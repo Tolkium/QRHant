@@ -1,68 +1,126 @@
-# Supabase backend — deployment notes
+# Supabase backend — Phase 3 setup
 
-The app runs fully on-device (mock backend) until you flip
-`environment.backend` to `'supabase'`. Everything needed for the real backend
-lives in this folder.
+Flip the app from on-device mock to real Supabase. Do this **before** Cloudflare.
 
-## One-time setup
+## 1. Create a Supabase project
 
-1. Create a project at [supabase.com](https://supabase.com) (free tier is enough
-   for 500 players / 3 days).
-2. Install the CLI and link the project:
+1. [supabase.com/dashboard](https://supabase.com/dashboard) → **New project** (free tier is enough).
+2. Note the **Project URL** and client key (Settings → API):
+   - **Publishable** (`sb_publishable_…`) — use in `environment.local.ts` when legacy
+     keys are disabled
+   - or legacy **anon** (`eyJ…`) if still enabled
+   Never use `service_role` / `sb_secret_…` in the Angular app.
 
-   ```bash
-   npx supabase login
-   npx supabase link --project-ref <your-project-ref>
-   ```
+## 2. Local credentials (never commit)
 
-3. Apply the schema:
+`src/environments/environment.local.ts` is gitignored. It already exists with placeholders — edit it:
 
-   ```bash
-   npx supabase db push
-   ```
+```ts
+export const environment = {
+  backend: 'supabase',
+  supabaseUrl: 'https://xxxx.supabase.co',
+  supabaseAnonKey: 'eyJ...', // anon key only — never service_role
+  // ...
+};
+```
 
-4. Deploy the Edge Functions:
+Committed `environment.ts` stays on `backend: 'mock'` for CI and teammates.
 
-   ```bash
-   npx supabase functions deploy sync-finds
-   npx supabase functions deploy generate-codes
-   npx supabase functions deploy admin-reset-password
-   ```
+Run the app against Supabase:
 
-5. In `src/environments/environment.ts` set:
+```bash
+npm run start:supabase          # localhost
+npm run start:supabase:lan      # phone on same Wi‑Fi (HTTPS still needed for camera)
+```
 
-   ```ts
-   backend: 'supabase',
-   supabaseUrl: 'https://<ref>.supabase.co',
-   supabaseAnonKey: '<anon key>',
-   ```
+## 3. Link CLI and push schema
 
-6. Auth settings (dashboard → Authentication):
-   - Disable "Confirm email" (accounts use synthetic e-mails
-     `<nickname>@player.qrhunt.app`; there is nothing to confirm).
-   - Set JWT expiry / session length so refresh comfortably outlasts the
-     festival (default is fine; players stay logged in via auto-refresh).
+```bash
+npx supabase login
+npx supabase link --project-ref <your-project-ref>   # ref = subdomain of the URL
+npx supabase db push
+```
 
-7. Create the first admin: register a normal account in the app, then in the
-   SQL editor run:
+This applies `0001_init.sql` + `0002_api_grants.sql` (tables, RLS, API grants,
+`get_pack`, `get_leaderboard`, profile trigger).
 
-   ```sql
-   update public.profiles set role = 'admin' where nickname = '<you>';
-   ```
+## 4. Deploy Edge Functions
 
-8. Admin TOTP 2FA: enable MFA in the dashboard (Authentication → MFA). The
-   client exposes `enrollTotp()` / `verifyTotp()` on `SupabaseBackendService`;
-   login throws `mfa-required` when a challenge is pending.
+```bash
+npx supabase functions deploy sync-finds
+npx supabase functions deploy generate-codes
+npx supabase functions deploy admin-reset-password
+```
 
-9. Turn on daily backups (dashboard → Database → Backups) before the event.
+Or: `npm run supabase:functions`
 
-## Security model recap
+## 5. Auth dashboard settings
 
-- `codes.code` (plaintext) is admin-only via RLS; players get the pack through
-  `get_pack()`, which exposes only `tag`/`iv`/`ciphertext`/`releaseAt`.
-- `finds` has no insert policy — writes happen exclusively inside the
-  `sync-finds` Edge Function (service role), which re-validates every code,
-  clamps timestamps to [last contact, arrival], applies the admin-editable
-  rate limits and records anomaly flags.
-- The leaderboard is served by `get_leaderboard()`, which applies the
-  visibility flags server-side, so hidden data never reaches the client.
+Authentication → Providers → Email:
+
+- **Disable “Confirm email”** — accounts use synthetic addresses
+  `<nickname>@player.qrhunt.app`; nothing to confirm.
+
+Optional: lengthen JWT/session if you want extra headroom beyond auto-refresh.
+
+## 6. First admin account
+
+1. **Clear site data** in the browser once (mock IndexedDB ≠ Supabase).
+2. `npm run start:supabase` → register a normal account in the app.
+3. Supabase dashboard → **SQL Editor**:
+
+```sql
+update public.profiles set role = 'admin' where nickname = 'your_nickname';
+```
+
+4. Log out and back in → `/admin` should work.
+
+## 7. Demo test data (same as mock seed)
+
+Loads **Demo Festival 2026** with 20 fixed QR codes, artwork, fake leaderboard
+players (`demo123` password).
+
+1. Copy `supabase/.env.example` → `supabase/.env`
+2. Paste **service_role** key from Dashboard → Settings → API (never commit)
+3. Run:
+
+```bash
+npm run seed:supabase
+```
+
+4. Hard-refresh the app (or clear site data) so the pack reloads.
+
+## 8. Smoke test (repeat Phase 1 checklist)
+
+| Area | What to verify |
+| --- | --- |
+| Auth | Register, login, refresh keeps session |
+| Admin | Create event, bulk generate codes, upload artwork |
+| Player | Pack loads, scan works, found card shows art (no code) |
+| Sync | Phone scan → PC leaderboard updates |
+| Offline | Airplane mode scan → back online → sync |
+| Map | Place pins, print map |
+
+Use a **“Dev Hunt”** test event; keep the real festival event for later.
+
+## 9. Optional before go-live
+
+- Authentication → MFA for admin TOTP (`enrollTotp` / `verifyTotp` in the client).
+- Database → Backups (daily) before the event.
+
+## Security recap
+
+- Plaintext `codes.code` is admin-only (RLS). Players get the pack via `get_pack()`.
+- `finds` inserts only through `sync-finds` (service role + re-validation).
+- Leaderboard via `get_leaderboard()` — flags applied server-side.
+- **Never** put `service_role` in the Angular app or git.
+
+## npm scripts
+
+| Script | Purpose |
+| --- | --- |
+| `npm run start:supabase` | Dev server with `environment.local.ts` |
+| `npm run build:supabase` | Build with local Supabase env |
+| `npm run supabase:push` | `supabase db push` |
+| `npm run supabase:functions` | Deploy all three Edge Functions |
+| `npm run seed:supabase` | Load demo event + codes + fake players |

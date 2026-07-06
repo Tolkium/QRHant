@@ -67,8 +67,8 @@ npm run android:open  # open in Android Studio (requires Android Studio + JDK)
 - **`dev`** — daily work; open PRs into `main` when ready.
 - CI runs on every push/PR to `main` or `dev`: `npm ci` → `ng test` → `ng build`.
 - Keep `environment.ts` on `backend: 'mock'` with empty Supabase keys in git.
-  For local Supabase testing (Phase 3), copy `environment.example.ts` to
-  `environment.local.ts` (gitignored) — wire-up for that file comes in Phase 3.
+  For Supabase testing (Phase 3), edit `src/environments/environment.local.ts`
+  (gitignored) and run `npm run start:supabase`. See `supabase/README.md`.
 
 ## Android APK
 

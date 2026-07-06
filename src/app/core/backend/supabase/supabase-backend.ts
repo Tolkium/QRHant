@@ -143,22 +143,42 @@ export class SupabaseBackendService {
 
   async register(creds: Credentials): Promise<Profile> {
     if (creds.password.length < 6) throw new Error('short-password');
+    const nickname = creds.nickname.trim();
     const { data, error } = await this.client.auth.signUp({
-      email: syntheticEmail(creds.nickname),
+      email: syntheticEmail(nickname),
       password: creds.password,
+      options: {
+        data: { nickname, language: creds.language ?? 'en' },
+      },
     });
     if (error || !data.user) {
       throw new Error(error?.message.includes('already') ? 'nickname-taken' : 'invalid');
     }
-    const { error: profileError } = await this.client.from('profiles').insert({
-      id: data.user.id,
-      nickname: creds.nickname.trim(),
-      language: creds.language ?? 'en',
-    });
-    if (profileError) {
+
+    // Ensure we have a session (email confirm must be off in Supabase dashboard).
+    if (!data.session) {
+      const { error: loginError } = await this.client.auth.signInWithPassword({
+        email: syntheticEmail(nickname),
+        password: creds.password,
+      });
+      if (loginError) throw new Error('invalid');
+    }
+
+    // Profile row is created by DB trigger; upsert covers older projects without it.
+    const { error: profileError } = await this.client.from('profiles').upsert(
+      {
+        id: data.user.id,
+        nickname,
+        language: creds.language ?? 'en',
+      },
+      { onConflict: 'id', ignoreDuplicates: true },
+    );
+    if (profileError && profileError.code !== '23505') {
       throw new Error(profileError.code === '23505' ? 'nickname-taken' : 'invalid');
     }
-    return this.fetchProfile(data.user.id);
+    const profile = await this.fetchProfile(data.user.id);
+    localStorage.setItem(PROFILE_CACHE, JSON.stringify(profile));
+    return profile;
   }
 
   async login(creds: Credentials): Promise<Profile> {
