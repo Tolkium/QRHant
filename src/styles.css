@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Server-driven theme: these variables are overwritten at runtime by ThemeStore
+   from the active event's theme JSON. Tailwind utilities map onto them below. */
+:root {
+  --c-primary: #6d28d9;
+  --c-primary-ink: #ffffff;
+  --c-accent: #f59e0b;
+  --c-bg: #f8f7fc;
+  --c-surface: #ffffff;
+  --c-ink: #17141f;
+  --c-muted: #6b6580;
+  --c-line: #e5e1f0;
+  --c-good: #16a34a;
+  --c-bad: #dc2626;
+  color-scheme: only light;
+}
+
+@theme inline {
+  --color-primary: var(--c-primary);
+  --color-primary-ink: var(--c-primary-ink);
+  --color-accent: var(--c-accent);
+  --color-page: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-good: var(--c-good);
+  --color-bad: var(--c-bad);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-page text-ink antialiased;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    Roboto,
+    sans-serif;
+  /* Outdoor readability: slightly larger base font */
+  font-size: 17px;
+  overscroll-behavior-y: none;
+}
+
+/* Reusable primitives (kept tiny on purpose) */
+.btn-primary,
+.btn-ghost,
+.btn-danger {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 font-semibold
+    transition active:scale-95 disabled:opacity-40 disabled:active:scale-100 select-none;
+  min-height: 48px;
+}
+.btn-primary {
+  @apply bg-primary text-primary-ink shadow-md;
+}
+.btn-ghost {
+  @apply border border-line bg-surface text-ink;
+}
+.btn-danger {
+  @apply bg-bad text-white;
+}
+.card {
+  @apply rounded-2xl bg-surface border border-line shadow-sm;
+}
+.input {
+  @apply w-full rounded-xl border border-line bg-surface px-4 text-ink
+    placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary;
+  min-height: 48px;
+}
+.label {
+  @apply block text-sm font-semibold text-muted mb-1;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

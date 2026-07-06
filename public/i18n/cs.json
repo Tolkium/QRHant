@@ -1,0 +1,125 @@
+{
+  "common": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "back": "Zpět",
+    "offline": "Offline",
+    "loading": "Načítání…"
+  },
+  "auth": {
+    "welcome": "Vítej, lovče!",
+    "nickname": "Přezdívka",
+    "password": "Heslo",
+    "email": "E-mail (nepovinné, pro obnovu)",
+    "login": "Přihlásit se",
+    "register": "Vytvořit účet",
+    "switchToLogin": "Už máš účet? Přihlas se",
+    "switchToRegister": "Jsi tu poprvé? Vytvoř si účet",
+    "errors": {
+      "required": "Přezdívka a heslo jsou povinné.",
+      "nicknameTaken": "Tato přezdívka je už obsazená.",
+      "invalid": "Nesprávná přezdívka nebo heslo.",
+      "shortPassword": "Heslo musí mít alespoň 6 znaků.",
+      "banned": "Tento účet byl zablokován."
+    }
+  },
+  "onboarding": {
+    "next": "Další",
+    "start": "Začít lovit",
+    "slides": {
+      "one": {
+        "title": "Najdi QR kódy",
+        "text": "Kódy jsou ukryté po celém festivalu. Otevři skener a naskenuj každý kód, který najdeš."
+      },
+      "two": {
+        "title": "Posbírej je všechny",
+        "text": "Každý kód odemkne kartu s uměleckým dílem a jeho příběhem. Tvoje nálezy se uloží i bez internetu."
+      },
+      "three": {
+        "title": "Vyšplhej se v žebříčku",
+        "text": "Čím víc kódů najdeš, tím výš budeš. Synchronizuj se, když máš signál, aby se nálezy počítaly."
+      }
+    }
+  },
+  "tabs": {
+    "codes": "Kódy",
+    "ranking": "Žebříček",
+    "scan": "Skenovat"
+  },
+  "codes": {
+    "progress": "{{found}} / {{total}} nalezeno",
+    "filter": {
+      "all": "Všechny",
+      "found": "Nalezené",
+      "missing": "Chybějící"
+    },
+    "empty": "Zatím nebyly zveřejněny žádné kódy. Sleduj nás!",
+    "locked": "Zatím nenalezeno"
+  },
+  "detail": {
+    "foundAt": "Nalezeno {{time}}"
+  },
+  "scan": {
+    "title": "Naskenuj kód",
+    "hint": "Namiř kameru na QR kód",
+    "pause": "Pozastavit",
+    "resume": "Pokračovat",
+    "noCamera": "Kamera není dostupná. Zkontroluj oprávnění v prohlížeči.",
+    "unknownCode": "Tento kód do hry nepatří.",
+    "alreadyFound": "Tenhle už jsi našel!",
+    "manual": {
+      "title": "Zadání kódu (personál)",
+      "placeholder": "6znakový kód",
+      "submit": "Odeslat kód"
+    }
+  },
+  "celebrate": {
+    "found": "Nový nález!",
+    "milestone": "{{count}} nalezených kódů — úžasné!",
+    "allFound": "Našel jsi VŠECHNY. Legenda!"
+  },
+  "rank": {
+    "title": "Žebříček",
+    "you": "Ty",
+    "codes": "{{count}} kódů",
+    "hidden": "Žebříček je momentálně skrytý. Lov dál!",
+    "frozen": "Žebříček je zmrazený — finální výsledky už brzy!",
+    "anonymous": "Lovec"
+  },
+  "install": {
+    "hint": "Nainstaluj pro celou obrazovku — bez lišty prohlížeče.",
+    "hintManual": "Přidej na plochu: menu prohlížeče → Nainstalovat aplikaci (nebo Sdílet → Přidat na plochu na iPhonu).",
+    "action": "Nainstalovat",
+    "dismiss": "Teď ne"
+  },
+  "profile": {
+    "title": "Profil",
+    "language": "Jazyk",
+    "avatar": "Avatar",
+    "nickname": "Přezdívka",
+    "rules": "Jak hrát",
+    "install": {
+      "title": "Nainstalovat aplikaci"
+    },
+    "sync": {
+      "title": "Synchronizace",
+      "now": "Synchronizovat teď",
+      "pending": "{{count}} nálezů čeká na synchronizaci",
+      "done": "Vše synchronizováno",
+      "last": "Poslední synchronizace: {{time}}",
+      "never": "Zatím nesynchronizováno"
+    },
+    "logout": "Odhlásit se",
+    "version": "Verze"
+  },
+  "lifecycle": {
+    "countdown": "Hra začíná za",
+    "notStarted": "Hra ještě nezačala",
+    "ended": "Hra skončila",
+    "thanks": "Díky za hru! Finální výsledky vyhlásí organizátoři."
+  },
+  "sync": {
+    "offlineQueued": "Uloženo v zařízení — synchronizuje se, až budeš online"
+  }
+}

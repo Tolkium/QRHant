@@ -1,0 +1,125 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "offline": "Offline",
+    "loading": "Loading…"
+  },
+  "auth": {
+    "welcome": "Welcome, hunter!",
+    "nickname": "Nickname",
+    "password": "Password",
+    "email": "E-mail (optional, for recovery)",
+    "login": "Log in",
+    "register": "Create account",
+    "switchToLogin": "Already have an account? Log in",
+    "switchToRegister": "New here? Create account",
+    "errors": {
+      "required": "Nickname and password are required.",
+      "nicknameTaken": "This nickname is already taken.",
+      "invalid": "Wrong nickname or password.",
+      "shortPassword": "Password must be at least 6 characters.",
+      "banned": "This account has been suspended."
+    }
+  },
+  "onboarding": {
+    "next": "Next",
+    "start": "Start hunting",
+    "slides": {
+      "one": {
+        "title": "Find the QR codes",
+        "text": "Codes are hidden around the festival. Open the scanner and scan every code you find."
+      },
+      "two": {
+        "title": "Collect them all",
+        "text": "Each code unlocks a card with a piece of art and its story. Your finds are saved even without internet."
+      },
+      "three": {
+        "title": "Climb the ranking",
+        "text": "The more codes you find, the higher you climb. Sync when you have signal so your finds count."
+      }
+    }
+  },
+  "tabs": {
+    "codes": "Codes",
+    "ranking": "Ranking",
+    "scan": "Scan"
+  },
+  "codes": {
+    "progress": "{{found}} / {{total}} found",
+    "filter": {
+      "all": "All",
+      "found": "Found",
+      "missing": "Missing"
+    },
+    "empty": "No codes released yet. Stay tuned!",
+    "locked": "Not found yet"
+  },
+  "detail": {
+    "foundAt": "Found {{time}}"
+  },
+  "scan": {
+    "title": "Scan a code",
+    "hint": "Point the camera at a QR code",
+    "pause": "Pause",
+    "resume": "Resume",
+    "noCamera": "Camera is not available. Check permissions in your browser settings.",
+    "unknownCode": "This code does not belong to the hunt.",
+    "alreadyFound": "You already found this one!",
+    "manual": {
+      "title": "Staff code entry",
+      "placeholder": "6-character code",
+      "submit": "Submit code"
+    }
+  },
+  "celebrate": {
+    "found": "New find!",
+    "milestone": "{{count}} codes found — amazing!",
+    "allFound": "You found them ALL. Legend!"
+  },
+  "rank": {
+    "title": "Ranking",
+    "you": "You",
+    "codes": "{{count}} codes",
+    "hidden": "The ranking is currently hidden. Keep hunting!",
+    "frozen": "Ranking is frozen — final results coming soon!",
+    "anonymous": "Hunter"
+  },
+  "install": {
+    "hint": "Install for full screen — no browser bar.",
+    "hintManual": "Add to home screen: browser menu → Install app (or Share → Add to Home on iPhone).",
+    "action": "Install",
+    "dismiss": "Not now"
+  },
+  "profile": {
+    "title": "Profile",
+    "language": "Language",
+    "avatar": "Avatar",
+    "nickname": "Nickname",
+    "rules": "How to play",
+    "install": {
+      "title": "Install app"
+    },
+    "sync": {
+      "title": "Synchronization",
+      "now": "Sync now",
+      "pending": "{{count}} finds waiting to sync",
+      "done": "Everything synced",
+      "last": "Last sync: {{time}}",
+      "never": "Not synced yet"
+    },
+    "logout": "Log out",
+    "version": "Version"
+  },
+  "lifecycle": {
+    "countdown": "The hunt starts in",
+    "notStarted": "The hunt has not started yet",
+    "ended": "The hunt is over",
+    "thanks": "Thanks for playing! Final results will be announced by the organizers."
+  },
+  "sync": {
+    "offlineQueued": "Saved on device — will sync when online"
+  }
+}
