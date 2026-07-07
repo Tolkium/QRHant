@@ -6,6 +6,7 @@ import { SessionStore } from '../../core/stores/session.store';
 import { SyncEngine } from '../../core/sync/sync-engine';
 import { InstallPromptService } from '../../core/pwa/install-prompt';
 import { Avatar } from '../../shared/avatar';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-hunt-shell',
@@ -16,8 +17,15 @@ import { Avatar } from '../../shared/avatar';
       <header
         class="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-surface border-b border-line"
       >
-        <span class="font-extrabold text-lg truncate">
-          {{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}
+        <span class="font-extrabold text-lg truncate flex items-center gap-1.5 min-w-0">
+          <span class="truncate">{{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}</span>
+          @if (deployLabel) {
+            <span
+              class="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted border border-line rounded px-1 py-px"
+            >
+              {{ deployLabel }}
+            </span>
+          }
         </span>
         <span class="flex items-center gap-3">
           @if (!sync.online()) {
@@ -119,6 +127,7 @@ import { Avatar } from '../../shared/avatar';
   `,
 })
 export class HuntShell {
+  readonly deployLabel = environment.deployLabel;
   readonly pack = inject(PackStore);
   readonly session = inject(SessionStore);
   readonly sync = inject(SyncEngine);

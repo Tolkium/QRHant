@@ -5,6 +5,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { SessionStore } from '../../core/stores/session.store';
 import { PackStore } from '../../core/stores/pack.store';
 import { Lang, LANGS } from '../../core/models';
+import { environment } from '../../../environments/environment';
 
 const ONBOARDED_KEY = 'qrhunt.onboarded';
 
@@ -27,8 +28,15 @@ const ONBOARDED_KEY = 'qrhunt.onboarded';
         }
       </div>
 
-      <h1 class="text-3xl font-extrabold text-center">
-        {{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}
+      <h1 class="text-3xl font-extrabold text-center flex items-center justify-center gap-2 flex-wrap">
+        <span>{{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}</span>
+        @if (deployLabel) {
+          <span
+            class="text-xs font-bold uppercase tracking-wide text-muted border border-line rounded px-1.5 py-0.5"
+          >
+            {{ deployLabel }}
+          </span>
+        }
       </h1>
 
       @if (!onboarded()) {
@@ -114,6 +122,7 @@ const ONBOARDED_KEY = 'qrhunt.onboarded';
   `,
 })
 export class AuthPage {
+  readonly deployLabel = environment.deployLabel;
   private readonly session = inject(SessionStore);
   private readonly transloco = inject(TranslocoService);
   private readonly router = inject(Router);

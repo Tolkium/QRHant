@@ -6,4 +6,6 @@ export const environment = {
   sentryDsn: '',
   supabaseUrl: '',
   supabaseAnonKey: '',
+  /** Shown in the UI header on non-production deploys (e.g. DEV). Empty on prod. */
+  deployLabel: '',
 };

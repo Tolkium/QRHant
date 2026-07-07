@@ -26,6 +26,10 @@ const key = (
 )?.trim();
 const backend = process.env.BACKEND?.trim() || 'supabase';
 const sentryDsn = process.env.SENTRY_DSN?.trim() || '';
+const devRef = 'rvtltgrlsmapwonmwsbf';
+const deployLabel =
+  process.env.DEPLOY_LABEL?.trim() ||
+  (url?.includes(devRef) ? 'DEV' : '');
 
 let appVersion = process.env.APP_VERSION?.trim();
 if (!appVersion) {
@@ -55,6 +59,7 @@ export const environment = {
   sentryDsn: '${sentryDsn.replace(/'/g, "\\'")}',
   supabaseUrl: '${url.replace(/'/g, "\\'")}',
   supabaseAnonKey: '${key.replace(/'/g, "\\'")}',
+  deployLabel: '${deployLabel.replace(/'/g, "\\'")}',
 };
 `;
 
