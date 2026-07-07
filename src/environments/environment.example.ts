@@ -5,4 +5,5 @@ export const environment = {
   sentryDsn: '',
   supabaseUrl: 'https://YOUR_PROJECT.supabase.co',
   supabaseAnonKey: 'sb_publishable_...', // or legacy anon eyJ… if still enabled
+  deployLabel: 'DEV', // set to '' for production builds
 };

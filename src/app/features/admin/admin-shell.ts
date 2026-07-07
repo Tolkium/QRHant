@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdminState } from './admin-state';
 import { SessionStore } from '../../core/stores/session.store';
+import { environment } from '../../../environments/environment';
 
 const NAV = [
   ['dashboard', 'Dashboard', '📊'],
@@ -26,7 +27,16 @@ const NAV = [
         <button class="text-2xl px-2" (click)="menuOpen.set(!menuOpen())" aria-label="Menu">
           ☰
         </button>
-        <span class="font-extrabold">Admin</span>
+        <span class="font-extrabold flex items-center gap-1.5">
+          Admin
+          @if (deployLabel) {
+            <span
+              class="text-[10px] font-bold uppercase tracking-wide text-muted border border-line rounded px-1 py-px"
+            >
+              {{ deployLabel }}
+            </span>
+          }
+        </span>
         <button class="text-sm text-primary font-semibold" (click)="logout()">Log out</button>
       </header>
 
@@ -37,7 +47,16 @@ const NAV = [
         [class.hidden]="!menuOpen()"
         [class.flex]="menuOpen()"
       >
-        <p class="font-extrabold text-lg mb-2 hidden md:block">QR Hunt Admin</p>
+        <p class="font-extrabold text-lg mb-2 hidden md:flex items-center gap-1.5">
+          QR Hunt Admin
+          @if (deployLabel) {
+            <span
+              class="text-[10px] font-bold uppercase tracking-wide text-muted border border-line rounded px-1 py-px"
+            >
+              {{ deployLabel }}
+            </span>
+          }
+        </p>
 
         <!-- event switcher -->
         <label class="label" for="event-switcher">Event</label>
@@ -74,6 +93,7 @@ const NAV = [
   `,
 })
 export class AdminShell implements OnInit {
+  readonly deployLabel = environment.deployLabel;
   readonly state = inject(AdminState);
   private readonly session = inject(SessionStore);
   private readonly router = inject(Router);
