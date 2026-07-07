@@ -9,7 +9,7 @@ export interface Profile {
   id: string;
   nickname: string;
   email?: string;
-  avatar: string; // preset avatar id, e.g. 'fox'
+  avatar: string; // preset id (e.g. 'fox') or JPEG data URL
   language: Lang;
   role: Role;
   banned: boolean;
@@ -222,6 +222,14 @@ export const PRESET_AVATARS = [
   'panda',
   'octopus',
 ] as const;
+
+export function isPresetAvatar(avatar: string): boolean {
+  return (PRESET_AVATARS as readonly string[]).includes(avatar);
+}
+
+export function isCustomAvatar(avatar: string): boolean {
+  return avatar.startsWith('data:image/');
+}
 
 export const DEFAULT_THEME: EventTheme = {
   primary: '#6d28d9',

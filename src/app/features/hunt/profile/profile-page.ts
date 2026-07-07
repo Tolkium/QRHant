@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -8,13 +8,14 @@ import { SyncEngine } from '../../../core/sync/sync-engine';
 import { InstallPromptService } from '../../../core/pwa/install-prompt';
 import { CodeEntryService } from '../scan/code-entry.service';
 import { Avatar } from '../../../shared/avatar';
-import { Lang, LANGS, PRESET_AVATARS } from '../../../core/models';
+import { AvatarCropDialog } from '../../../shared/avatar-crop-dialog';
+import { Lang, LANGS, PRESET_AVATARS, isCustomAvatar } from '../../../core/models';
 import { environment } from '../../../../environments/environment';
 import { celebrateFind } from '../../../shared/celebrate';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [FormsModule, RouterLink, TranslocoModule, Avatar],
+  imports: [FormsModule, RouterLink, TranslocoModule, Avatar, AvatarCropDialog],
   template: `
     <div class="p-4 max-w-md mx-auto flex flex-col gap-4">
       <a routerLink="/hunt/codes" class="text-primary font-semibold">
@@ -45,8 +46,40 @@ import { celebrateFind } from '../../../shared/celebrate';
               <app-avatar [avatar]="a" [size]="44" />
             </button>
           }
+          <label
+            class="rounded-full p-1 border-2 cursor-pointer"
+            [class.border-primary]="hasCustomAvatar()"
+            [class.border-transparent]="!hasCustomAvatar()"
+            [title]="'profile.avatarUpload.label' | transloco"
+          >
+            @if (hasCustomAvatar()) {
+              <app-avatar [avatar]="session.user()!.avatar" [size]="44" />
+            } @else {
+              <span
+                class="inline-flex items-center justify-center rounded-full bg-primary/10 text-xl"
+                style="width: 44px; height: 44px"
+                >📷</span
+              >
+            }
+            <input
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="pickAvatar($event)"
+            />
+          </label>
         </div>
+        <p class="text-xs text-muted mt-2">{{ 'profile.avatarUpload.hint' | transloco }}</p>
       </section>
+
+      @if (cropFile(); as file) {
+        <app-avatar-crop-dialog
+          [imageSrc]="cropPreview()!"
+          [file]="file"
+          (confirmed)="onAvatarCropped($event)"
+          (cancelled)="clearCrop()"
+        />
+      }
 
       <!-- language -->
       <section class="card p-4">
@@ -164,6 +197,12 @@ export class ProfilePage {
   readonly version = environment.appVersion;
   readonly manualResult = signal<string | null>(null);
   readonly showRules = signal(false);
+  readonly cropFile = signal<File | null>(null);
+  readonly cropPreview = signal<string | null>(null);
+  readonly hasCustomAvatar = computed(() => {
+    const av = this.session.user()?.avatar;
+    return !!av && isCustomAvatar(av);
+  });
 
   readonly isStandalone = () =>
     window.matchMedia('(display-mode: standalone)').matches ||
@@ -184,6 +223,34 @@ export class ProfilePage {
 
   setAvatar(avatar: string): void {
     void this.session.setAvatar(avatar);
+  }
+
+  pickAvatar(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file || !file.type.startsWith('image/')) return;
+    if (file.size > 12 * 1024 * 1024) {
+      this.manualResult.set('profile.avatarUpload.tooLarge');
+      setTimeout(() => this.manualResult.set(null), 3000);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.cropPreview.set(reader.result as string);
+      this.cropFile.set(file);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onAvatarCropped(dataUrl: string): void {
+    this.clearCrop();
+    void this.session.setAvatar(dataUrl);
+  }
+
+  clearCrop(): void {
+    this.cropFile.set(null);
+    this.cropPreview.set(null);
   }
 
   syncNow(): void {

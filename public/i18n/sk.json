@@ -97,6 +97,17 @@
     "title": "Profil",
     "language": "Jazyk",
     "avatar": "Avatar",
+    "avatarUpload": {
+      "label": "Nahrať fotku",
+      "hint": "Klikni na fotoaparát a nahraj vlastnú fotku. Ťahaj pre zarovnanie, posuvníkom priblíž.",
+      "tooLarge": "Obrázok je príliš veľký (max. 12 MB)."
+    },
+    "avatarCrop": {
+      "title": "Orezať avatar",
+      "hint": "Posúvaj fotku, aby si mal tvár v strede. Mriežka pomôže so zarovnaním.",
+      "zoom": "Priblíženie",
+      "save": "Použiť fotku"
+    },
     "nickname": "Prezývka",
     "rules": "Ako hrať",
     "install": {

@@ -97,6 +97,17 @@
     "title": "Profile",
     "language": "Language",
     "avatar": "Avatar",
+    "avatarUpload": {
+      "label": "Upload photo",
+      "hint": "Tap the camera to upload your own photo. Drag to position and use the slider to zoom.",
+      "tooLarge": "Image is too large (max 12 MB)."
+    },
+    "avatarCrop": {
+      "title": "Crop avatar",
+      "hint": "Drag the photo to frame your face. The grid helps with alignment.",
+      "zoom": "Zoom",
+      "save": "Use photo"
+    },
     "nickname": "Nickname",
     "rules": "How to play",
     "install": {
