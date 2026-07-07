@@ -116,7 +116,7 @@ interface PinGesture {
       </div>
 
       <div
-        class="relative inline-block select-none max-w-full border border-line rounded-xl overflow-hidden touch-none"
+        class="map-canvas relative inline-block select-none max-w-full border border-line rounded-xl overflow-hidden touch-none"
         (pointerup)="onMapPointerUp($event)"
         (pointermove)="onMapPointerMove($event)"
         (pointerleave)="cancelPinGesture()"
@@ -146,7 +146,7 @@ interface PinGesture {
 
         @if (pinPanel(); as pin) {
           <div
-            class="absolute z-20 w-56 card p-3 shadow-lg flex flex-col gap-2 border-2 border-primary"
+            class="map-pin-panel absolute z-20 w-56 card p-3 shadow-lg flex flex-col gap-2 border-2 border-primary"
             [style.left.%]="panelPos().x * 100"
             [style.top.%]="panelPos().y * 100"
             (pointerdown)="$event.stopPropagation()"
@@ -252,6 +252,20 @@ export class MapPage {
   @HostListener('document:keydown.escape')
   onEscape(): void {
     if (this.pinPanel()) this.closePanel();
+  }
+
+  @HostListener('document:pointerup', ['$event'])
+  onDocumentPointerUp(event: PointerEvent): void {
+    if (!this.pinPanel()) return;
+    const target = event.target as HTMLElement;
+    if (
+      target.closest('.map-pin-panel') ||
+      target.closest('.map-pin') ||
+      target.closest('.map-canvas')
+    ) {
+      return;
+    }
+    this.closePanel();
   }
 
   openPanel(pin: CodeRecord): void {
@@ -407,6 +421,14 @@ export class MapPage {
     }
 
     if ((event.target as HTMLElement).closest('.map-pin')) return;
+
+    if (this.pinPanel()) {
+      if (!(event.target as HTMLElement).closest('.map-pin-panel')) {
+        this.closePanel();
+      }
+      return;
+    }
+
     if (!this.selectedCodeId) return;
     this.mapBox = event.currentTarget as HTMLElement;
     const { x, y } = this.relative(this.mapBox, event.clientX, event.clientY);
