@@ -25,6 +25,11 @@
                 "input": "public"
               },
               {
+                "glob": "**/*",
+                "input": "design",
+                "output": "/design"
+              },
+              {
                 "glob": "zxing_reader.wasm",
                 "input": "node_modules/zxing-wasm/dist/reader",
                 "output": "/wasm"

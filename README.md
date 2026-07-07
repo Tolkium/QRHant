@@ -49,6 +49,7 @@ keyed from the code itself — devices never hold plaintext codes.
 | `src/app/features/hunt/` | Player UI: codes grid, card detail, scanner, ranking, profile |
 | `src/app/features/admin/` | Admin panel: dashboard, events, codes, map editor, leaderboard flags, players, settings, print sheet |
 | `supabase/` | Postgres schema + RLS, Edge Functions, deployment notes |
+| `design/` | UI theme lab (`index.html`) — share `/design/` with designers |
 | `android/` | Capacitor Android project (MLKit native scanning) |
 
 ## Commands
@@ -122,6 +123,18 @@ not in git.
 - Prod: register admin, create/seed event (or run `npm run seed:supabase` with `supabase/.env.prod` locally — careful).
 - Dev preview URL: same flow against dev DB (already seeded).
 - Camera/scan on phone needs **HTTPS** — Pages provides that automatically.
+
+### Design lab (theme picker for designers)
+
+The standalone UI lab in `design/index.html` is copied into every build at **`/design/`** (no app button — just share the URL).
+
+| Where | Link |
+| --- | --- |
+| Local dev | `http://localhost:4200/design/` |
+| Cloudflare Pages preview (`dev` branch) | `https://<your-preview>.pages.dev/design/` |
+| Production | `https://<your-prod-domain>/design/` |
+
+After pushing to `dev`, open the Pages preview deployment and append `/design/`. Designers can pick themes and layouts in the browser; choices are for reference only until integrated into the app.
 
 ### 3. Local smoke test of the Pages build
 
