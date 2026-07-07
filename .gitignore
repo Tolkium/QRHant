@@ -30,6 +30,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
+Archytecture.md
 /.angular/cache
 .sass-cache/
 /connect.lock
@@ -45,8 +46,10 @@ Thumbs.db
 
 # Local secrets (never commit real Supabase keys)
 src/environments/environment.local.ts
+src/environments/environment.deploy.ts
 .env
 .env.*
 !.env.example
 supabase/.env
 supabase/.env.local
+supabase/.env.prod

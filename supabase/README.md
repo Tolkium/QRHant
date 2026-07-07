@@ -2,6 +2,20 @@
 
 Flip the app from on-device mock to real Supabase. Do this **before** Cloudflare.
 
+## Dev vs production projects
+
+| | **Dev** (daily IDE) | **Prod** (`main` / Cloudflare) |
+| --- | --- | --- |
+| Dashboard name | `QRHant-Dev` | `QRHant-Backend` |
+| Project ref | `rvtltgrlsmapwonmwsbf` | `wsafofmssdycacqjzclv` |
+| Angular local | `environment.local.ts` → dev URL + publishable | CF production env vars (later) |
+| CLI / seed | `supabase/.env` → dev secret | `supabase/.env.prod` (backup, rare ops) |
+
+Refs are in `supabase/projects.env.example` (safe to commit). Secrets stay gitignored.
+
+**Daily rule:** IDE and `npm run seed:supabase` always target **dev**. Prod migrations:
+`npm run supabase:push:prod` only after testing on dev.
+
 ## 1. Create a Supabase project
 
 1. [supabase.com/dashboard](https://supabase.com/dashboard) → **New project** (free tier is enough).
@@ -121,6 +135,10 @@ Use a **“Dev Hunt”** test event; keep the real festival event for later.
 | --- | --- |
 | `npm run start:supabase` | Dev server with `environment.local.ts` |
 | `npm run build:supabase` | Build with local Supabase env |
-| `npm run supabase:push` | `supabase db push` |
+| `npm run supabase:push` | `supabase db push` (uses linked project) |
+| `npm run supabase:push:dev` | Link dev + push migrations |
+| `npm run supabase:push:prod` | Link prod + push migrations |
 | `npm run supabase:functions` | Deploy all three Edge Functions |
-| `npm run seed:supabase` | Load demo event + codes + fake players |
+| `npm run supabase:functions:dev` | Link dev + deploy functions |
+| `npm run supabase:functions:prod` | Link prod + deploy functions |
+| `npm run seed:supabase` | Load demo event + codes + fake players (dev `.env` only) |

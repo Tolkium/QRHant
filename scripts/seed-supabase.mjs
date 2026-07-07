@@ -22,13 +22,13 @@ const root = resolve(__dirname, '..');
 
 loadEnv(resolve(root, 'supabase/.env'));
 
-const url = process.env.SUPABASE_URL ?? 'https://wsafofmssdycacqjzclv.supabase.co';
+const url = process.env.SUPABASE_URL ?? 'https://rvtltgrlsmapwonmwsbf.supabase.co';
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!serviceKey) {
   console.error(
     'Missing SUPABASE_SERVICE_ROLE_KEY.\n' +
-      'Copy supabase/.env.example → supabase/.env and paste the service_role key.',
+      'Copy supabase/.env.example → supabase/.env and paste the secret key (sb_secret_…).',
   );
   process.exit(1);
 }
