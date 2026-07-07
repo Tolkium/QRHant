@@ -56,7 +56,8 @@ keyed from the code itself — devices never hold plaintext codes.
 ```bash
 npm start             # dev server
 npm test              # vitest (crypto module has hard coverage)
-npm run build         # production PWA -> dist/qrhunt/browser
+npm run build         # production PWA -> dist/qrhunt/browser (needs env.deploy — use build:pages)
+npm run build:pages   # Cloudflare Pages: writes env from SUPABASE_* vars, then builds
 npm run android:sync  # build web + sync into android/
 npm run android:open  # open in Android Studio (requires Android Studio + JDK)
 ```
@@ -77,3 +78,59 @@ Studio (or the SDK + JDK 21): run `npm run android:sync`, open the project,
 and build. The scanner automatically switches from the web camera pipeline to
 native MLKit inside the APK. Play Store submission needs a one-time $25
 developer account; the PWA is fully usable without it.
+
+## Cloudflare Pages
+
+Host the PWA with Supabase. **Production** (`main`) uses **QRHant-Backend**;
+**preview** deploys (e.g. `dev`) use **QRHant-Dev**. Keys live in Cloudflare,
+not in git.
+
+### 1. Create the Pages project
+
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. Repo: `Tolkium/QRHant`
+3. **Production branch:** `main`
+4. **Build settings:**
+
+| Setting | Value |
+| --- | --- |
+| Framework preset | None |
+| Build command | `npm run build:pages` |
+| Build output directory | `dist/qrhunt/browser` |
+| Root directory | `/` |
+
+5. **Environment variables** → add for **Production** (QRHant-Backend):
+
+| Name | Value |
+| --- | --- |
+| `NODE_VERSION` | `24.15.0` |
+| `SUPABASE_URL` | `https://wsafofmssdycacqjzclv.supabase.co` |
+| `SUPABASE_PUBLISHABLE_KEY` | publishable key from prod dashboard (Settings → API) |
+| `BACKEND` | `supabase` |
+
+6. Same variables for **Preview**, but **dev** URL + publishable key:
+
+| Name | Preview value |
+| --- | --- |
+| `SUPABASE_URL` | `https://rvtltgrlsmapwonmwsbf.supabase.co` |
+| `SUPABASE_PUBLISHABLE_KEY` | dev publishable key |
+
+7. Save and deploy. SPA routing uses `public/_redirects`.
+
+### 2. After first deploy
+
+- Prod: register admin, create/seed event (or run `npm run seed:supabase` with `supabase/.env.prod` locally — careful).
+- Dev preview URL: same flow against dev DB (already seeded).
+- Camera/scan on phone needs **HTTPS** — Pages provides that automatically.
+
+### 3. Local smoke test of the Pages build
+
+```bash
+# PowerShell — use your dev or prod publishable key
+$env:SUPABASE_URL="https://rvtltgrlsmapwonmwsbf.supabase.co"
+$env:SUPABASE_PUBLISHABLE_KEY="sb_publishable_..."
+npm run build:pages
+npx serve dist/qrhunt/browser
+```
+
+Refs (no secrets): `supabase/projects.env.example`.
