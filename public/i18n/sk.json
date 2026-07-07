@@ -98,14 +98,13 @@
     "language": "Jazyk",
     "avatar": "Avatar",
     "avatarUpload": {
-      "label": "Nahrať fotku",
-      "hint": "Klikni na fotoaparát a nahraj vlastnú fotku. Ťahaj pre zarovnanie, posuvníkom priblíž.",
+      "label": "Nahrať vlastnú fotku",
+      "short": "Fotka",
       "tooLarge": "Obrázok je príliš veľký (max. 12 MB)."
     },
     "avatarCrop": {
       "title": "Orezať avatar",
-      "hint": "Posúvaj fotku, aby si mal tvár v strede. Mriežka pomôže so zarovnaním.",
-      "zoom": "Priblíženie",
+      "hint": "Posúvaj na zarovnanie. Na mobile priblíž prstami, na PC kolieskom.",
       "save": "Použiť fotku"
     },
     "nickname": "Prezývka",

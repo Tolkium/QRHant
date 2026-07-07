@@ -53,19 +53,6 @@ const MAX_ZOOM = 3;
           </div>
         </div>
 
-        <label class="flex flex-col gap-1">
-          <span class="label">{{ 'profile.avatarCrop.zoom' | transloco }}</span>
-          <input
-            type="range"
-            class="w-full accent-primary"
-            [min]="minScale()"
-            [max]="maxScale()"
-            [step]="0.01"
-            [value]="scale()"
-            (input)="onZoomInput($event)"
-          />
-        </label>
-
         <div class="flex gap-2">
           <button type="button" class="btn-ghost flex-1" (click)="cancelled.emit()">
             {{ 'common.cancel' | transloco }}
@@ -105,6 +92,10 @@ export class AvatarCropDialog {
   private dragStartY = 0;
   private dragOriginX = 0;
   private dragOriginY = 0;
+  private pinching = false;
+  private pinchStartDist = 0;
+  private pinchStartScale = 0;
+  private readonly pointers = new Map<number, { x: number; y: number }>();
 
   constructor() {
     queueMicrotask(() => this.loadImage());
@@ -120,16 +111,35 @@ export class AvatarCropDialog {
 
   onPointerDown(event: PointerEvent): void {
     if (!this.ready()) return;
+    const el = event.currentTarget as HTMLElement;
+    el.setPointerCapture(event.pointerId);
+    this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (this.pointers.size === 2) {
+      this.beginPinch();
+      return;
+    }
+
     this.dragging = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
     this.dragOriginX = this.offsetX();
     this.dragOriginY = this.offsetY();
-    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   }
 
   onPointerMove(event: PointerEvent): void {
-    if (!this.dragging) return;
+    if (!this.pointers.has(event.pointerId)) return;
+    this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (this.pinching && this.pointers.size >= 2) {
+      const dist = this.pointerDistance();
+      if (dist > 0 && this.pinchStartDist > 0) {
+        this.setScale(this.pinchStartScale * (dist / this.pinchStartDist));
+      }
+      return;
+    }
+
+    if (!this.dragging || this.pointers.size !== 1) return;
     const dx = event.clientX - this.dragStartX;
     const dy = event.clientY - this.dragStartY;
     this.offsetX.set(this.dragOriginX + dx);
@@ -138,19 +148,29 @@ export class AvatarCropDialog {
   }
 
   onPointerUp(event: PointerEvent): void {
-    if (!this.dragging) return;
-    this.dragging = false;
-    (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+    this.pointers.delete(event.pointerId);
+    if (this.pointers.size < 2) this.pinching = false;
+    if (this.pointers.size === 0) {
+      this.dragging = false;
+    } else if (this.pointers.size === 1 && !this.pinching) {
+      const [pt] = this.pointers.values();
+      this.dragging = true;
+      this.dragStartX = pt.x;
+      this.dragStartY = pt.y;
+      this.dragOriginX = this.offsetX();
+      this.dragOriginY = this.offsetY();
+    }
+    try {
+      (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+    } catch {
+      /* pointer may already be released */
+    }
   }
 
   onWheel(event: WheelEvent): void {
     event.preventDefault();
     const delta = event.deltaY > 0 ? -0.08 : 0.08;
     this.setScale(this.scale() + delta);
-  }
-
-  onZoomInput(event: Event): void {
-    this.setScale(Number((event.target as HTMLInputElement).value));
   }
 
   async confirm(): Promise<void> {
@@ -168,6 +188,21 @@ export class AvatarCropDialog {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  private beginPinch(): void {
+    this.pinching = true;
+    this.dragging = false;
+    this.pinchStartDist = this.pointerDistance();
+    this.pinchStartScale = this.scale();
+  }
+
+  private pointerDistance(): number {
+    const pts = [...this.pointers.values()];
+    if (pts.length < 2) return 0;
+    const dx = pts[1].x - pts[0].x;
+    const dy = pts[1].y - pts[0].y;
+    return Math.hypot(dx, dy);
   }
 
   private loadImage(): void {

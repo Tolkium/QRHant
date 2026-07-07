@@ -47,19 +47,36 @@ import { celebrateFind } from '../../../shared/celebrate';
             </button>
           }
           <label
-            class="rounded-full p-1 border-2 cursor-pointer"
+            class="rounded-full p-1 border-2 cursor-pointer shrink-0"
             [class.border-primary]="hasCustomAvatar()"
             [class.border-transparent]="!hasCustomAvatar()"
-            [title]="'profile.avatarUpload.label' | transloco"
+            [class.!border-dashed]="!hasCustomAvatar()"
+            [class.!border-line]="!hasCustomAvatar()"
+            [attr.aria-label]="'profile.avatarUpload.label' | transloco"
           >
             @if (hasCustomAvatar()) {
               <app-avatar [avatar]="session.user()!.avatar" [size]="44" />
             } @else {
               <span
-                class="inline-flex items-center justify-center rounded-full bg-primary/10 text-xl"
+                class="flex flex-col items-center justify-center rounded-full bg-primary/10 text-primary leading-none"
                 style="width: 44px; height: 44px"
-                >📷</span
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span class="text-[9px] font-bold mt-0.5">{{
+                  'profile.avatarUpload.short' | transloco
+                }}</span>
+              </span>
             }
             <input
               type="file"
@@ -69,7 +86,6 @@ import { celebrateFind } from '../../../shared/celebrate';
             />
           </label>
         </div>
-        <p class="text-xs text-muted mt-2">{{ 'profile.avatarUpload.hint' | transloco }}</p>
       </section>
 
       @if (cropFile(); as file) {

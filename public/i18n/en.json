@@ -98,14 +98,13 @@
     "language": "Language",
     "avatar": "Avatar",
     "avatarUpload": {
-      "label": "Upload photo",
-      "hint": "Tap the camera to upload your own photo. Drag to position and use the slider to zoom.",
+      "label": "Upload your photo",
+      "short": "Photo",
       "tooLarge": "Image is too large (max 12 MB)."
     },
     "avatarCrop": {
       "title": "Crop avatar",
-      "hint": "Drag the photo to frame your face. The grid helps with alignment.",
-      "zoom": "Zoom",
+      "hint": "Drag to position. Pinch on mobile or scroll to zoom.",
       "save": "Use photo"
     },
     "nickname": "Nickname",
