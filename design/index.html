@@ -191,8 +191,10 @@
       --nav-style: default;
 
       height: 100%;
+      min-height: 0;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
       background: var(--bg);
       color: var(--ink);
       font-family: var(--font);
@@ -452,11 +454,6 @@
     }
     [data-active-theme="shrine"] .card::before { top: 2px; left: 2px; border-right: none; border-bottom: none; }
     [data-active-theme="shrine"] .card::after { bottom: 2px; right: 2px; border-left: none; border-top: none; }
-    [data-active-theme="shrine"] .card > .card-inner {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      overflow: hidden;
-    }
     [data-active-theme="shrine"] .card-img.found-1 {
       background: linear-gradient(180deg, #87ceeb 0%, #f5d78e 55%, #c0392b 100%);
     }
@@ -734,8 +731,8 @@
     [data-active-theme="scrapbook"] .bottom-nav {
       background: #fffef8;
       border-top: 4px solid var(--ink);
-      margin: 0 0.35rem;
-      border-radius: 0.75rem 0.75rem 0 0;
+      margin: 0 0.5rem 0.5rem;
+      border-radius: 0.75rem;
       box-shadow: 0 -3px 0 var(--primary);
     }
     [data-active-theme="scrapbook"] .nav-scan-fab {
@@ -753,7 +750,7 @@
 
     /* Rich theme shared: swap card layers per theme */
     .card-stamp, .card-sticker, .card-inner { display: none; }
-    .card-scene-art { display: none; width: 55%; max-height: 70%; }
+    .card-scene-art { display: none; width: 78%; height: 78%; max-height: none; }
     [data-active-theme="shrine"] .card-inner { display: block; }
     [data-active-theme="shrine"] .card > .card-img,
     [data-active-theme="shrine"] .card > .card-body,
@@ -857,7 +854,6 @@
       border-radius: 1rem;
     }
     [data-active-theme="kiyo"] .kiyo-art {
-      aspect-ratio: 3/2;
       position: relative;
       overflow: hidden;
       background: linear-gradient(180deg, #c5dff8 0%, #f0e6f0 45%, #e8f4e8 100%);
@@ -883,7 +879,7 @@
       z-index: 2;
     }
     [data-active-theme="kiyo"] .card-kiyo .card-body {
-      padding: 0.65rem 0.75rem 0.75rem;
+      padding: 1.5rem 0.75rem 0.65rem;
     }
     [data-active-theme="kiyo"] .card-title {
       font-weight: 600;
@@ -903,9 +899,9 @@
       background: rgba(255,255,255,0.78);
       backdrop-filter: blur(24px) saturate(180%);
       border-top: 0.5px solid rgba(0,0,0,0.08);
-      margin: 0 0.5rem;
-      border-radius: 1.25rem 1.25rem 0 0;
-      padding-bottom: 0.65rem;
+      margin: 0 0.5rem 0.5rem;
+      border-radius: 1.25rem;
+      padding-bottom: 0.5rem;
     }
     [data-active-theme="kiyo"] .nav-scan-fab {
       background: var(--primary);
@@ -1025,7 +1021,6 @@
       pointer-events: none;
     }
     [data-active-theme="wamon"] .wamon-art {
-      aspect-ratio: 3/2;
       position: relative;
       overflow: hidden;
     }
@@ -1035,8 +1030,7 @@
       display: block;
     }
     [data-active-theme="wamon"] .card-wamon .card-body {
-      padding: 0.55rem 0.65rem 0.7rem;
-      border-top: 1px solid var(--line);
+      padding: 1.5rem 0.65rem 0.65rem;
     }
     [data-active-theme="wamon"] .card-title {
       font-family: var(--font-display);
@@ -1176,8 +1170,6 @@
       box-shadow: var(--shadow);
     }
     [data-active-theme="sumi"] .sumi-art {
-      aspect-ratio: 3/2;
-      position: relative;
       overflow: hidden;
       background: #fff;
     }
@@ -1194,7 +1186,7 @@
       background: linear-gradient(90deg, transparent, var(--line), transparent);
     }
     [data-active-theme="sumi"] .card-sumi .card-body {
-      padding: 0.5rem 0.6rem 0.65rem;
+      padding: 1.5rem 0.65rem 0.6rem;
     }
     [data-active-theme="sumi"] .card-title {
       font-weight: 700;
@@ -1208,9 +1200,6 @@
     }
     [data-active-theme="sumi"] .card.locked-card .sumi-art {
       filter: grayscale(0.85) opacity(0.55);
-    }
-    [data-active-theme="sumi"] .card-sumi {
-      position: relative;
     }
     [data-active-theme="sumi"] .sumi-stamp {
       display: none;
@@ -1350,7 +1339,6 @@
       overflow: hidden;
     }
     [data-active-theme="kawaii"] .kawaii-art {
-      aspect-ratio: 3/2;
       position: relative;
       overflow: hidden;
       background: linear-gradient(180deg, #fff8f9 0%, #fce8ec 100%);
@@ -1359,9 +1347,6 @@
       width: 100%;
       height: 100%;
       display: block;
-    }
-    [data-active-theme="kawaii"] .card-kawaii {
-      position: relative;
     }
     [data-active-theme="kawaii"] .kawaii-badge {
       display: none;
@@ -1382,7 +1367,7 @@
     }
     [data-active-theme="kawaii"] .card:not(.locked-card) .kawaii-badge { display: block; }
     [data-active-theme="kawaii"] .card-kawaii .card-body {
-      padding: 0.55rem 0.7rem 0.7rem;
+      padding: 1.5rem 0.65rem 0.65rem;
     }
     [data-active-theme="kawaii"] .card-title {
       font-weight: 800;
@@ -1414,8 +1399,9 @@
     [data-active-theme="kawaii"] .bottom-nav {
       background: rgba(255, 255, 255, 0.96);
       border-top: none;
+      margin: 0 0.5rem 0.5rem;
       box-shadow: 0 -4px 20px rgba(232, 145, 157, 0.1);
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      border-radius: var(--radius-lg);
     }
     [data-active-theme="kawaii"] .nav-scan-fab {
       background: linear-gradient(145deg, #f4a0b0, var(--primary));
@@ -1533,9 +1519,6 @@
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-    [data-active-theme="izakaya"] .card-izakaya {
-      position: relative;
-    }
     [data-active-theme="izakaya"] .izakaya-tag {
       display: none;
       position: absolute;
@@ -1553,13 +1536,13 @@
     }
     [data-active-theme="izakaya"] .card:not(.locked-card) .izakaya-tag { display: block; }
     [data-active-theme="izakaya"] .izakaya-art {
-      padding: 0.85rem 0.85rem 0.35rem;
       display: flex;
       justify-content: center;
+      align-items: center;
     }
     [data-active-theme="izakaya"] .izakaya-plate {
-      width: 4.5rem;
-      height: 4.5rem;
+      width: 72%;
+      height: 62%;
       border-radius: 50%;
       background: #fff;
       display: flex;
@@ -1573,7 +1556,7 @@
       height: 85%;
     }
     [data-active-theme="izakaya"] .card-izakaya .card-body {
-      padding: 0.4rem 0.75rem 0.75rem;
+      padding: 1.5rem 0.75rem 0.7rem;
       text-align: center;
     }
     [data-active-theme="izakaya"] .card-title {
@@ -1743,14 +1726,13 @@
       box-shadow: var(--shadow);
     }
     [data-active-theme="eats"] .card-eats {
-      position: relative;
       text-align: center;
     }
     [data-active-theme="eats"] .eats-art {
-      padding: 0.65rem 0.5rem 0.25rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-end;
     }
     [data-active-theme="eats"] .eats-wood {
       width: 3.2rem;
@@ -1761,13 +1743,13 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     [data-active-theme="eats"] .eats-food svg {
-      width: 3.5rem;
-      height: 3.5rem;
+      width: 100%;
+      height: 100%;
       display: block;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
     [data-active-theme="eats"] .card-eats .card-body {
-      padding: 0.35rem 0.55rem 0.65rem;
+      padding: 1.5rem 0.75rem 0.7rem;
     }
     [data-active-theme="eats"] .card-title {
       font-weight: 800;
@@ -1941,14 +1923,11 @@
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-    [data-active-theme="zen"] .card-zen {
-      position: relative;
-    }
     [data-active-theme="zen"] .zen-kanji {
       position: absolute;
       top: 0.45rem;
       right: 0.45rem;
-      z-index: 2;
+      z-index: 4;
       width: 1.75rem;
       height: 1.75rem;
       display: flex;
@@ -1964,11 +1943,8 @@
     [data-active-theme="zen"] .zen-kanji.ink { background: var(--accent); color: #faf6ef; }
     [data-active-theme="zen"] .zen-kanji.red { background: var(--primary); color: #faf6ef; }
     [data-active-theme="zen"] .zen-art {
-      aspect-ratio: 1/1;
-      max-height: 7rem;
       overflow: hidden;
       background: #faf6ef;
-      border-bottom: 1px solid var(--line);
     }
     [data-active-theme="zen"] .zen-art svg {
       width: 100%;
@@ -1976,7 +1952,7 @@
       display: block;
     }
     [data-active-theme="zen"] .card-zen .card-body {
-      padding: 0.5rem 0.6rem 0.65rem;
+      padding: 1.5rem 0.65rem 0.65rem;
     }
     [data-active-theme="zen"] .card-title {
       font-weight: 700;
@@ -2222,10 +2198,10 @@
       background: rgba(255,255,255,0.05);
     }
     [data-active-theme="liquid"] .bottom-nav {
-      margin: 0 0.5rem;
-      border-radius: 1.5rem 1.5rem 0 0;
+      margin: 0 0.5rem 0.5rem;
+      border-radius: 1.5rem;
       border-top: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
     }
     [data-active-theme="liquid"] .nav-scan-fab {
       background: rgba(255,255,255,0.18);
@@ -2440,10 +2416,11 @@
 
     .app-main {
       flex: 1;
+      min-height: 0;
       overflow: hidden;
       position: relative;
     }
-    .screen { display: none; height: 100%; flex-direction: column; overflow: hidden; }
+    .screen { display: none; height: 100%; min-height: 0; flex-direction: column; overflow: hidden; position: relative; }
     .screen.active { display: flex; }
 
     /* Progress header */
@@ -2507,8 +2484,12 @@
       padding: 0.75rem;
       overflow-y: auto;
       flex: 1;
+      min-height: 0;
     }
     .card {
+      position: relative;
+      aspect-ratio: 3/4;
+      min-height: 130px;
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius-lg);
@@ -2516,29 +2497,263 @@
       box-shadow: var(--shadow);
     }
     .card-img {
-      aspect-ratio: 3/2;
+      position: absolute;
+      inset: 0;
+      aspect-ratio: unset;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 2.25rem;
     }
     .card-img.found-1 { background: linear-gradient(135deg, #a855f7 30%, #ec4899); }
     .card-img.found-2 { background: linear-gradient(135deg, #06b6d4 30%, #3b82f6); }
     .card-img.locked {
-      background: var(--line);
-      font-size: 1.25rem;
+      background: linear-gradient(160deg, color-mix(in srgb, var(--line) 70%, var(--muted)), var(--line));
+      font-size: 1.5rem;
       color: var(--muted);
-      opacity: 0.85;
+      opacity: 0.95;
     }
     .card.locked-card {
       border-style: dashed;
       border-color: color-mix(in srgb, var(--line) 80%, var(--muted));
-      background: color-mix(in srgb, var(--bg) 60%, var(--surface));
       box-shadow: none;
     }
-    .card-body { padding: 0.5rem 0.6rem; }
-    .card-title { font-weight: 700; font-size: 0.78rem; line-height: 1.2; }
-    .card-meta { font-size: 0.65rem; color: var(--muted); margin-top: 0.15rem; }
+    .card-body {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 1.75rem 0.55rem 0.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 55%, transparent 100%);
+      color: #fff;
+    }
+    .card-title { font-weight: 700; font-size: 0.78rem; line-height: 1.2; color: inherit; }
+    .card-meta { font-size: 0.65rem; color: rgba(255,255,255,0.82); margin-top: 0.15rem; }
+    .card.locked-card .card-body {
+      background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 50%, transparent 100%);
+    }
+
+    /* Full-bleed theme card layers */
+    .card-kiyo, .card-wamon, .card-sumi, .card-kawaii, .card-izakaya, .card-eats, .card-zen, .card-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .card-kiyo .kiyo-art,
+    .card-wamon .wamon-art,
+    .card-sumi .sumi-art,
+    .card-kawaii .kawaii-art,
+    .card-izakaya .izakaya-art,
+    .card-eats .eats-art,
+    .card-zen .zen-art {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: unset;
+      width: 100%;
+      height: 100%;
+    }
+    .card-kiyo .kiyo-art svg,
+    .card-wamon .wamon-art svg,
+    .card-sumi .sumi-art svg,
+    .card-kawaii .kawaii-art svg,
+    .card-zen .zen-art svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .card-inner .card-img {
+      position: absolute;
+      inset: 0;
+    }
+    .card-kiyo .card-body,
+    .card-wamon .card-body,
+    .card-sumi .card-body,
+    .card-kawaii .card-body,
+    .card-izakaya .card-body,
+    .card-eats .card-body,
+    .card-zen .card-body,
+    .card-inner .card-body {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      margin-top: 0;
+      border-top: none;
+    }
+    [data-active-theme="kiyo"] .card-kiyo .card-body {
+      background: linear-gradient(to top, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.72) 55%, transparent 100%);
+      backdrop-filter: blur(6px);
+      color: var(--ink);
+      padding: 1.5rem 0.75rem 0.65rem;
+    }
+    [data-active-theme="kiyo"] .card-kiyo .card-meta { color: var(--muted); }
+    [data-active-theme="wamon"] .card-wamon .card-body {
+      background: linear-gradient(to top, rgba(250,247,242,0.96) 0%, rgba(250,247,242,0.7) 55%, transparent 100%);
+      color: var(--ink);
+      padding: 1.5rem 0.65rem 0.65rem;
+    }
+    [data-active-theme="wamon"] .card-wamon .card-meta { color: var(--muted); }
+    [data-active-theme="sumi"] .card-sumi .card-body {
+      background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 50%, transparent 100%);
+      color: var(--ink);
+      padding: 1.5rem 0.65rem 0.6rem;
+    }
+    [data-active-theme="sumi"] .card-sumi .card-meta { color: var(--muted); }
+    [data-active-theme="kawaii"] .card-kawaii .card-body {
+      background: linear-gradient(to top, rgba(255,248,249,0.96) 0%, rgba(255,248,249,0.72) 55%, transparent 100%);
+      color: var(--ink);
+      padding: 1.5rem 0.65rem 0.65rem;
+    }
+    [data-active-theme="kawaii"] .card-kawaii .card-meta { color: var(--muted); }
+    [data-active-theme="izakaya"] .card-izakaya .card-body {
+      background: linear-gradient(to top, rgba(233,84,46,0.96) 0%, rgba(233,84,46,0.55) 55%, transparent 100%);
+      color: #fff;
+      padding: 1.5rem 0.75rem 0.7rem;
+    }
+    [data-active-theme="izakaya"] .card-izakaya .izakaya-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #ff8a65 0%, #e9542e 55%, #c43e1a 100%);
+      padding: 0;
+    }
+    [data-active-theme="izakaya"] .izakaya-plate {
+      width: 72%;
+      height: 62%;
+      border-radius: 50%;
+    }
+    [data-active-theme="eats"] .card-eats .card-body {
+      background: linear-gradient(to top, rgba(26,35,126,0.92) 0%, rgba(26,35,126,0.5) 55%, transparent 100%);
+      color: #fff;
+      padding: 1.5rem 0.75rem 0.7rem;
+    }
+    [data-active-theme="eats"] .card-eats .eats-art {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: linear-gradient(180deg, #fff9c4 0%, #ffc107 45%, #ffb300 100%);
+      padding: 0;
+    }
+    [data-active-theme="eats"] .eats-food {
+      width: 78%;
+      height: 72%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    [data-active-theme="eats"] .eats-food svg { width: 100%; height: 100%; }
+    [data-active-theme="zen"] .card-zen .card-body {
+      background: linear-gradient(to top, rgba(250,246,239,0.96) 0%, rgba(250,246,239,0.68) 55%, transparent 100%);
+      color: var(--ink);
+      padding: 1.5rem 0.65rem 0.65rem;
+    }
+    [data-active-theme="zen"] .card-zen .card-meta { color: var(--muted); }
+    [data-active-theme="zen"] .card-zen .zen-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    [data-active-theme="zen"] .card-zen .zen-art svg { width: 88%; height: 88%; }
+    [data-active-theme="sumi"] .card-sumi,
+    [data-active-theme="kawaii"] .card-kawaii,
+    [data-active-theme="izakaya"] .card-izakaya,
+    [data-active-theme="eats"] .card-eats,
+    [data-active-theme="zen"] .card-zen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    [data-active-theme="sumi"] .card-sumi .sumi-art,
+    [data-active-theme="kawaii"] .card-kawaii .kawaii-art,
+    [data-active-theme="izakaya"] .card-izakaya .izakaya-art,
+    [data-active-theme="eats"] .card-eats .eats-art,
+    [data-active-theme="zen"] .card-zen .zen-art {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      aspect-ratio: unset;
+      border-bottom: none;
+    }
+    [data-active-theme="shrine"] .card-inner .card-body {
+      background: linear-gradient(to top, rgba(255,248,240,0.96) 0%, rgba(255,248,240,0.65) 55%, transparent 100%);
+      color: var(--ink);
+      padding: 1.5rem 0.55rem 0.5rem;
+    }
+    [data-active-theme="shrine"] .card-inner .card-meta { color: var(--muted); }
+    [data-active-theme="shrine"] .card > .card-inner {
+      position: absolute;
+      inset: 5px;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      border-radius: calc(var(--radius-lg) - 4px);
+    }
+
+    /* Open card detail view */
+    .card-detail-card .eats-stepper { display: none; }
+    .screen[data-screen="card"] .card-detail-top {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+    }
+    .card-detail-back {
+      border: none;
+      background: none;
+      color: var(--primary);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0.25rem 0;
+    }
+    .card-detail-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .screen[data-screen="card"] .card-detail-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+    .card-detail-card {
+      aspect-ratio: 3/4;
+      max-height: 72%;
+      margin: 0 auto 0.75rem;
+      width: 100%;
+    }
+    .card-detail-copy {
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--muted);
+      padding: 0 0.15rem 0.5rem;
+    }
+    .app:has(.screen[data-screen="card"].active) .bottom-nav,
+    .app:has(.screen[data-screen="settings"].active) .bottom-nav,
+    .app:has(.screen[data-screen="auth"].active) .bottom-nav {
+      display: none !important;
+    }
+    .app:has(.screen[data-screen="card"].active) .top-nav,
+    .app:has(.screen[data-screen="settings"].active) .top-nav {
+      display: none !important;
+    }
 
     /* Scan screen */
     .scan-view {
@@ -2592,6 +2807,7 @@
       padding: 0.75rem;
       overflow-y: auto;
       flex: 1;
+      min-height: 0;
     }
     .rank-item {
       display: flex;
@@ -2651,6 +2867,7 @@
     /* Settings / Profile screen */
     .settings-screen {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 0.65rem 0.75rem 1.25rem;
       display: flex;
@@ -2856,15 +3073,18 @@
       border: 2px solid var(--accent);
     }
 
-    /* Bottom nav — always exactly 3 slots via flex */
+    /* Bottom nav — floating dock inside phone frame */
     .bottom-nav {
       display: flex;
       align-items: flex-end;
       justify-content: space-around;
       background: var(--surface);
-      border-top: 1px solid var(--line);
-      padding: 0.4rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+      border: 1px solid var(--line);
+      margin: 0 0.55rem 0.55rem;
+      border-radius: 1.15rem;
+      padding: 0.35rem 0.5rem 0.45rem;
       flex-shrink: 0;
+      box-shadow: var(--shadow);
     }
     .nav-tab {
       display: flex;
@@ -2929,7 +3149,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: -1.25rem;
+      margin-top: -1rem;
       box-shadow: 0 4px 16px color-mix(in srgb, var(--primary) 40%, transparent);
       border: 3px solid var(--bg);
       cursor: pointer;
@@ -3247,6 +3467,7 @@
       padding: 0.5rem 0.75rem;
       overflow-y: auto;
       flex: 1;
+      min-height: 0;
     }
     [data-active-layout="compact"] .card-row {
       display: flex;
@@ -3893,6 +4114,96 @@
                 </div>
               </div>
 
+              <!-- Open card -->
+              <div class="screen" data-screen="card">
+                <div class="card-detail-top">
+                  <button type="button" class="card-detail-back" data-go="codes">← Back</button>
+                  <span class="card-detail-label">Open card</span>
+                </div>
+                <div class="card-detail-scroll">
+                  <div class="card card-detail-card">
+                    <div class="card-zen">
+                      <span class="zen-kanji parch">狩</span>
+                      <div class="zen-art"><svg viewBox="0 0 120 120"><rect fill="#faf6ef" width="120" height="120"/><path d="M60 95 L38 95 L42 68 L32 68 L60 35 L88 68 L78 68 L82 95Z" fill="#1a1a1a" opacity="0.75"/><rect x="52" y="58" width="16" height="37" fill="#1a1a1a" opacity="0.5"/><circle cx="35" cy="28" r="9" fill="#c41e3a"/><circle cx="55" cy="18" r="7" fill="#c41e3a" opacity="0.85"/><circle cx="88" cy="32" r="8" fill="#c41e3a" opacity="0.9"/><circle cx="72" cy="15" r="6" fill="#c41e3a" opacity="0.7"/></svg></div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Found · 2h ago</div></div>
+                    </div>
+                    <div class="card-eats">
+                      <div class="eats-art"><div class="eats-food"><svg viewBox="0 0 56 56"><ellipse cx="28" cy="36" rx="20" ry="12" fill="#fff" stroke="#1a237e" stroke-width="1.8"/><path d="M12 32 Q28 18 44 32" fill="#ff8a65" stroke="#1a237e" stroke-width="1.5"/><path d="M16 30 Q28 20 40 30" fill="#ffab91" stroke="#1a237e" stroke-width="1"/></svg></div><div class="eats-wood"></div></div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Sake · Salmon</div><div class="eats-stepper"><span>−</span><span class="eats-qty">1</span><span>+</span></div></div>
+                    </div>
+                    <div class="card-izakaya">
+                      <span class="izakaya-tag">New</span>
+                      <div class="izakaya-art"><div class="izakaya-plate"><svg viewBox="0 0 60 60"><ellipse cx="30" cy="32" rx="22" ry="14" fill="#f5f0e6"/><ellipse cx="30" cy="28" rx="16" ry="9" fill="#ff8a65"/><ellipse cx="30" cy="26" rx="12" ry="6" fill="#ffab91"/><circle cx="22" cy="38" r="4" fill="#f5f0e6" stroke="#ddd" stroke-width="0.5"/><circle cx="38" cy="38" r="4" fill="#f5f0e6" stroke="#ddd" stroke-width="0.5"/></svg></div></div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Salmon set · mural hunt</div><span class="izakaya-pill">Found ✓</span></div>
+                    </div>
+                    <div class="card-kawaii">
+                      <span class="kawaii-badge">★</span>
+                      <div class="kawaii-art">
+                        <svg viewBox="0 0 200 120"><rect fill="#fff8f9" width="200" height="120"/><circle cx="155" cy="35" r="22" fill="#ffe566" opacity="0.85"/><circle cx="40" cy="25" r="14" fill="#fff" opacity="0.7"/><circle cx="65" cy="18" r="10" fill="#fff" opacity="0.5"/><path d="M30 85 Q60 60 100 75 Q140 90 170 70" stroke="#f4a0b0" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="75" y="55" width="50" height="35" rx="8" fill="#e8919d" opacity="0.5"/><circle cx="88" cy="68" r="6" fill="#6eb5e0"/><circle cx="100" cy="72" r="6" fill="#f5a623"/><circle cx="112" cy="68" r="6" fill="#7bc67e"/></svg>
+                      </div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Found 2h ago</div></div>
+                    </div>
+                    <div class="card-sumi">
+                      <span class="sumi-stamp">印</span>
+                      <div class="sumi-art">
+                        <svg viewBox="0 0 200 120"><circle cx="42" cy="32" r="18" fill="#e60012"/><line x1="28" y1="30" x2="56" y2="30" stroke="#fff" stroke-width="1" opacity="0.35"/><path d="M55 100 L100 35 L145 100" fill="none" stroke="#1a1a1a" stroke-width="2"/><path d="M72 82 L100 48 L128 82" fill="#888" opacity="0.2"/><path d="M88 95 L100 58 L112 95" fill="#fff"/><ellipse cx="100" cy="104" rx="55" ry="6" fill="#ccc" opacity="0.15"/></svg>
+                      </div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Found 2h ago</div></div>
+                    </div>
+                    <div class="card-wamon">
+                      <div class="wamon-art">
+                        <svg viewBox="0 0 200 120"><defs><pattern id="wm-detail" width="14" height="7" patternUnits="userSpaceOnUse"><path d="M0 7 Q3.5 0 7 7 Q10.5 0 14 7" fill="none" stroke="#b8956a" stroke-width="0.8"/></pattern></defs><rect fill="#f5efe6" width="200" height="120"/><rect fill="url(#wm-detail)" width="200" height="120" opacity="0.55"/><circle cx="100" cy="55" r="32" fill="#b5352d" opacity="0.12"/><circle cx="165" cy="25" r="5" fill="#fff" stroke="#b5352d" stroke-width="0.6"/></svg>
+                      </div>
+                      <div class="card-body"><div class="card-title">Sunrise Mural</div><div class="card-meta">Found 2h ago</div></div>
+                    </div>
+                    <div class="card-kiyo">
+                      <div class="kiyo-art">
+                        <span class="kiyo-badge">発見</span>
+                        <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice">
+                          <defs>
+                            <linearGradient id="kiyoSkyDetail" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b8d4f0"/><stop offset="100%" stop-color="#f0e8f4"/></linearGradient>
+                            <linearGradient id="kiyoFujiDetail" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5a6a7a"/><stop offset="100%" stop-color="#2c3e50"/></linearGradient>
+                          </defs>
+                          <rect width="200" height="120" fill="url(#kiyoSkyDetail)"/>
+                          <ellipse cx="170" cy="28" rx="22" ry="22" fill="#fff" opacity="0.9"/>
+                          <path d="M60 95 L100 35 L140 95 Z" fill="url(#kiyoFujiDetail)"/>
+                          <path d="M95 50 L100 35 L105 50" fill="#fff" opacity="0.85"/>
+                          <path d="M0 95 Q30 80 60 95" fill="#8fbc8f" opacity="0.5"/>
+                          <path d="M140 95 Q170 78 200 95" fill="#8fbc8f" opacity="0.5"/>
+                          <rect x="0" y="95" width="200" height="25" fill="#6b9b6b" opacity="0.35"/>
+                          <path d="M155 70 Q175 55 195 68" stroke="#e8a0b8" stroke-width="2.5" fill="none"/>
+                          <circle cx="178" cy="58" r="5" fill="#f5b8c8"/><circle cx="190" cy="64" r="4" fill="#f8c8d8"/><circle cx="168" cy="66" r="3.5" fill="#f0b0c0"/>
+                          <path d="M30 88 L35 78 L40 88 Z" fill="#c0392b" opacity="0.7"/><path d="M25 88 L50 88" stroke="#c0392b" stroke-width="2.5"/>
+                        </svg>
+                      </div>
+                      <div class="card-body">
+                        <div class="card-title">Sunrise Mural</div>
+                        <div class="card-meta">Found 2h ago</div>
+                      </div>
+                    </div>
+                    <div class="card-inner">
+                      <div class="card-img found-1">
+                        <svg class="card-scene-art card-scene-torii" viewBox="0 0 64 48" fill="none"><path d="M6 38h52M10 38V22M54 38V22M4 22h56M32 10v12" stroke="#c0392b" stroke-width="3"/><path d="M22 22h20v16H22z" fill="#c0392b" opacity="0.85"/><path d="M18 18 Q32 6 46 18" stroke="#d4a012" stroke-width="2.5" fill="none"/></svg>
+                      </div>
+                      <div class="card-body">
+                        <div class="card-title">Sunrise Mural</div>
+                        <div class="card-meta">Found 2h ago</div>
+                      </div>
+                    </div>
+                    <span class="card-stamp">✓</span>
+                    <span class="card-sticker">⭐</span>
+                    <div class="card-img found-1">
+                      <svg class="card-scene-art" viewBox="0 0 48 36" fill="none"><circle cx="36" cy="10" r="7" fill="#ffe66d"/><path d="M4 30 Q24 8 44 30" fill="#ff6b9d" opacity="0.7"/></svg>
+                    </div>
+                    <div class="card-body">
+                      <div class="card-title">Sunrise Mural</div>
+                      <div class="card-meta">Found 2h ago</div>
+                    </div>
+                  </div>
+                  <p class="card-detail-copy">Large-format art card from the north gate mural. Scan the hidden QR nearby to unlock the full illustration and artist notes.</p>
+                </div>
+              </div>
+
               <!-- Scan -->
               <div class="screen" data-screen="scan">
                 <div class="scan-view">
@@ -4050,6 +4361,7 @@
           <div class="preview-label">Preview screen</div>
           <div class="screen-tabs" id="screen-tabs">
             <button class="screen-tab on" data-screen="codes">Cards</button>
+            <button class="screen-tab" data-screen="card">Open</button>
             <button class="screen-tab" data-screen="scan">Scan</button>
             <button class="screen-tab" data-screen="rank">Rank</button>
             <button class="screen-tab" data-screen="settings">Settings</button>
