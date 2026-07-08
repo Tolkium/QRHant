@@ -83,24 +83,20 @@
       border-color: transparent;
       box-shadow: 0 0 0 2px var(--lab-ink), 0 4px 20px rgba(0,0,0,0.4);
     }
-    .theme-btn[data-theme="festival"] { background: linear-gradient(135deg, #6d28d9, #a855f7); }
     .theme-btn[data-theme="neon"] { background: linear-gradient(135deg, #0f172a, #06b6d4); color: #e0f7fa; }
-    .theme-btn[data-theme="sunny"] { background: linear-gradient(135deg, #ea580c, #fbbf24); color: #1c1008; }
     .theme-btn[data-theme="pop"] { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
     .theme-btn[data-theme="forest"] { background: linear-gradient(135deg, #14532d, #4ade80); color: #f0fdf4; }
     .theme-btn[data-theme="arcade"] { background: linear-gradient(135deg, #312e81, #f43f5e); }
     .theme-btn[data-theme="sakura"] { background: linear-gradient(135deg, #faf6f1, #e8a0b8); color: #2d2640; }
-    .theme-btn[data-theme="shibuya"] { background: linear-gradient(135deg, #0d0d12, #ff2d6a); color: #ffe4ec; }
     .theme-btn[data-theme="shrine"] { background: linear-gradient(135deg, #f5f0e6, #c0392b); color: #3d2314; }
     .theme-btn[data-theme="atlas"] { background: linear-gradient(135deg, #f4e4bc, #5c3d2e); color: #2c1810; }
-    .theme-btn[data-theme="scrapbook"] { background: linear-gradient(135deg, #ffe66d, #ff6b9d); color: #3d2c1e; }
+    .theme-btn[data-theme="scrapbook"] { background: linear-gradient(135deg, #ffe66d, #ff6b9d); color: #2d2838; }
     .theme-btn[data-theme="kiyo"] { background: linear-gradient(135deg, #f5f5f7, #1d1d1f); color: #1d1d1f; border-color: #e8a0b8; }
     .theme-btn[data-theme="liquid"] { background: linear-gradient(135deg, #667eea, #764ba2, #f093fb); color: #fff; }
     .theme-btn[data-theme="wamon"] { background: linear-gradient(135deg, #f0ebe3, #b5352d); color: #2c2620; border-color: #b8956a; }
     .theme-btn[data-theme="sumi"] { background: linear-gradient(135deg, #ffffff, #e60012); color: #1a1a1a; border-color: #ccc; }
     .theme-btn[data-theme="kawaii"] { background: linear-gradient(135deg, #fff5f7, #f4a0b0); color: #4a3728; border-color: #f8d0d8; }
     .theme-btn[data-theme="izakaya"] { background: linear-gradient(135deg, #2d3277, #e9542e); color: #fff; border-color: #e9542e; }
-    .theme-btn[data-theme="eats"] { background: linear-gradient(135deg, #ffc107, #1a237e); color: #fff; border-color: #1a237e; }
     .theme-btn[data-theme="zen"] { background: linear-gradient(135deg, #e5d9c3, #c41e3a); color: #1a1a1a; border-color: #8b7355; }
 
     .layout-btn {
@@ -173,21 +169,21 @@
 
     /* ── Theme tokens (overridden per theme) ── */
     .app {
-      --primary: #6d28d9;
-      --primary-ink: #fff;
-      --accent: #f59e0b;
-      --bg: #f8f7fc;
-      --surface: #fff;
-      --ink: #17141f;
-      --muted: #6b6580;
-      --line: #e5e1f0;
-      --good: #16a34a;
-      --bad: #dc2626;
-      --radius: 1rem;
-      --radius-lg: 1.25rem;
-      --shadow: 0 2px 12px rgba(0,0,0,0.06);
-      --font: "DM Sans", system-ui, sans-serif;
-      --font-display: "Outfit", sans-serif;
+      --primary: #22d3ee;
+      --primary-ink: #042f2e;
+      --accent: #f472b6;
+      --bg: #0c1222;
+      --surface: #151d32;
+      --ink: #e8f4ff;
+      --muted: #7b8db5;
+      --line: #243049;
+      --good: #34d399;
+      --bad: #fb7185;
+      --radius: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow: 0 0 24px rgba(34, 211, 238, 0.12);
+      --font: "Space Grotesk", system-ui, sans-serif;
+      --font-display: "Syne", sans-serif;
       --nav-style: default;
 
       height: 100%;
@@ -199,14 +195,6 @@
       color: var(--ink);
       font-family: var(--font);
       font-size: 15px;
-    }
-
-    /* Theme: Festival Pulse (evolved current) */
-    [data-active-theme="festival"] .app {
-      --primary: #6d28d9;
-      --accent: #f59e0b;
-      --bg: #f8f7fc;
-      --font-display: "Outfit", sans-serif;
     }
 
     /* Theme: Neon Night Hunt */
@@ -227,25 +215,6 @@
       --font: "Space Grotesk", system-ui, sans-serif;
       --font-display: "Syne", sans-serif;
       --nav-style: neon;
-    }
-
-    /* Theme: Sunny Adventure */
-    [data-active-theme="sunny"] .app {
-      --primary: #c2410c;
-      --primary-ink: #fff;
-      --accent: #eab308;
-      --bg: #fffbeb;
-      --surface: #fff;
-      --ink: #1c1008;
-      --muted: #78716c;
-      --line: #fde68a;
-      --good: #15803d;
-      --bad: #b91c1c;
-      --radius: 1.25rem;
-      --radius-lg: 1.75rem;
-      --shadow: 0 4px 16px rgba(194, 65, 12, 0.1);
-      --font-display: "Outfit", sans-serif;
-      --nav-style: pill;
     }
 
     /* Theme: Bold Pop */
@@ -335,49 +304,6 @@
     [data-active-theme="sakura"] .chip { border-radius: 0.35rem; }
     [data-active-theme="sakura"] .nav-scan-fab {
       box-shadow: 0 4px 14px rgba(61, 74, 107, 0.2);
-    }
-
-    /* Theme: Neon Shibuya — urban night, sign glow */
-    [data-active-theme="shibuya"] .app {
-      --primary: #ff2d6a;
-      --primary-ink: #1a0810;
-      --accent: #ffd400;
-      --bg: #0a0a0f;
-      --surface: #14141c;
-      --ink: #f2ece6;
-      --muted: #8e8898;
-      --line: #2a2635;
-      --good: #3dd68c;
-      --bad: #ff5c7a;
-      --radius: 0.5rem;
-      --radius-lg: 0.65rem;
-      --shadow: 0 0 20px rgba(255, 45, 106, 0.15);
-      --font: "M PLUS Rounded 1c", system-ui, sans-serif;
-      --font-display: "Syne", sans-serif;
-      --nav-style: shibuya;
-    }
-    [data-active-theme="shibuya"] .app-header {
-      border-bottom-color: var(--primary);
-      box-shadow: 0 2px 24px rgba(255, 45, 106, 0.12);
-    }
-    [data-active-theme="shibuya"] .nav-scan-fab {
-      box-shadow: 0 0 20px var(--primary);
-      border: 2px solid var(--accent);
-    }
-    [data-active-theme="shibuya"] .nav-tab.active {
-      color: var(--accent);
-      text-shadow: 0 0 10px rgba(255, 212, 0, 0.5);
-    }
-    [data-active-theme="shibuya"] .btn {
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.78rem;
-    }
-
-    [data-active-theme="shibuya"] .btn {
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      font-size: 0.78rem;
     }
 
     /* ══════════════════════════════════════════
@@ -622,25 +548,25 @@
       --primary: #ff6b9d;
       --primary-ink: #fff;
       --accent: #4ecdc4;
-      --bg: #d4b896;
-      --surface: #fffef8;
-      --ink: #3d2c1e;
-      --muted: #7a6555;
-      --line: #e8d4c0;
+      --bg: #fff8f3;
+      --surface: #ffffff;
+      --ink: #2d2838;
+      --muted: #6e6672;
+      --line: #f0e4dc;
       --good: #06d6a0;
       --bad: #ef476f;
       --radius: 0.4rem;
       --radius-lg: 0.25rem;
-      --shadow: 3px 4px 0 rgba(61,44,30,0.15);
+      --shadow: 3px 4px 0 rgba(45, 40, 56, 0.12);
       --font: "Caveat", cursive;
       --font-display: "Caveat", cursive;
       background-image:
-        radial-gradient(circle at 20% 30%, rgba(255,107,157,0.15) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(78,205,196,0.15) 0%, transparent 25%),
-        url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23a08060' opacity='0.3'/%3E%3C/svg%3E");
+        radial-gradient(circle at 18% 28%, rgba(255,107,157,0.12) 0%, transparent 28%),
+        radial-gradient(circle at 82% 72%, rgba(78,205,196,0.14) 0%, transparent 28%),
+        url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffb8d0' opacity='0.18'/%3E%3C/svg%3E");
     }
     [data-active-theme="scrapbook"] .app-header {
-      background: #fffef8;
+      background: #ffffff;
       border-bottom: 4px solid var(--primary);
       transform: rotate(-0.3deg);
       margin: 0 0.25rem;
@@ -651,7 +577,7 @@
     [data-active-theme="scrapbook"] .progress-block {
       margin: 0.5rem 0.55rem 0;
       padding: 0.65rem 0.75rem;
-      background: #fffef8;
+      background: #ffffff;
       border: 3px solid var(--ink);
       box-shadow: 4px 4px 0 var(--primary);
       transform: rotate(0.4deg);
@@ -696,7 +622,7 @@
       width: 28px;
       height: 12px;
       background: rgba(255,230,109,0.75);
-      border: 1px solid rgba(180,160,80,0.4);
+      border: 1px solid rgba(45, 40, 56, 0.12);
       z-index: 3;
     }
     [data-active-theme="scrapbook"] .card::before { top: -5px; left: 12px; transform: rotate(-8deg); }
@@ -721,7 +647,7 @@
       filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.2));
     }
     [data-active-theme="scrapbook"] .card.locked-card {
-      background: #f0ebe0;
+      background: #f5f0eb;
       opacity: 0.85;
       box-shadow: none;
       border: 2px dashed var(--muted);
@@ -729,7 +655,7 @@
     [data-active-theme="scrapbook"] .card.locked-card::before,
     [data-active-theme="scrapbook"] .card.locked-card::after { display: none; }
     [data-active-theme="scrapbook"] .bottom-nav {
-      background: #fffef8;
+      background: #ffffff;
       border-top: 4px solid var(--ink);
       margin: 0 0.5rem 0.5rem;
       border-radius: 0.75rem;
@@ -1648,209 +1574,6 @@
     .izakaya-noodles { top: -2%; left: -8%; width: 55%; opacity: 0.9; }
     .izakaya-waves { bottom: 0; right: 0; width: 70%; opacity: 0.15; }
 
-    /* ══ Theme: JapanEats — ref image ⑤ yellow + navy food-delivery pop ══ */
-    [data-active-theme="eats"] .app {
-      --primary: #1a237e;
-      --primary-ink: #ffffff;
-      --accent: #ffc107;
-      --bg: #ffc107;
-      --surface: #ffffff;
-      --ink: #1a237e;
-      --muted: #9e9e9e;
-      --line: #ffe082;
-      --good: #43a047;
-      --bad: #e53935;
-      --radius: 1rem;
-      --radius-lg: 1.2rem;
-      --shadow: 0 4px 16px rgba(26, 35, 126, 0.12);
-      --font: "M PLUS Rounded 1c", "DM Sans", sans-serif;
-      --font-display: "M PLUS Rounded 1c", sans-serif;
-      position: relative;
-      background-color: var(--bg);
-      background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 12 L6 6 L12 12 L18 6 L24 12 L18 18 L12 12 L6 18Z' fill='none' stroke='%23ffb300' stroke-width='0.6' opacity='0.35'/%3E%3C/svg%3E");
-    }
-    [data-active-theme="eats"] .app-header {
-      background: transparent;
-      border-bottom: none;
-    }
-    [data-active-theme="eats"] .app-logo {
-      font-weight: 800;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-      color: #fff;
-    }
-    [data-active-theme="eats"] .app-logo .logo-japan { color: #fff; }
-    [data-active-theme="eats"] .app-logo .logo-eats { color: var(--primary); }
-    [data-active-theme="eats"] .badge-sync {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-    }
-    [data-active-theme="eats"] .header-scan-btn { color: var(--primary); }
-    [data-active-theme="eats"] .progress-block {
-      margin: 0.5rem 0.65rem 0;
-      padding: 0.85rem 0.95rem;
-      background: rgba(255, 193, 7, 0.6);
-      border: none;
-      border-radius: var(--radius-lg);
-      background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 L5 5 L10 10 L15 5 L20 10' fill='none' stroke='%23ffb300' stroke-width='0.8' opacity='0.5'/%3E%3C/svg%3E");
-    }
-    [data-active-theme="eats"] .progress-block,
-    [data-active-theme="eats"] .progress-label { color: #fff; }
-    [data-active-theme="eats"] .progress-label strong { color: var(--primary); background: #fff; padding: 0.1rem 0.35rem; border-radius: 0.35rem; }
-    [data-active-theme="eats"] .progress-bar {
-      background: rgba(255, 255, 255, 0.45);
-      height: 8px;
-      border-radius: 99px;
-    }
-    [data-active-theme="eats"] .progress-fill {
-      background: var(--primary);
-      border-radius: 99px;
-    }
-    [data-active-theme="eats"] .chip {
-      border: none;
-      background: #e0e0e0;
-      color: #757575;
-      border-radius: 99px;
-      font-weight: 700;
-      font-size: 0.68rem;
-    }
-    [data-active-theme="eats"] .chip.on {
-      background: var(--primary);
-      color: #fff;
-    }
-    [data-active-theme="eats"] .card {
-      background: var(--surface);
-      border: none;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-    }
-    [data-active-theme="eats"] .card-eats {
-      text-align: center;
-    }
-    [data-active-theme="eats"] .eats-art {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    [data-active-theme="eats"] .eats-wood {
-      width: 3.2rem;
-      height: 0.55rem;
-      background: #8d6e63;
-      border-radius: 0.15rem;
-      margin-top: -0.15rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-    [data-active-theme="eats"] .eats-food svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-    }
-    [data-active-theme="eats"] .card-eats .card-body {
-      padding: 1.5rem 0.75rem 0.7rem;
-    }
-    [data-active-theme="eats"] .card-title {
-      font-weight: 800;
-      font-size: 0.78rem;
-      color: var(--primary);
-    }
-    [data-active-theme="eats"] .card-meta {
-      font-size: 0.62rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-    [data-active-theme="eats"] .eats-stepper {
-      display: inline-flex;
-      align-items: center;
-      margin-top: 0.4rem;
-      border: 2px solid var(--primary);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      font-weight: 800;
-      font-size: 0.65rem;
-    }
-    [data-active-theme="eats"] .eats-stepper span {
-      padding: 0.15rem 0.4rem;
-      color: var(--primary);
-    }
-    [data-active-theme="eats"] .eats-stepper .eats-qty {
-      background: #fff;
-      border-left: 2px solid var(--primary);
-      border-right: 2px solid var(--primary);
-      min-width: 1.4rem;
-      text-align: center;
-    }
-    [data-active-theme="eats"] .card.locked-card {
-      opacity: 0.55;
-    }
-    [data-active-theme="eats"] .card.locked-card .eats-food {
-      filter: grayscale(0.8);
-    }
-    [data-active-theme="eats"] .card.locked-card .card-title::after {
-      content: " · out of stock";
-      font-weight: 600;
-      color: var(--muted);
-      font-size: 0.58rem;
-    }
-    [data-active-theme="eats"] .settings-section {
-      background: #fff;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-    }
-    [data-active-theme="eats"] .settings-title {
-      font-weight: 800;
-      color: var(--primary);
-      font-size: 0.75rem;
-    }
-    [data-active-theme="eats"] .bottom-nav {
-      margin: 0 0.65rem 0.6rem;
-      border-radius: 99px;
-      background: var(--primary);
-      border: none;
-      box-shadow: 0 4px 20px rgba(26, 35, 126, 0.35);
-      padding: 0.4rem 0.6rem;
-    }
-    [data-active-theme="eats"] .nav-tab { color: rgba(255,255,255,0.55); }
-    [data-active-theme="eats"] .nav-tab.active { color: #fff; }
-    [data-active-theme="eats"] .nav-tab .lbl { font-weight: 700; }
-    [data-active-theme="eats"] .nav-scan-fab {
-      background: #fff;
-      color: var(--primary);
-      border: 3px solid var(--primary);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-    }
-    [data-active-theme="eats"] .rank-item {
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    [data-active-theme="eats"] .rank-item.you {
-      background: var(--primary);
-      color: #fff;
-    }
-    [data-active-theme="eats"] .rank-item.you .rank-name,
-    [data-active-theme="eats"] .rank-item.you .rank-score { color: #fff; }
-    [data-active-theme="eats"] .btn-primary {
-      background: var(--primary);
-      border-radius: 99px;
-      font-weight: 800;
-      border: none;
-    }
-
-    /* JapanEats ramen explosion deco */
-    .eats-deco {
-      display: none;
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .eats-deco svg { position: absolute; }
-    .eats-ramen-burst { top: 12%; right: -15%; width: 65%; opacity: 0.18; }
-
     /* ══ Theme: Zen Parchment — ref image ⑥ iOS kanji widgets · maple · samurai ══ */
     [data-active-theme="zen"] .app {
       --primary: #c41e3a;
@@ -2241,7 +1964,7 @@
       color: #fff;
     }
 
-    .phone-ambient, .glass-blob, .card-kiyo, .kiyo-badge, .card-wamon, .wamon-deco, .card-sumi, .sumi-deco, .card-kawaii, .kawaii-deco, .card-izakaya, .izakaya-deco, .card-eats, .eats-deco, .card-zen, .zen-deco { display: none; }
+    .phone-ambient, .glass-blob, .card-kiyo, .kiyo-badge, .card-wamon, .wamon-deco, .card-sumi, .sumi-deco, .card-kawaii, .kawaii-deco, .card-izakaya, .izakaya-deco, .card-eats, .card-zen, .zen-deco { display: none; }
     [data-active-theme="liquid"] .phone-ambient,
     [data-active-theme="liquid"] .glass-blob { display: block; }
     [data-active-theme="kiyo"] .kiyo-badge { display: block; }
@@ -2249,7 +1972,6 @@
     [data-active-theme="sumi"] .sumi-deco { display: block; }
     [data-active-theme="kawaii"] .kawaii-deco { display: block; }
     [data-active-theme="izakaya"] .izakaya-deco { display: block; }
-    [data-active-theme="eats"] .eats-deco { display: block; }
     [data-active-theme="zen"] .zen-deco { display: block; }
     [data-active-theme="wamon"] .app-header,
     [data-active-theme="wamon"] .app-main,
@@ -2276,13 +1998,6 @@
     [data-active-theme="izakaya"] .app-main,
     [data-active-theme="izakaya"] .bottom-nav,
     [data-active-theme="izakaya"] .top-nav {
-      position: relative;
-      z-index: 1;
-    }
-    [data-active-theme="eats"] .app-header,
-    [data-active-theme="eats"] .app-main,
-    [data-active-theme="eats"] .bottom-nav,
-    [data-active-theme="eats"] .top-nav {
       position: relative;
       z-index: 1;
     }
@@ -2351,19 +2066,6 @@
     [data-active-theme="izakaya"] .card-sumi,
     [data-active-theme="izakaya"] .card-kawaii { display: none !important; }
 
-    /* JapanEats card layer swap */
-    [data-active-theme="eats"] .card-eats { display: block; }
-    [data-active-theme="eats"] .card > .card-img,
-    [data-active-theme="eats"] .card > .card-body,
-    [data-active-theme="eats"] .card-stamp,
-    [data-active-theme="eats"] .card-sticker,
-    [data-active-theme="eats"] .card-inner,
-    [data-active-theme="eats"] .card-kiyo,
-    [data-active-theme="eats"] .card-wamon,
-    [data-active-theme="eats"] .card-sumi,
-    [data-active-theme="eats"] .card-kawaii,
-    [data-active-theme="eats"] .card-izakaya { display: none !important; }
-
     /* Zen card layer swap */
     [data-active-theme="zen"] .card-zen { display: block; }
     [data-active-theme="zen"] .card > .card-img,
@@ -2375,8 +2077,7 @@
     [data-active-theme="zen"] .card-wamon,
     [data-active-theme="zen"] .card-sumi,
     [data-active-theme="zen"] .card-kawaii,
-    [data-active-theme="zen"] .card-izakaya,
-    [data-active-theme="zen"] .card-eats { display: none !important; }
+    [data-active-theme="zen"] .card-izakaya { display: none !important; }
 
     /* ── App components ── */
     .app-header {
@@ -2628,26 +2329,6 @@
       height: 62%;
       border-radius: 50%;
     }
-    [data-active-theme="eats"] .card-eats .card-body {
-      background: linear-gradient(to top, rgba(26,35,126,0.92) 0%, rgba(26,35,126,0.5) 55%, transparent 100%);
-      color: #fff;
-      padding: 1.5rem 0.75rem 0.7rem;
-    }
-    [data-active-theme="eats"] .card-eats .eats-art {
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      background: linear-gradient(180deg, #fff9c4 0%, #ffc107 45%, #ffb300 100%);
-      padding: 0;
-    }
-    [data-active-theme="eats"] .eats-food {
-      width: 78%;
-      height: 72%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    [data-active-theme="eats"] .eats-food svg { width: 100%; height: 100%; }
     [data-active-theme="zen"] .card-zen .card-body {
       background: linear-gradient(to top, rgba(250,246,239,0.96) 0%, rgba(250,246,239,0.68) 55%, transparent 100%);
       color: var(--ink);
@@ -2663,7 +2344,6 @@
     [data-active-theme="sumi"] .card-sumi,
     [data-active-theme="kawaii"] .card-kawaii,
     [data-active-theme="izakaya"] .card-izakaya,
-    [data-active-theme="eats"] .card-eats,
     [data-active-theme="zen"] .card-zen {
       position: absolute;
       inset: 0;
@@ -2673,7 +2353,6 @@
     [data-active-theme="sumi"] .card-sumi .sumi-art,
     [data-active-theme="kawaii"] .card-kawaii .kawaii-art,
     [data-active-theme="izakaya"] .card-izakaya .izakaya-art,
-    [data-active-theme="eats"] .card-eats .eats-art,
     [data-active-theme="zen"] .card-zen .zen-art {
       position: absolute;
       inset: 0;
@@ -3167,20 +2846,6 @@
     /* Tabs layout: no bottom nav */
     [data-active-layout="tabs"] .bottom-nav { display: none; }
 
-    /* Nav: pill style (sunny) */
-    [data-active-theme="sunny"] .bottom-nav {
-      margin: 0 0.75rem 0.75rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      padding: 0.25rem 0.5rem 0.5rem;
-    }
-    [data-active-theme="sunny"] .nav-scan-fab {
-      border-radius: 1rem;
-      width: 48px;
-      height: 48px;
-    }
-
     /* Nav: neon glow */
     [data-active-theme="neon"] .nav-scan-fab {
       box-shadow: 0 0 24px var(--primary), 0 0 48px color-mix(in srgb, var(--primary) 30%, transparent);
@@ -3521,35 +3186,31 @@
     }
   </style>
 </head>
-<body data-active-theme="festival" data-active-layout="classic">
+<body data-active-theme="neon" data-active-layout="classic">
 
   <header class="lab-header">
     <h1>QR Hunt — UI Design Lab</h1>
-    <p>19 themes · 4 layouts · incl. ⑫ Japan×Apple, ⑬ Liquid Glass &amp; ⑭–⑲ ref-image series</p>
+    <p>15 themes · 4 layouts · incl. ⑨ Japan×Apple, ⑩ Liquid Glass &amp; ⑪–⑮ ref-image series</p>
   </header>
 
   <div class="picker-section">
-    <div class="picker-label">Color theme <span style="font-weight:400;text-transform:none;letter-spacing:0">— ⑨–⑪ ornate · ⑫⑬ premium · ⑭–⑲ ref images ①–⑥ of 7</span></div>
+    <div class="picker-label">Color theme <span style="font-weight:400;text-transform:none;letter-spacing:0">— ⑥–⑧ ornate · ⑨⑩ premium · ⑪–⑮ ref images ①–⑥ of 7</span></div>
     <nav class="theme-picker" aria-label="Design themes">
-      <button class="theme-btn active" data-theme="festival">① Festival Pulse</button>
-      <button class="theme-btn" data-theme="neon">② Neon Night</button>
-      <button class="theme-btn" data-theme="sunny">③ Sunny Adventure</button>
-      <button class="theme-btn" data-theme="pop">④ Bold Pop</button>
-      <button class="theme-btn" data-theme="forest">⑤ Forest Quest</button>
-      <button class="theme-btn" data-theme="arcade">⑥ Electric Arcade</button>
-      <button class="theme-btn" data-theme="sakura">⑦ Sakura Matsuri</button>
-      <button class="theme-btn" data-theme="shibuya">⑧ Neon Shibuya</button>
-      <button class="theme-btn" data-theme="shrine">⑨ Kyoto Shrine</button>
-      <button class="theme-btn" data-theme="atlas">⑩ Treasure Atlas</button>
-      <button class="theme-btn" data-theme="scrapbook">⑪ Sticker Scrapbook</button>
-      <button class="theme-btn" data-theme="kiyo">⑫ Kiyo Precision</button>
-      <button class="theme-btn" data-theme="liquid">⑬ Liquid Glass</button>
-      <button class="theme-btn" data-theme="wamon">⑭ Wagara Washi</button>
-      <button class="theme-btn" data-theme="sumi">⑮ Sumi-e Ink</button>
-      <button class="theme-btn" data-theme="kawaii">⑯ Mofu Kawaii</button>
-      <button class="theme-btn" data-theme="izakaya">⑰ Izakaya Navy</button>
-      <button class="theme-btn" data-theme="eats">⑱ JapanEats</button>
-      <button class="theme-btn" data-theme="zen">⑲ Zen Parchment</button>
+      <button class="theme-btn active" data-theme="neon">① Neon Night</button>
+      <button class="theme-btn" data-theme="pop">② Bold Pop</button>
+      <button class="theme-btn" data-theme="forest">③ Forest Quest</button>
+      <button class="theme-btn" data-theme="arcade">④ Electric Arcade</button>
+      <button class="theme-btn" data-theme="sakura">⑤ Sakura Matsuri</button>
+      <button class="theme-btn" data-theme="shrine">⑥ Kyoto Shrine</button>
+      <button class="theme-btn" data-theme="atlas">⑦ Treasure Atlas</button>
+      <button class="theme-btn" data-theme="scrapbook">⑧ Sticker Scrapbook</button>
+      <button class="theme-btn" data-theme="kiyo">⑨ Kiyo Precision</button>
+      <button class="theme-btn" data-theme="liquid">⑩ Liquid Glass</button>
+      <button class="theme-btn" data-theme="wamon">⑪ Wagara Washi</button>
+      <button class="theme-btn" data-theme="sumi">⑫ Sumi-e Ink</button>
+      <button class="theme-btn" data-theme="kawaii">⑬ Mofu Kawaii</button>
+      <button class="theme-btn" data-theme="izakaya">⑭ Izakaya Navy</button>
+      <button class="theme-btn" data-theme="zen">⑮ Zen Parchment</button>
     </nav>
   </div>
 
@@ -3672,25 +3333,6 @@
                 <path d="M0 60 Q25 30 50 60 Q75 30 100 60 Q125 30 150 60 Q175 30 200 60 Q225 30 250 60 Q275 30 300 60" stroke="#e9542e" stroke-width="2"/>
                 <path d="M0 80 Q25 50 50 80 Q75 50 100 80 Q125 50 150 80 Q175 50 200 80 Q225 50 250 80 Q275 50 300 80" stroke="#e9542e" stroke-width="1.5" opacity="0.6"/>
                 <path d="M0 100 Q25 70 50 100 Q75 70 100 100 Q125 70 150 100 Q175 70 200 100 Q225 70 250 100 Q275 70 300 100" stroke="#e9542e" stroke-width="1" opacity="0.35"/>
-              </svg>
-            </div>
-
-            <div class="eats-deco" aria-hidden="true">
-              <svg class="eats-ramen-burst" viewBox="0 0 280 320" fill="none">
-                <path d="M140 280 L60 280 Q50 200 80 140 Q100 90 140 70 Q180 90 200 140 Q230 200 220 280Z" fill="#fff" stroke="#1a237e" stroke-width="2"/>
-                <ellipse cx="140" cy="275" rx="75" ry="8" fill="#5c6bc0" opacity="0.3"/>
-                <path d="M100 50 Q120 30 140 20 Q160 30 180 50" stroke="#ffc107" stroke-width="4" fill="none" stroke-linecap="round"/>
-                <path d="M90 65 Q115 45 140 35 Q165 45 190 65" stroke="#ffd54f" stroke-width="3" fill="none"/>
-                <path d="M85 80 Q110 60 140 50 Q170 60 195 80" stroke="#ffca28" stroke-width="2.5" fill="none"/>
-                <ellipse cx="120" cy="100" rx="12" ry="8" fill="#fff" stroke="#1a237e" stroke-width="1.5"/>
-                <ellipse cx="160" cy="95" rx="10" ry="7" fill="#ffab91" stroke="#1a237e" stroke-width="1.2"/>
-                <ellipse cx="100" cy="120" rx="14" ry="6" fill="#ffcc80" stroke="#1a237e" stroke-width="1.2"/>
-                <ellipse cx="175" cy="115" rx="11" ry="5" fill="#ffcc80" stroke="#1a237e" stroke-width="1.2"/>
-                <circle cx="145" cy="130" r="6" fill="#fff" stroke="#1a237e" stroke-width="1"/><circle cx="145" cy="130" r="3" fill="#ffd54f"/>
-                <circle cx="110" cy="145" r="4" fill="#ffeb3b" stroke="#1a237e" stroke-width="0.8"/>
-                <circle cx="170" cy="140" r="3.5" fill="#ffeb3b" stroke="#1a237e" stroke-width="0.8"/>
-                <line x1="155" y1="25" x2="175" y2="45" stroke="#5d4037" stroke-width="3" stroke-linecap="round"/>
-                <line x1="165" y1="20" x2="185" y2="40" stroke="#5d4037" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
 
@@ -4370,7 +4012,7 @@
         </div>
       </div>
       <p class="theme-desc" id="theme-desc">
-        <strong>Festival Pulse</strong> — Evolved from your current purple + amber. Clean, readable outdoors, trustworthy but energetic. Good default for real festivals.
+        <strong>Neon Night</strong> — Dark canvas with cyan + pink neon. Scan button glows like a beacon. Feels alive after sunset without being childish.
       </p>
       <p class="theme-desc" id="layout-desc">
         <strong>Classic FAB</strong> — Bottom nav with elevated scan button. Familiar mobile pattern, scan always one thumb-tap away.
@@ -4430,22 +4072,14 @@
         </div>
       </div>
       <p class="theme-desc" id="theme-vibe">
-        Vibe: trustworthy festival app · readable in sunlight · purple energy without feeling corporate
+        Vibe: night-market energy · glow accents · premium dark mode for evening events
       </p>
     </div>
 
     <!-- All themes overview -->
     <div class="panel" style="grid-column: 1 / -1">
-      <div class="panel-title">All 19 color themes</div>
+      <div class="panel-title">All 15 color themes</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;padding:1.25rem">
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#6d28d9,#f59e0b);padding:1.25rem;text-align:center">
-            <div style="font-family:Outfit;font-weight:800;font-size:1.1rem;color:#fff">Festival Pulse</div>
-            <div style="font-size:0.7rem;color:rgba(255,255,255,0.8);margin-top:0.25rem">Purple + amber · safe default</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: multi-event platform, all ages, outdoor readability</div>
-        </div>
 
         <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
           <div style="background:linear-gradient(135deg,#0c1222,#22d3ee);padding:1.25rem;text-align:center">
@@ -4453,14 +4087,6 @@
             <div style="font-size:0.7rem;color:#7b8db5;margin-top:0.25rem">Dark + cyan glow · night events</div>
           </div>
           <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: evening concerts, clubs, light festivals, younger crowd</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#fffbeb,#ea580c);padding:1.25rem;text-align:center">
-            <div style="font-family:Outfit;font-weight:800;font-size:1.1rem;color:#1c1008">Sunny Adventure</div>
-            <div style="font-size:0.7rem;color:#78716c;margin-top:0.25rem">Warm orange · family friendly</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: daytime parks, food festivals, families with kids</div>
         </div>
 
         <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
@@ -4496,14 +4122,6 @@
         </div>
 
         <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#0a0a0f,#ff2d6a);padding:1.25rem;text-align:center;border-bottom:2px solid #ffd400">
-            <div style="font-family:Syne;font-weight:800;font-size:1.1rem;color:#ffe4ec">Neon Shibuya</div>
-            <div style="font-size:0.7rem;color:#8e8898;margin-top:0.25rem">Hot pink neon · gold signs · urban night</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: city nightlife hunts, anime cons, Akihabara-style urban adventures</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
           <div style="background:linear-gradient(135deg,#f5f0e6,#c0392b);padding:1.25rem;text-align:center;border-bottom:3px solid #d4a012">
             <div style="font-family:'Yuji Syuku',serif;font-size:1.1rem;color:#3d2314">⛩ Kyoto Shrine</div>
             <div style="font-size:0.7rem;color:#7a5c42;margin-top:0.25rem">Gold frames · torii icons · ema plaques</div>
@@ -4520,9 +4138,9 @@
         </div>
 
         <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#fffef8,#ff6b9d);padding:1.25rem;text-align:center;border:3px solid #3d2c1e">
-            <div style="font-family:Caveat,cursive;font-weight:700;font-size:1.25rem;color:#3d2c1e">📔 Sticker Scrapbook</div>
-            <div style="font-size:0.7rem;color:#7a6555;margin-top:0.25rem">Polaroids · washi tape · sticker badges</div>
+          <div style="background:linear-gradient(135deg,#fff8f3,#ff6b9d);padding:1.25rem;text-align:center;border:3px solid #2d2838">
+            <div style="font-family:Caveat,cursive;font-weight:700;font-size:1.25rem;color:#2d2838">📔 Sticker Scrapbook</div>
+            <div style="font-size:0.7rem;color:#6e6672;margin-top:0.25rem">Polaroids · washi tape · sticker badges</div>
           </div>
           <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: kids events, school hunts — playful collage with tilted cards &amp; tape corners</div>
         </div>
@@ -4576,14 +4194,6 @@
         </div>
 
         <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#ffc107,#1a237e);padding:1.25rem;text-align:center">
-            <div style="font-family:'M PLUS Rounded 1c',sans-serif;font-weight:800;font-size:1.1rem;color:#fff">🍱 JapanEats</div>
-            <div style="font-size:0.7rem;color:rgba(255,255,255,0.8);margin-top:0.25rem">Ref ⑤ · yellow · navy · ramen burst · menu grid</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: fun food hunts — playful vector sushi cards, quantity steppers, navy order-bar nav</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
           <div style="background:linear-gradient(135deg,#e5d9c3,#c41e3a);padding:1.25rem;text-align:center;border-bottom:2px solid #1a1a1a">
             <div style="font-family:'Yuji Syuku','Noto Serif JP',serif;font-weight:700;font-size:1.2rem;color:#1a1a1a">禅 Zen Parchment</div>
             <div style="font-size:0.7rem;color:#7a6f5f;margin-top:0.25rem">Ref ⑥ · kanji icons · maple · samurai · tanzaku</div>
@@ -4626,17 +4236,9 @@
 
   <script>
     const descriptions = {
-      festival: {
-        desc: '<strong>Festival Pulse</strong> — Evolved from your current purple + amber. Clean, readable outdoors, trustworthy but energetic. Good default for real festivals.',
-        vibe: 'Vibe: trustworthy festival app · readable in sunlight · purple energy without feeling corporate'
-      },
       neon: {
         desc: '<strong>Neon Night</strong> — Dark canvas with cyan + pink neon. Scan button glows like a beacon. Feels alive after sunset without being childish.',
         vibe: 'Vibe: night-market energy · glow accents · premium dark mode for evening events'
-      },
-      sunny: {
-        desc: '<strong>Sunny Adventure</strong> — Warm terracotta and golden yellow. Rounded pill nav, soft shadows. Inviting for families — feels like a sunny day out.',
-        vibe: 'Vibe: approachable & warm · great contrast in daylight · "let\'s go explore!"'
       },
       pop: {
         desc: '<strong>Bold Pop</strong> — Hard edges, offset shadows, hot pink + violet. Loud and shareable. Not corporate — feels like a sticker pack come to life.',
@@ -4653,10 +4255,6 @@
       sakura: {
         desc: '<strong>Sakura Matsuri</strong> — Washi-paper cream background, indigo ink, soft cherry blossom pink. Noto Serif headings, subtle petal gradients. Refined spring festival elegance — Japan without cliché.',
         vibe: 'Vibe: hanami picnic · temple fair · quiet beauty · cultural hunt at cherry blossom season'
-      },
-      shibuya: {
-        desc: '<strong>Neon Shibuya</strong> — Midnight asphalt black, hot-pink neon signs, gold accent like crossing lights. Urban, loud, alive — Tokyo after dark. Completely different from Sakura\'s daytime calm.',
-        vibe: 'Vibe: scramble crossing energy · izakaya district · anime con · city night hunt'
       },
       shrine: {
         desc: '<strong>Kyoto Shrine</strong> — Ornate gold-corner frames on every card, torii gate menu icons, vermillion + gold palette, ema-plaque chips, lantern scan button. Scene illustrations inside cards. A full decorative UI, not just colors.',
@@ -4693,10 +4291,6 @@
       izakaya: {
         desc: '<strong>Izakaya Navy</strong> — Mimics your ref image ④: deep navy canvas (#2D3277), vermillion orange cards (#E9542E), white pill chips &amp; floating nav bar. Seigaiha wave texture, noodle + chopsticks + rising sun deco. Menu-style orange product cards with circular plate art, navy "New" tags, white price pills.',
         vibe: 'Vibe: Japanese restaurant app · ramen night · food festival menu · bold navy &amp; vermillion'
-      },
-      eats: {
-        desc: '<strong>JapanEats</strong> — Mimics your ref image ⑤: bright yellow (#FFC107) + navy (#1A237E), meander pattern header, grey/navy pill category chips. Menu-grid cards with vector sushi on wooden blocks, quantity steppers, "out of stock" locked state. Exploding ramen bowl deco — playful food-delivery energy.',
-        vibe: 'Vibe: JapanEats delivery app · ramen &amp; sushi hunt · yellow pop · order-your-finds'
       },
       zen: {
         desc: '<strong>Zen Parchment</strong> — Mimics your ref image ⑥: warm beige parchment home-screen aesthetic, kanji badge icons (parchment/black/red), square widget cards with pagoda+maple, tanzaku strips, samurai+red sun art. Yuji Syuku calligraphy font, uppercase letter-spaced labels, iOS-style dock bottom bar.',
@@ -4754,11 +4348,6 @@
         codes: '<svg class="nav-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="8" ry="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 14 Q12 8 16 14" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="6" y1="18" x2="18" y2="18" stroke="currentColor" stroke-width="1.5"/></svg>',
         scan: '<svg class="nav-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
         rank: '<svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 20 Q12 16 18 20" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>'
-      },
-      eats: {
-        codes: '<svg class="nav-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="7" ry="5" fill="currentColor" opacity="0.2"/><path d="M7 13 Q12 7 17 13" stroke="currentColor" stroke-width="2" fill="none"/><line x1="5" y1="17" x2="19" y2="17" stroke="currentColor" stroke-width="1.8"/></svg>',
-        scan: '<svg class="nav-icon" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="3" fill="currentColor" opacity="0.15"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
-        rank: '<svg class="nav-icon" viewBox="0 0 24 24"><path d="M8 6h12l-1.5 12H9.5L8 6z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 6h2M8 10h10" stroke="currentColor" stroke-width="1.5"/></svg>'
       },
       zen: {
         codes: '<svg class="nav-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" font-size="11" font-family="serif" fill="currentColor">札</text></svg>',
@@ -4836,7 +4425,7 @@
       el.addEventListener('click', () => switchScreen(el.dataset.go));
     });
 
-    applyThemeIcons('festival');
+    applyThemeIcons('neon');
   </script>
 </body>
 </html>
