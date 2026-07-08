@@ -116,7 +116,7 @@ not in git.
 | `SUPABASE_URL` | `https://rvtltgrlsmapwonmwsbf.supabase.co` |
 | `SUPABASE_PUBLISHABLE_KEY` | dev publishable key |
 
-7. Save and deploy. SPA routing uses `public/_redirects`.
+7. Save and deploy. SPA routing is handled automatically by Cloudflare Pages (no `_redirects` needed). The design lab at `/design/` is excluded from the Angular service worker so it stays a standalone static page.
 
 ### 2. After first deploy
 
