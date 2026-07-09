@@ -60,11 +60,18 @@
       color: var(--lab-muted);
       margin-bottom: 0.6rem;
     }
-    .theme-picker,
-    .layout-picker {
+    .picker-label-hint {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .theme-picker {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
+    }
+    .theme-picker-hint {
+      display: none;
     }
     .theme-btn {
       border: 2px solid var(--lab-line);
@@ -98,25 +105,6 @@
     .theme-btn[data-theme="kawaii"] { background: linear-gradient(135deg, #fff5f7, #f4a0b0); color: #4a3728; border-color: #f8d0d8; }
     .theme-btn[data-theme="izakaya"] { background: linear-gradient(135deg, #2d3277, #e9542e); color: #fff; border-color: #e9542e; }
     .theme-btn[data-theme="zen"] { background: linear-gradient(135deg, #e5d9c3, #c41e3a); color: #1a1a1a; border-color: #8b7355; }
-
-    .layout-btn {
-      border: 2px solid var(--lab-line);
-      background: var(--lab-surface);
-      color: var(--lab-ink);
-      padding: 0.5rem 0.9rem;
-      border-radius: 0.65rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
-      font-family: inherit;
-    }
-    .layout-btn:hover { transform: translateY(-1px); }
-    .layout-btn.active {
-      border-color: #a78bfa;
-      background: #2a2540;
-      box-shadow: 0 0 0 1px #a78bfa;
-    }
 
     .lab-grid {
       display: grid;
@@ -1401,8 +1389,7 @@
       letter-spacing: 0.06em;
       color: #fff;
     }
-    [data-active-theme="izakaya"] .badge-sync,
-    [data-active-theme="izakaya"] .header-scan-btn {
+    [data-active-theme="izakaya"] .badge-sync {
       color: #fff;
       border-color: rgba(255,255,255,0.25);
     }
@@ -1847,8 +1834,7 @@
     [data-active-theme="liquid"] .card,
     [data-active-theme="liquid"] .settings-section,
     [data-active-theme="liquid"] .rank-item,
-    [data-active-theme="liquid"] .bottom-nav,
-    [data-active-theme="liquid"] .layout-hero {
+    [data-active-theme="liquid"] .bottom-nav {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -1975,43 +1961,37 @@
     [data-active-theme="zen"] .zen-deco { display: block; }
     [data-active-theme="wamon"] .app-header,
     [data-active-theme="wamon"] .app-main,
-    [data-active-theme="wamon"] .bottom-nav,
-    [data-active-theme="wamon"] .top-nav {
+    [data-active-theme="wamon"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
     [data-active-theme="sumi"] .app-header,
     [data-active-theme="sumi"] .app-main,
-    [data-active-theme="sumi"] .bottom-nav,
-    [data-active-theme="sumi"] .top-nav {
+    [data-active-theme="sumi"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
     [data-active-theme="kawaii"] .app-header,
     [data-active-theme="kawaii"] .app-main,
-    [data-active-theme="kawaii"] .bottom-nav,
-    [data-active-theme="kawaii"] .top-nav {
+    [data-active-theme="kawaii"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
     [data-active-theme="izakaya"] .app-header,
     [data-active-theme="izakaya"] .app-main,
-    [data-active-theme="izakaya"] .bottom-nav,
-    [data-active-theme="izakaya"] .top-nav {
+    [data-active-theme="izakaya"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
     [data-active-theme="zen"] .app-header,
     [data-active-theme="zen"] .app-main,
-    [data-active-theme="zen"] .bottom-nav,
-    [data-active-theme="zen"] .top-nav {
+    [data-active-theme="zen"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
     [data-active-theme="liquid"] .app-header,
     [data-active-theme="liquid"] .app-main,
-    [data-active-theme="liquid"] .bottom-nav,
-    [data-active-theme="liquid"] .top-nav {
+    [data-active-theme="liquid"] .bottom-nav {
       position: relative;
       z-index: 1;
     }
@@ -2429,10 +2409,6 @@
     .app:has(.screen[data-screen="auth"].active) .bottom-nav {
       display: none !important;
     }
-    .app:has(.screen[data-screen="card"].active) .top-nav,
-    .app:has(.screen[data-screen="settings"].active) .top-nav {
-      display: none !important;
-    }
 
     /* Scan screen */
     .scan-view {
@@ -2696,8 +2672,7 @@
 
     /* Full-screen overlays: hide chrome */
     .app:has(.screen[data-screen="settings"].active) .bottom-nav,
-    .app:has(.screen[data-screen="auth"].active) .bottom-nav,
-    .app:has(.screen[data-screen="settings"].active) .top-nav {
+    .app:has(.screen[data-screen="auth"].active) .bottom-nav {
       display: none !important;
     }
 
@@ -2835,17 +2810,6 @@
     }
     .nav-scan-fab .nav-icon { width: 24px; height: 24px; stroke: currentColor; }
 
-    /* Classic: FAB center */
-    [data-active-layout="classic"] .nav-scan-fab { display: flex; }
-    [data-active-layout="classic"] .nav-scan-tab { display: none; }
-
-    /* Carousel: flat scan tab */
-    [data-active-layout="carousel"] .nav-scan-fab { display: none; }
-    [data-active-layout="carousel"] .nav-scan-tab { display: flex; flex: 1; }
-
-    /* Tabs layout: no bottom nav */
-    [data-active-layout="tabs"] .bottom-nav { display: none; }
-
     /* Nav: neon glow */
     [data-active-theme="neon"] .nav-scan-fab {
       box-shadow: 0 0 24px var(--primary), 0 0 48px color-mix(in srgb, var(--primary) 30%, transparent);
@@ -2980,221 +2944,79 @@
       color: var(--lab-ink);
     }
 
-    /* ── Layout: hidden structural elements ── */
-    .top-nav, .layout-hero, .header-scan-btn, .card-list { display: none; }
-
-    /* ══ LAYOUT: Classic ══ */
-    [data-active-layout="classic"] .bottom-nav { display: flex; }
-
-    /* ══ LAYOUT: Top Tabs ══ */
-    [data-active-layout="tabs"] .bottom-nav { display: none; }
-    [data-active-layout="tabs"] .top-nav {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.25rem;
-      padding: 0.5rem 0.75rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
-      flex-shrink: 0;
-    }
-    [data-active-layout="tabs"] .top-nav-tab {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.1rem;
-      padding: 0.45rem 0.25rem;
-      border-radius: var(--radius);
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-decoration: none;
-      border: 1px solid transparent;
-    }
-    [data-active-layout="tabs"] .top-nav-tab.active {
-      background: color-mix(in srgb, var(--primary) 10%, var(--surface));
-      color: var(--primary);
-      border-color: color-mix(in srgb, var(--primary) 25%, transparent);
-    }
-    [data-active-layout="tabs"] .top-nav-tab .nav-icon { width: 18px; height: 18px; }
-    [data-active-layout="tabs"] .top-nav-tab span.lbl { font-size: 0.6rem; }
-    [data-active-layout="tabs"] .app-main { padding-bottom: 0; }
-    [data-active-layout="tabs"] .progress-block {
-      border-bottom: none;
-      padding-bottom: 0.5rem;
-    }
-
-    /* ══ LAYOUT: Hero Carousel ══ */
-    [data-active-layout="carousel"] .bottom-nav { display: flex; }
-    [data-active-layout="carousel"] .layout-hero {
-      display: block;
-      margin: 0.75rem 0.75rem 0;
-      padding: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      flex-shrink: 0;
-    }
-    [data-active-layout="carousel"] .hero-ring-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    [data-active-layout="carousel"] .hero-ring {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: conic-gradient(var(--primary) 0 62%, var(--line) 62% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      position: relative;
-    }
-    [data-active-layout="carousel"] .hero-ring::after {
-      content: "";
-      position: absolute;
-      inset: 6px;
-      border-radius: 50%;
-      background: var(--surface);
-    }
-    [data-active-layout="carousel"] .hero-ring span {
-      position: relative;
-      z-index: 1;
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 0.85rem;
-      color: var(--primary);
-    }
-    [data-active-layout="carousel"] .hero-text .progress-title { font-size: 1.05rem; }
-    [data-active-layout="carousel"] .hero-text p {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-    [data-active-layout="carousel"] .progress-block .progress-row,
-    [data-active-layout="carousel"] .progress-block .progress-bar { display: none; }
-    [data-active-layout="carousel"] .card-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      padding: 0.75rem;
-    }
-    [data-active-layout="carousel"] .card-strip-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
-      padding-left: 0.15rem;
-    }
-    [data-active-layout="carousel"] .card-strip {
-      display: flex;
-      gap: 0.55rem;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
-      scrollbar-width: none;
-    }
-    [data-active-layout="carousel"] .card-strip::-webkit-scrollbar { display: none; }
-    [data-active-layout="carousel"] .card-strip .card {
-      flex: 0 0 130px;
-    }
-    [data-active-layout="carousel"] .card-grid > .card { display: none; }
-    [data-active-layout="carousel"] .card-grid .card-strip-wrap { display: block; }
-
-    /* ══ LAYOUT: Compact List ══ */
-    [data-active-layout="compact"] .bottom-nav {
-      display: flex;
-      justify-content: center;
-      gap: 3.5rem;
-    }
-    [data-active-layout="compact"] .nav-scan-slot { display: none; }
-    [data-active-layout="compact"] .header-scan-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: var(--radius);
-      background: var(--primary);
-      color: var(--primary-ink);
-      border: none;
-      flex-shrink: 0;
-    }
-    [data-active-layout="compact"] .header-scan-btn svg { width: 18px; height: 18px; }
-    [data-active-layout="compact"] .app-header { padding: 0.45rem 0.75rem; }
-    [data-active-layout="compact"] .app-logo { font-size: 0.92rem; }
-    [data-active-layout="compact"] .card-grid { display: none; }
-    [data-active-layout="compact"] .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      padding: 0.5rem 0.75rem;
-      overflow-y: auto;
-      flex: 1;
-      min-height: 0;
-    }
-    [data-active-layout="compact"] .card-row {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.55rem 0.65rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    [data-active-layout="compact"] .card-row-thumb {
-      width: 48px;
-      height: 48px;
-      border-radius: calc(var(--radius) - 2px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
-    [data-active-layout="compact"] .card-row-info { flex: 1; min-width: 0; }
-    [data-active-layout="compact"] .card-row-info .card-title { font-size: 0.82rem; }
-    [data-active-layout="compact"] .card-row-badge {
-      font-size: 0.62rem;
-      font-weight: 700;
-      padding: 0.2rem 0.5rem;
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--primary) 12%, transparent);
-      color: var(--primary);
-    }
-    [data-active-layout="compact"] .card-row.locked .card-row-thumb {
-      background: color-mix(in srgb, var(--line) 50%, var(--bg));
-      filter: grayscale(0.5);
-      opacity: 0.7;
-    }
-    [data-active-layout="compact"] .card-row-thumb.found-1 {
-      background: linear-gradient(135deg, #a855f7 30%, #ec4899);
-    }
-    [data-active-layout="compact"] .card-row-thumb.found-2 {
-      background: linear-gradient(135deg, #06b6d4 30%, #3b82f6);
-    }
-    [data-active-layout="compact"] .progress-block { padding: 0.55rem 0.75rem; }
-    [data-active-layout="compact"] .filters { margin-top: 0.4rem; }
-    [data-active-layout="compact"] .chip { padding: 0.22rem 0.6rem; font-size: 0.68rem; }
-
-    .card-strip-wrap { display: none; }
-
     @media (max-width: 700px) {
-      .lab-grid { grid-template-columns: 1fr; }
+      .lab-header {
+        padding: 0.75rem 1rem;
+      }
+      .lab-header h1 {
+        font-size: 1.1rem;
+      }
+      .lab-shell {
+        display: flex;
+        flex-direction: column;
+      }
+      .picker-section {
+        order: 2;
+        position: sticky;
+        bottom: 0;
+        z-index: 90;
+        padding: 0.65rem 0 calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        border-bottom: none;
+        border-top: 1px solid var(--lab-line);
+        background: rgba(15, 14, 20, 0.96);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+      }
+      .picker-label {
+        margin-bottom: 0.4rem;
+        padding: 0 1rem;
+      }
+      .picker-label-hint {
+        display: none;
+      }
+      .theme-picker-hint {
+        display: block;
+        padding: 0 1rem;
+        margin-top: 0.35rem;
+        font-size: 0.62rem;
+        color: var(--lab-muted);
+      }
+      .theme-picker {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0.15rem 1rem 0.25rem;
+        gap: 0.4rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+      }
+      .theme-picker::-webkit-scrollbar {
+        display: none;
+      }
+      .theme-btn {
+        flex-shrink: 0;
+        padding: 0.42rem 0.8rem;
+        font-size: 0.74rem;
+        scroll-snap-align: start;
+      }
+      .lab-grid {
+        order: 1;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1rem 1rem calc(6.5rem + env(safe-area-inset-bottom, 0px));
+      }
     }
   </style>
 </head>
-<body data-active-theme="neon" data-active-layout="classic">
+<body data-active-theme="neon">
 
   <header class="lab-header">
     <h1>QR Hunt — UI Design Lab</h1>
-    <p>15 themes · 4 layouts · incl. ⑨ Japan×Apple, ⑩ Liquid Glass &amp; ⑪–⑮ ref-image series</p>
   </header>
 
+  <div class="lab-shell">
   <div class="picker-section">
-    <div class="picker-label">Color theme <span style="font-weight:400;text-transform:none;letter-spacing:0">— ⑥–⑧ ornate · ⑨⑩ premium · ⑪–⑮ ref images ①–⑥ of 7</span></div>
+    <div class="picker-label">Color theme <span class="picker-label-hint">— ⑥–⑧ ornate · ⑨⑩ premium · ⑪–⑮ ref images ①–⑥ of 7</span></div>
     <nav class="theme-picker" aria-label="Design themes">
       <button class="theme-btn active" data-theme="neon">① Neon Night</button>
       <button class="theme-btn" data-theme="pop">② Bold Pop</button>
@@ -3212,16 +3034,7 @@
       <button class="theme-btn" data-theme="izakaya">⑭ Izakaya Navy</button>
       <button class="theme-btn" data-theme="zen">⑮ Zen Parchment</button>
     </nav>
-  </div>
-
-  <div class="picker-section">
-    <div class="picker-label">Layout structure</div>
-    <nav class="layout-picker" aria-label="Layout modes">
-      <button class="layout-btn active" data-layout="classic">Classic FAB</button>
-      <button class="layout-btn" data-layout="tabs">Top Tabs</button>
-      <button class="layout-btn" data-layout="carousel">Hero Carousel</button>
-      <button class="layout-btn" data-layout="compact">Compact List</button>
-    </nav>
+    <p class="theme-picker-hint">Swipe themes →</p>
   </div>
 
   <div class="lab-grid">
@@ -3362,13 +3175,6 @@
             <header class="app-header">
               <span class="app-logo">QR Hunt</span>
               <span class="app-header-meta">
-                <button class="header-scan-btn" aria-label="Scan">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                    <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                    <line x1="7" y1="12" x2="17" y2="12"/>
-                  </svg>
-                </button>
                 <span class="badge-sync">⇅ 2</span>
                 <button class="header-avatar-btn" type="button" aria-label="Profile" data-go="settings">
                   <span class="avatar">🦊</span>
@@ -3376,33 +3182,9 @@
               </span>
             </header>
 
-            <nav class="top-nav" aria-label="Main navigation">
-              <a class="top-nav-tab active" href="#" data-nav="codes">
-                <span class="nav-icon-slot" data-icon="codes"></span>
-                <span class="lbl">Cards</span>
-              </a>
-              <a class="top-nav-tab" href="#" data-nav="scan">
-                <span class="nav-icon-slot" data-icon="scan"></span>
-                <span class="lbl">Scan</span>
-              </a>
-              <a class="top-nav-tab" href="#" data-nav="rank">
-                <span class="nav-icon-slot" data-icon="rank"></span>
-                <span class="lbl">Rank</span>
-              </a>
-            </nav>
-
             <main class="app-main">
               <!-- Codes -->
               <div class="screen active" data-screen="codes">
-                <div class="layout-hero">
-                  <div class="hero-ring-row">
-                    <div class="hero-ring"><span>62%</span></div>
-                    <div class="hero-text">
-                      <span class="progress-title">8 / 13 found</span>
-                      <p>5 codes still hidden — keep exploring!</p>
-                    </div>
-                  </div>
-                </div>
                 <div class="progress-block">
                   <div class="progress-row">
                     <span class="progress-title">8 / 13 found</span>
@@ -3416,42 +3198,6 @@
                   </div>
                 </div>
                 <div class="card-grid">
-                  <div class="card-strip-wrap">
-                    <div class="card-strip-label">Recently found</div>
-                    <div class="card-strip">
-                      <div class="card">
-                        <div class="card-img found-1">🎨</div>
-                        <div class="card-body">
-                          <div class="card-title">Sunrise Mural</div>
-                          <div class="card-meta">2h ago</div>
-                        </div>
-                      </div>
-                      <div class="card">
-                        <div class="card-img found-2">🎭</div>
-                        <div class="card-body">
-                          <div class="card-title">Stage Left</div>
-                          <div class="card-meta">Yesterday</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-strip-label" style="margin-top:0.5rem">Still locked</div>
-                    <div class="card-strip">
-                      <div class="card locked-card">
-                        <div class="card-img locked"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-                        <div class="card-body">
-                          <div class="card-title">Hidden Gate</div>
-                          <div class="card-meta">Not found</div>
-                        </div>
-                      </div>
-                      <div class="card locked-card">
-                        <div class="card-img locked"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-                        <div class="card-body">
-                          <div class="card-title">Food Alley</div>
-                          <div class="card-meta">Not found</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div class="card">
                     <div class="card-zen">
                       <span class="zen-kanji parch">狩</span>
@@ -3720,40 +3466,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="card-list">
-                  <div class="card-row">
-                    <div class="card-row-thumb found-1">🎨</div>
-                    <div class="card-row-info">
-                      <div class="card-title">Sunrise Mural</div>
-                      <div class="card-meta">Found 2h ago</div>
-                    </div>
-                    <span class="card-row-badge">Found</span>
-                  </div>
-                  <div class="card-row">
-                    <div class="card-row-thumb found-2">🎭</div>
-                    <div class="card-row-info">
-                      <div class="card-title">Stage Left</div>
-                      <div class="card-meta">Found yesterday</div>
-                    </div>
-                    <span class="card-row-badge">Found</span>
-                  </div>
-                  <div class="card-row locked">
-                    <div class="card-row-thumb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-                    <div class="card-row-info">
-                      <div class="card-title">Hidden Gate</div>
-                      <div class="card-meta">Not found yet</div>
-                    </div>
-                    <span class="card-row-badge">Locked</span>
-                  </div>
-                  <div class="card-row locked">
-                    <div class="card-row-thumb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-                    <div class="card-row-info">
-                      <div class="card-title">Food Alley</div>
-                      <div class="card-meta">Not found yet</div>
-                    </div>
-                    <span class="card-row-badge">Locked</span>
-                  </div>
-                </div>
               </div>
 
               <!-- Open card -->
@@ -3982,10 +3694,6 @@
                 Cards
               </button>
               <div class="nav-scan-slot">
-                <button class="nav-tab nav-scan-tab" data-nav="scan">
-                  <span class="nav-icon-slot" data-icon="scan"></span>
-                  Scan
-                </button>
                 <button class="nav-scan-fab" data-nav="scan" aria-label="Scan">
                   <span class="nav-icon-slot" data-icon="scan"></span>
                 </button>
@@ -4013,9 +3721,6 @@
       </div>
       <p class="theme-desc" id="theme-desc">
         <strong>Neon Night</strong> — Dark canvas with cyan + pink neon. Scan button glows like a beacon. Feels alive after sunset without being childish.
-      </p>
-      <p class="theme-desc" id="layout-desc">
-        <strong>Classic FAB</strong> — Bottom nav with elevated scan button. Familiar mobile pattern, scan always one thumb-tap away.
       </p>
     </div>
 
@@ -4076,162 +3781,7 @@
       </p>
     </div>
 
-    <!-- All themes overview -->
-    <div class="panel" style="grid-column: 1 / -1">
-      <div class="panel-title">All 15 color themes</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;padding:1.25rem">
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#0c1222,#22d3ee);padding:1.25rem;text-align:center">
-            <div style="font-family:Syne;font-weight:800;font-size:1.1rem;color:#e8f4ff">Neon Night</div>
-            <div style="font-size:0.7rem;color:#7b8db5;margin-top:0.25rem">Dark + cyan glow · night events</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: evening concerts, clubs, light festivals, younger crowd</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#faf5ff,#db2777);padding:1.25rem;text-align:center;border-bottom:3px solid #1e1b2e">
-            <div style="font-family:Syne;font-weight:800;font-size:1.1rem;color:#1e1b2e">Bold Pop</div>
-            <div style="font-size:0.7rem;color:#6b5b7a;margin-top:0.25rem">Brutalist shadows · loud & fun</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: street art hunts, uni events, standing out on social</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#f0fdf4,#166534);padding:1.25rem;text-align:center">
-            <div style="font-family:Outfit;font-weight:800;font-size:1.1rem;color:#14532d">Forest Quest</div>
-            <div style="font-size:0.7rem;color:#4d7c5e;margin-top:0.25rem">Earthy green · nature hunt</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: hiking trails, botanical gardens, eco festivals</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#1e1b4b,#6366f1);padding:1.25rem;text-align:center;border-bottom:3px solid #f43f5e">
-            <div style="font-family:Syne;font-weight:800;font-size:1.1rem;color:#e0e7ff;letter-spacing:0.05em">ELECTRIC ARCADE</div>
-            <div style="font-size:0.7rem;color:#a5b4fc;margin-top:0.25rem">Retro game · high energy</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: gaming expos, escape-room vibes, competitive teens</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#faf6f1,#e8a0b8);padding:1.25rem;text-align:center">
-            <div style="font-family:'Noto Serif JP',serif;font-weight:700;font-size:1.1rem;color:#2a2438">桜 Sakura Matsuri</div>
-            <div style="font-size:0.7rem;color:#7a7089;margin-top:0.25rem">Washi cream · indigo · cherry blossom</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: spring festivals, temple fairs, cultural events, elegant daytime hunts</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#f5f0e6,#c0392b);padding:1.25rem;text-align:center;border-bottom:3px solid #d4a012">
-            <div style="font-family:'Yuji Syuku',serif;font-size:1.1rem;color:#3d2314">⛩ Kyoto Shrine</div>
-            <div style="font-size:0.7rem;color:#7a5c42;margin-top:0.25rem">Gold frames · torii icons · ema plaques</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: temple trails, shrine festivals — full ornate UI with corner brackets &amp; scene art</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#f4e4bc,#5c3d2e);padding:1.25rem;text-align:center">
-            <div style="font-family:'Libre Baskerville',serif;font-weight:700;font-size:1.1rem;color:#2c1810">🧭 Treasure Atlas</div>
-            <div style="font-size:0.7rem;color:#6b4c35;margin-top:0.25rem">Parchment · rope borders · compass nav</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: pirate hunts, museum quests — aged paper cards with wax stamps &amp; map textures</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#fff8f3,#ff6b9d);padding:1.25rem;text-align:center;border:3px solid #2d2838">
-            <div style="font-family:Caveat,cursive;font-weight:700;font-size:1.25rem;color:#2d2838">📔 Sticker Scrapbook</div>
-            <div style="font-size:0.7rem;color:#6e6672;margin-top:0.25rem">Polaroids · washi tape · sticker badges</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: kids events, school hunts — playful collage with tilted cards &amp; tape corners</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#f5f5f7,#1d1d1f);padding:1.25rem;text-align:center;border-bottom:2px solid #e8a0b8">
-            <div style="font-family:-apple-system,Inter,sans-serif;font-weight:600;font-size:1.05rem;color:#1d1d1f;letter-spacing:-0.03em">清 Kiyo Precision</div>
-            <div style="font-size:0.7rem;color:#86868b;margin-top:0.25rem">Japan × Apple · Fuji art · SF typography</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: premium cultural hunts — illustrated cards, frosted header, Apple spacing &amp; shadows</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);padding:1.25rem;text-align:center;border:1px solid rgba(255,255,255,0.2)">
-            <div style="font-family:-apple-system,Inter,sans-serif;font-weight:600;font-size:1.05rem;color:#fff;letter-spacing:-0.03em">Liquid Glass</div>
-            <div style="font-size:0.7rem;color:rgba(255,255,255,0.7);margin-top:0.25rem">Frosted blur · iridescent edges · mesh glow</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: flagship feel — visionOS/iOS glass panels, animated gradient ambient, shimmer borders</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#f0ebe3,#b5352d);padding:1.25rem;text-align:center;border-bottom:2px solid #b8956a">
-            <div style="font-family:'Noto Serif JP',serif;font-weight:700;font-size:1.1rem;color:#2c2620">和 Wagara Washi</div>
-            <div style="font-size:0.7rem;color:#6b5a48;margin-top:0.25rem">Ref ① · seigaiha · kumo · kanoko · kiku</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: cultural premium hunts — washi texture, corner pattern art, cloud card caps, vermillion &amp; gold wagara</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#ffffff,#e60012);padding:1.25rem;text-align:center;border-bottom:2px solid #1a1a1a">
-            <div style="font-family:'Noto Serif JP',serif;font-weight:700;font-size:1.1rem;color:#1a1a1a">墨 Sumi-e Ink</div>
-            <div style="font-size:0.7rem;color:#888;margin-top:0.25rem">Ref ② · Fuji · red sun · sakura branch</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: zen cultural hunts — suibokuga brushstrokes, vast white ma space, ink + vermillion only</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#fff5f7,#f4a0b0);padding:1.25rem;text-align:center;border-bottom:2px solid #fce8ec">
-            <div style="font-family:'M PLUS Rounded 1c',sans-serif;font-weight:800;font-size:1.1rem;color:#4a3728">もふ Mofu Kawaii</div>
-            <div style="font-size:0.7rem;color:#c9a0a8;margin-top:0.25rem">Ref ③ · pastel pink · bubbly · maneki-neko</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: family &amp; kids hunts — soft rounded UI, kawaii card art, hiragana-app energy, approachable fun</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#2d3277,#e9542e);padding:1.25rem;text-align:center">
-            <div style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:0.04em">🍜 Izakaya Navy</div>
-            <div style="font-size:0.7rem;color:rgba(255,255,255,0.75);margin-top:0.25rem">Ref ④ · navy · vermillion · seigaiha · noodles</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: food festivals &amp; night markets — menu-card layout, orange product cards, floating pill nav</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line)">
-          <div style="background:linear-gradient(135deg,#e5d9c3,#c41e3a);padding:1.25rem;text-align:center;border-bottom:2px solid #1a1a1a">
-            <div style="font-family:'Yuji Syuku','Noto Serif JP',serif;font-weight:700;font-size:1.2rem;color:#1a1a1a">禅 Zen Parchment</div>
-            <div style="font-size:0.7rem;color:#7a6f5f;margin-top:0.25rem">Ref ⑥ · kanji icons · maple · samurai · tanzaku</div>
-          </div>
-          <div style="padding:0.75rem;font-size:0.75rem;color:var(--lab-muted)">Best for: cultural zen hunts — parchment widgets, ink calligraphy, red maple accents, iOS-style dock nav</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Layout overview -->
-    <div class="panel" style="grid-column: 1 / -1">
-      <div class="panel-title">All 4 layout structures</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;padding:1.25rem">
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line);padding:1rem">
-          <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.35rem">Classic FAB</div>
-          <div style="font-size:0.75rem;color:var(--lab-muted);line-height:1.5">2-column card grid · bottom nav · scan as floating center button. Your current app structure.</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line);padding:1rem">
-          <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.35rem">Top Tabs</div>
-          <div style="font-size:0.75rem;color:var(--lab-muted);line-height:1.5">3 equal tabs below header · no bottom bar · scan is a peer tab, not special. Cleaner, more iOS-like.</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line);padding:1rem">
-          <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.35rem">Hero Carousel</div>
-          <div style="font-size:0.75rem;color:var(--lab-muted);line-height:1.5">Big progress ring hero · horizontal card strips · flat 3-tab bottom nav. Story-first, discovery feel.</div>
-        </div>
-
-        <div style="border-radius:1rem;overflow:hidden;border:1px solid var(--lab-line);padding:1rem">
-          <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.35rem">Compact List</div>
-          <div style="font-size:0.75rem;color:var(--lab-muted);line-height:1.5">Dense list rows · scan in header · slim 2-tab bottom nav. Maximum info density, power-user friendly.</div>
-        </div>
-
-      </div>
-    </div>
-
+  </div>
   </div>
 
   <script>
@@ -4364,24 +3914,14 @@
       });
     }
 
-    const layoutDescriptions = {
-      classic: '<strong>Classic FAB</strong> — Bottom nav with elevated scan button. Familiar mobile pattern, scan always one thumb-tap away.',
-      tabs: '<strong>Top Tabs</strong> — Navigation moves below the header. Scan is an equal tab, not a hero button. More content space, calmer hierarchy.',
-      carousel: '<strong>Hero Carousel</strong> — Progress ring hero at top, cards in horizontal swipe strips. Bottom nav is flat 3-tab. Feels like a discovery feed.',
-      compact: '<strong>Compact List</strong> — Dense list rows instead of grid. Scan moves to header. Slim 2-tab bottom bar. Fits more cards on screen.'
-    };
-
     const themeBtns = document.querySelectorAll('.theme-btn');
-    const layoutBtns = document.querySelectorAll('.layout-btn');
     const screenTabs = document.querySelectorAll('#screen-tabs .screen-tab');
-    const topNavTabs = document.querySelectorAll('.top-nav-tab');
     const navTabs = document.querySelectorAll('.bottom-nav [data-nav]');
     const screens = document.querySelectorAll('.screen');
 
     function switchScreen(target) {
       screenTabs.forEach(t => t.classList.toggle('on', t.dataset.screen === target));
       const isTabScreen = ['codes', 'scan', 'rank'].includes(target);
-      topNavTabs.forEach(t => t.classList.toggle('active', isTabScreen && t.dataset.nav === target));
       navTabs.forEach(t => t.classList.toggle('active', isTabScreen && t.dataset.nav === target));
       screens.forEach(s => s.classList.toggle('active', s.dataset.screen === target));
     }
@@ -4394,27 +3934,12 @@
         document.getElementById('theme-desc').innerHTML = descriptions[theme].desc;
         document.getElementById('theme-vibe').textContent = descriptions[theme].vibe;
         applyThemeIcons(theme);
-      });
-    });
-
-    layoutBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const layout = btn.dataset.layout;
-        document.body.dataset.activeLayout = layout;
-        layoutBtns.forEach(b => b.classList.toggle('active', b === btn));
-        document.getElementById('layout-desc').innerHTML = layoutDescriptions[layout];
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       });
     });
 
     screenTabs.forEach(tab => {
       tab.addEventListener('click', () => switchScreen(tab.dataset.screen));
-    });
-
-    topNavTabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchScreen(tab.dataset.nav);
-      });
     });
 
     navTabs.forEach(tab => {
