@@ -2,7 +2,9 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { CodesApi } from '../backend/api';
 import { HuntEvent, OfflinePack } from '../models';
 import { idbGet, idbPut } from '../db/idb';
+import { SessionStore } from './session.store';
 import { ThemeStore } from './theme.store';
+import { normalizeThemeConfig } from '../themes/theme-utils';
 
 const DEVICE_EVENT = 'device:event';
 const DEVICE_PACK = 'device:pack';
@@ -16,6 +18,7 @@ const DEVICE_PACK = 'device:pack';
 export class PackStore {
   private readonly codes = inject(CodesApi);
   private readonly themes = inject(ThemeStore);
+  private readonly session = inject(SessionStore);
 
   private readonly _event = signal<HuntEvent | null>(null);
   private readonly _pack = signal<OfflinePack | null>(null);
@@ -40,13 +43,18 @@ export class PackStore {
     return 'live';
   });
 
+  private applyThemeForEvent(event: HuntEvent): void {
+    const config = normalizeThemeConfig(event.theme, event.name);
+    this.themes.applyForEvent(config, this.session.user()?.preferredThemeId ?? null);
+  }
+
   /** Load cached data instantly, then try the network. */
   async load(): Promise<void> {
     const cachedEvent = await idbGet<HuntEvent>('kv', DEVICE_EVENT);
     const cachedPack = await idbGet<OfflinePack>('kv', DEVICE_PACK);
     if (cachedEvent) {
       this._event.set(cachedEvent);
-      this.themes.apply(cachedEvent.theme);
+      this.applyThemeForEvent(cachedEvent);
     }
     if (cachedPack) this._pack.set(cachedPack);
     await this.refresh();
@@ -58,7 +66,7 @@ export class PackStore {
       const event = await this.codes.getActiveEvent();
       if (!event) return;
       this._event.set(event);
-      this.themes.apply(event.theme);
+      this.applyThemeForEvent(event);
       await idbPut('kv', DEVICE_EVENT, event);
 
       const current = this._pack();
@@ -70,5 +78,11 @@ export class PackStore {
     } catch {
       // offline — cached data stays authoritative
     }
+  }
+
+  /** Re-apply when user changes theme preference. */
+  reapplyTheme(): void {
+    const event = this._event();
+    if (event) this.applyThemeForEvent(event);
   }
 }

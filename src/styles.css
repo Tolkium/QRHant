@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/themes.css";
 
 /* Server-driven theme: these variables are overwritten at runtime by ThemeStore
    from the active event's theme JSON. Tailwind utilities map onto them below. */
@@ -13,7 +14,9 @@
   --c-line: #e5e1f0;
   --c-good: #16a34a;
   --c-bad: #dc2626;
-  color-scheme: only light;
+  --c-font: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --c-font-display: inherit;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -36,12 +39,7 @@ body {
 
 body {
   @apply bg-page text-ink antialiased;
-  font-family:
-    "Segoe UI",
-    system-ui,
-    -apple-system,
-    Roboto,
-    sans-serif;
+  font-family: var(--c-font);
   /* Outdoor readability: slightly larger base font */
   font-size: 17px;
   overscroll-behavior-y: none;

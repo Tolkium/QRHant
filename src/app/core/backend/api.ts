@@ -36,7 +36,9 @@ export abstract class AuthApi {
   abstract register(creds: Credentials): Promise<Profile>;
   abstract login(creds: Credentials): Promise<Profile>;
   abstract logout(): Promise<void>;
-  abstract updateProfile(patch: Partial<Pick<Profile, 'avatar' | 'language'>>): Promise<Profile>;
+  abstract updateProfile(
+    patch: Partial<Pick<Profile, 'avatar' | 'language' | 'preferredThemeId'>>,
+  ): Promise<Profile>;
 }
 
 export abstract class CodesApi {

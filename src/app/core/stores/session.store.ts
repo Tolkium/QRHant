@@ -1,12 +1,14 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, Injector, signal } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { AuthApi, Credentials } from '../backend/api';
 import { Lang, Profile } from '../models';
+import { PackStore } from './pack.store';
 
 @Injectable({ providedIn: 'root' })
 export class SessionStore {
   private readonly auth = inject(AuthApi);
   private readonly transloco = inject(TranslocoService);
+  private readonly injector = inject(Injector);
 
   private readonly _user = signal<Profile | null>(null);
   private readonly _restored = signal(false);
@@ -37,17 +39,20 @@ export class SessionStore {
     const user = await this.auth.login(creds);
     this._user.set(user);
     this.applyLanguage(user.language);
+    this.injector.get(PackStore).reapplyTheme();
   }
 
   async register(creds: Credentials): Promise<void> {
     const user = await this.auth.register(creds);
     this._user.set(user);
     this.applyLanguage(user.language);
+    this.injector.get(PackStore).reapplyTheme();
   }
 
   async logout(): Promise<void> {
     await this.auth.logout();
     this._user.set(null);
+    this.injector.get(PackStore).reapplyTheme();
   }
 
   async setLanguage(language: Lang): Promise<void> {
@@ -60,6 +65,13 @@ export class SessionStore {
   async setAvatar(avatar: string): Promise<void> {
     if (this._user()) {
       this._user.set(await this.auth.updateProfile({ avatar }));
+    }
+  }
+
+  async setPreferredTheme(themeId: string | null): Promise<void> {
+    if (this._user()) {
+      this._user.set(await this.auth.updateProfile({ preferredThemeId: themeId }));
+      this.injector.get(PackStore).reapplyTheme();
     }
   }
 

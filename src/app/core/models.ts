@@ -11,6 +11,8 @@ export interface Profile {
   email?: string;
   avatar: string; // preset id (e.g. 'fox') or JPEG data URL
   language: Lang;
+  /** null = use event default theme */
+  preferredThemeId: string | null;
   role: Role;
   banned: boolean;
   createdAt: string;
@@ -18,6 +20,51 @@ export interface Profile {
 
 export type EventState = 'setup' | 'live' | 'ended';
 
+export interface ThemeTokens {
+  primary: string;
+  primaryInk: string;
+  accent: string;
+  bg: string;
+  surface: string;
+  ink: string;
+  muted: string;
+  line: string;
+  good: string;
+  bad: string;
+  radius: string;
+  radiusLg: string;
+  shadow: string;
+  font: string;
+  fontDisplay: string;
+}
+
+export interface CustomTheme {
+  id: string;
+  name: string;
+  tokens: ThemeTokens;
+  /** Optional built-in id (e.g. zen) — reuses its frame/nav cosmetics from design lab */
+  extends?: string;
+  createdAt: string;
+}
+
+export interface EventThemeConfig {
+  defaultPresetId: string;
+  enabledPresetIds: string[];
+  themePickerEnabled: boolean;
+  customThemes: CustomTheme[];
+  eventName: string;
+  logoText: string;
+}
+
+/** Resolved theme entry for UI lists (built-in or custom). */
+export interface ThemeRef {
+  id: string;
+  name: string;
+  builtin: boolean;
+  tokens: ThemeTokens;
+}
+
+/** @deprecated Use EventThemeConfig. Kept for type migration only. */
 export interface EventTheme {
   primary: string;
   primaryInk: string;
@@ -77,7 +124,7 @@ export interface HuntEvent {
   endsAt: string;
   state: EventState;
   active: boolean;
-  theme: EventTheme;
+  theme: EventThemeConfig;
   leaderboardFlags: LeaderboardFlags;
   huntSettings: HuntSettings;
   /** multiple site plans per event */
@@ -230,6 +277,7 @@ export function isPresetAvatar(avatar: string): boolean {
 export function isCustomAvatar(avatar: string): boolean {
   return avatar.startsWith('data:image/');
 }
+
 
 export const DEFAULT_THEME: EventTheme = {
   primary: '#6d28d9',

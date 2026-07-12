@@ -4,18 +4,30 @@ import {
   DEFAULT_ARGON,
   DEFAULT_FLAGS,
   DEFAULT_SETTINGS,
-  DEFAULT_THEME,
   HuntEvent,
   Lang,
   Profile,
 } from '../../models';
+import { defaultThemeConfig } from '../../themes/theme-utils';
 import { idbGet, idbPut } from '../../db/idb';
 import { generateCode } from '../../crypto/codec';
 import { deriveCode, encryptContent, newArgonSalt } from '../../crypto/pack-crypto';
 import { MockServer } from './mock-server';
 
-const SEED_VERSION = 9;
+const SEED_VERSION = 10;
 const SEED_KEY = 'seeded:version';
+
+/** Dev-only: keep owner nicknames as admin in the local mock DB. */
+const DEV_ADMIN_NICKNAMES = ['tolkium'] as const;
+
+async function ensureDevAdmins(server: MockServer): Promise<void> {
+  for (const nickname of DEV_ADMIN_NICKNAMES) {
+    const user = await server.findUserByNickname(nickname);
+    if (user && user.role !== 'admin') {
+      await server.putUser({ ...user, preferredThemeId: user.preferredThemeId ?? null, role: 'admin' });
+    }
+  }
+}
 
 /** Deterministic SVG placeholder artwork — abstract shapes only, no text overlay. */
 function demoArtImage(index: number): string {
@@ -90,7 +102,10 @@ function contentOf(a: SeedArt, index: number): CardContent {
  */
 export async function seedIfNeeded(server: MockServer): Promise<void> {
   const version = await idbGet<number>('kv', SEED_KEY);
-  if (version === SEED_VERSION) return;
+  if (version === SEED_VERSION) {
+    await ensureDevAdmins(server);
+    return;
+  }
   if (navigator.locks) {
     await navigator.locks.request('qrhunt-seed', () => doSeed(server));
   } else {
@@ -121,7 +136,10 @@ async function doSeed(server: MockServer): Promise<void> {
     endsAt: new Date(now + 48 * 3600_000).toISOString(),
     state: 'live',
     active: true,
-    theme: { ...DEFAULT_THEME, eventName: 'Demo Festival 2026', logoText: 'Demo Hunt' },
+    theme: {
+      ...defaultThemeConfig('Demo Festival 2026', 'Demo Hunt'),
+      themePickerEnabled: true,
+    },
     leaderboardFlags: { ...DEFAULT_FLAGS },
     huntSettings: { ...DEFAULT_SETTINGS },
     maps: [],
@@ -168,6 +186,7 @@ async function doSeed(server: MockServer): Promise<void> {
       nickname: 'admin',
       avatar: 'owl',
       language: 'en',
+      preferredThemeId: null,
       role: 'admin',
       banned: false,
       createdAt: new Date().toISOString(),
@@ -193,6 +212,7 @@ async function doSeed(server: MockServer): Promise<void> {
         nickname,
         avatar,
         language: 'sk',
+        preferredThemeId: null,
         role: 'player',
         banned: false,
         createdAt: new Date().toISOString(),
@@ -215,4 +235,5 @@ async function doSeed(server: MockServer): Promise<void> {
   }
 
   await idbPut('kv', SEED_KEY, SEED_VERSION);
+  await ensureDevAdmins(server);
 }

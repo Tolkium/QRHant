@@ -63,33 +63,6 @@ import { EventState, HuntEvent } from '../../../core/models';
           </div>
         </div>
 
-        <!-- theme editor: server-driven design -->
-        <h3 class="font-bold mt-2">Theme (applies to players without any redeploy)</h3>
-        <div class="grid md:grid-cols-3 gap-4">
-          <div>
-            <label class="label" for="th-event">Displayed event name</label>
-            <input id="th-event" class="input" [(ngModel)]="e.theme.eventName" />
-          </div>
-          <div>
-            <label class="label" for="th-logo">Logo text</label>
-            <input id="th-logo" class="input" [(ngModel)]="e.theme.logoText" />
-          </div>
-          <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="label" for="th-primary">Primary</label>
-              <input id="th-primary" type="color" class="input !p-1" [(ngModel)]="e.theme.primary" />
-            </div>
-            <div>
-              <label class="label" for="th-accent">Accent</label>
-              <input id="th-accent" type="color" class="input !p-1" [(ngModel)]="e.theme.accent" />
-            </div>
-            <div>
-              <label class="label" for="th-bg">Background</label>
-              <input id="th-bg" type="color" class="input !p-1" [(ngModel)]="e.theme.bg" />
-            </div>
-          </div>
-        </div>
-
         <div class="flex gap-2 justify-end">
           <button class="btn-primary" (click)="save()">Save event</button>
         </div>

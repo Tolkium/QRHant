@@ -23,6 +23,7 @@ import {
   normalizeEvent,
 } from '../../models';
 import { deriveCode, encryptContent } from '../../crypto/pack-crypto';
+import { normalizeThemeConfig } from '../../themes/theme-utils';
 import { environment } from '../../../../environments/environment';
 
 /**
@@ -49,7 +50,7 @@ function eventFromRow(row: Record<string, unknown>): HuntEvent {
     endsAt: row['ends_at'] as string,
     state: row['state'] as HuntEvent['state'],
     active: row['active'] as boolean,
-    theme: row['theme'] as HuntEvent['theme'],
+    theme: normalizeThemeConfig(row['theme'], row['name'] as string),
     leaderboardFlags: row['leaderboard_flags'] as HuntEvent['leaderboardFlags'],
     huntSettings: row['hunt_settings'] as HuntEvent['huntSettings'],
     maps: (row['maps'] as HuntEvent['maps']) ?? [],
@@ -118,7 +119,9 @@ export class SupabaseBackendService {
     } catch {
       // offline: fall back to the cached profile so the shell is never gated
       const cached = localStorage.getItem(PROFILE_CACHE);
-      return cached ? (JSON.parse(cached) as Profile) : null;
+      if (!cached) return null;
+      const parsed = JSON.parse(cached) as Profile;
+      return { ...parsed, preferredThemeId: parsed.preferredThemeId ?? null };
     }
   }
 
@@ -128,13 +131,14 @@ export class SupabaseBackendService {
       .select('*')
       .eq('id', userId)
       .single();
-    if (error || !data) throw new Error('profile missing');
+    if (error || !data) throw new Error('profile-missing');
     if (data.banned) throw new Error('banned');
     return {
       id: data.id,
       nickname: data.nickname,
       avatar: data.avatar,
       language: data.language,
+      preferredThemeId: data.preferred_theme_id ?? null,
       role: data.role,
       banned: data.banned,
       createdAt: data.created_at,
@@ -152,7 +156,7 @@ export class SupabaseBackendService {
       },
     });
     if (error || !data.user) {
-      throw new Error(error?.message.includes('already') ? 'nickname-taken' : 'invalid');
+      throw new Error(error?.message.includes('already') ? 'nickname-taken' : 'register-failed');
     }
 
     // Ensure we have a session (email confirm must be off in Supabase dashboard).
@@ -161,7 +165,7 @@ export class SupabaseBackendService {
         email: syntheticEmail(nickname),
         password: creds.password,
       });
-      if (loginError) throw new Error('invalid');
+      if (loginError) throw new Error('register-failed');
     }
 
     // Profile row is created by DB trigger; upsert covers older projects without it.
@@ -174,7 +178,7 @@ export class SupabaseBackendService {
       { onConflict: 'id', ignoreDuplicates: true },
     );
     if (profileError && profileError.code !== '23505') {
-      throw new Error(profileError.code === '23505' ? 'nickname-taken' : 'invalid');
+      throw new Error(profileError.code === '23505' ? 'nickname-taken' : 'register-failed');
     }
     const profile = await this.fetchProfile(data.user.id);
     localStorage.setItem(PROFILE_CACHE, JSON.stringify(profile));
@@ -186,7 +190,7 @@ export class SupabaseBackendService {
       email: syntheticEmail(creds.nickname),
       password: creds.password,
     });
-    if (error || !data.user) throw new Error('invalid');
+    if (error || !data.user) throw new Error('login-failed');
 
     // Admin TOTP 2FA: when an authenticator is enrolled, password alone gives
     // aal1 and the caller must complete a TOTP challenge via verifyTotp().
@@ -229,12 +233,20 @@ export class SupabaseBackendService {
     await this.client.auth.signOut();
   }
 
-  async updateProfile(patch: Partial<Pick<Profile, 'avatar' | 'language'>>): Promise<Profile> {
+  async updateProfile(
+    patch: Partial<Pick<Profile, 'avatar' | 'language' | 'preferredThemeId'>>,
+  ): Promise<Profile> {
     const { data } = await this.client.auth.getUser();
     if (!data.user) throw new Error('not authenticated');
-    const { error } = await this.client.from('profiles').update(patch).eq('id', data.user.id);
+    const row: Record<string, unknown> = {};
+    if (patch.avatar !== undefined) row['avatar'] = patch.avatar;
+    if (patch.language !== undefined) row['language'] = patch.language;
+    if (patch.preferredThemeId !== undefined) row['preferred_theme_id'] = patch.preferredThemeId;
+    const { error } = await this.client.from('profiles').update(row).eq('id', data.user.id);
     if (error) throw new Error(error.message);
-    return this.fetchProfile(data.user.id);
+    const profile = await this.fetchProfile(data.user.id);
+    localStorage.setItem(PROFILE_CACHE, JSON.stringify(profile));
+    return profile;
   }
 
   // ---------- CodesApi ----------
@@ -305,16 +317,15 @@ export class SupabaseBackendService {
   }
 
   async createEvent(name: string): Promise<HuntEvent> {
-    const { DEFAULT_THEME, DEFAULT_FLAGS, DEFAULT_SETTINGS, DEFAULT_ARGON } = await import(
-      '../../models'
-    );
+    const { DEFAULT_FLAGS, DEFAULT_SETTINGS, DEFAULT_ARGON } = await import('../../models');
+    const { defaultThemeConfig } = await import('../../themes/theme-utils');
     const { newArgonSalt } = await import('../../crypto/pack-crypto');
     const now = Date.now();
     const row = {
       name,
       starts_at: new Date(now).toISOString(),
       ends_at: new Date(now + 3 * 24 * 3600_000).toISOString(),
-      theme: { ...DEFAULT_THEME, eventName: name, logoText: name },
+      theme: defaultThemeConfig(name, name),
       leaderboard_flags: DEFAULT_FLAGS,
       hunt_settings: DEFAULT_SETTINGS,
       argon_salt: newArgonSalt(),
@@ -435,6 +446,7 @@ export class SupabaseBackendService {
       nickname: row.nickname,
       avatar: row.avatar,
       language: row.language,
+      preferredThemeId: row.preferred_theme_id ?? null,
       role: row.role,
       banned: row.banned,
       createdAt: row.created_at,
@@ -527,7 +539,7 @@ export class SupabaseAuthApi extends AuthApi {
   register = (c: Credentials) => this.backend.register(c);
   login = (c: Credentials) => this.backend.login(c);
   logout = () => this.backend.logout();
-  updateProfile = (p: Partial<Pick<Profile, 'avatar' | 'language'>>) =>
+  updateProfile = (p: Partial<Pick<Profile, 'avatar' | 'language' | 'preferredThemeId'>>) =>
     this.backend.updateProfile(p);
 }
 

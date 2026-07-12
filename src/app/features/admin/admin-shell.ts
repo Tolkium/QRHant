@@ -13,6 +13,7 @@ const NAV = [
   ['leaderboard', 'Leaderboard', '🏆'],
   ['players', 'Players', '👥'],
   ['settings', 'Settings', '⚙️'],
+  ['themes', 'Themes', '🎨'],
 ] as const;
 
 @Component({

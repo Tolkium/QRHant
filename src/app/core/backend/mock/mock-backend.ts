@@ -61,7 +61,7 @@ export class MockBackendService {
       return null;
     }
     this.currentUserId = user.id;
-    return user;
+    return { ...user, preferredThemeId: user.preferredThemeId ?? null };
   }
 
   async register(creds: Credentials): Promise<Profile> {
@@ -76,6 +76,7 @@ export class MockBackendService {
       email: creds.email?.trim() || undefined,
       avatar: 'fox',
       language: creds.language ?? 'en',
+      preferredThemeId: null,
       role: 'player',
       banned: false,
       createdAt: new Date().toISOString(),
@@ -99,7 +100,7 @@ export class MockBackendService {
     if (user.banned) throw new Error('banned');
     this.currentUserId = user.id;
     localStorage.setItem(SESSION_KEY, user.id);
-    return user;
+    return { ...user, preferredThemeId: user.preferredThemeId ?? null };
   }
 
   async logout(): Promise<void> {
@@ -107,7 +108,9 @@ export class MockBackendService {
     localStorage.removeItem(SESSION_KEY);
   }
 
-  async updateProfile(patch: Partial<Pick<Profile, 'avatar' | 'language'>>): Promise<Profile> {
+  async updateProfile(
+    patch: Partial<Pick<Profile, 'avatar' | 'language' | 'preferredThemeId'>>,
+  ): Promise<Profile> {
     await this.init();
     const user = await this.server.getUser(this.requireUser());
     if (!user) throw new Error('not authenticated');
@@ -120,7 +123,10 @@ export class MockBackendService {
 
   async getActiveEvent(): Promise<HuntEvent | null> {
     await this.init();
-    return this.server.getActiveEvent();
+    const event = await this.server.getActiveEvent();
+    if (!event) return null;
+    const { normalizeThemeConfig } = await import('../../themes/theme-utils');
+    return { ...event, theme: normalizeThemeConfig(event.theme, event.name) };
   }
 
   async getPack(eventId: string): Promise<OfflinePack> {
@@ -163,13 +169,16 @@ export class MockBackendService {
   async listEvents(): Promise<HuntEvent[]> {
     await this.init();
     await this.requireAdmin();
-    return this.server.listEvents();
+    const { normalizeThemeConfig } = await import('../../themes/theme-utils');
+    const events = await this.server.listEvents();
+    return events.map((e) => ({ ...e, theme: normalizeThemeConfig(e.theme, e.name) }));
   }
 
   async createEvent(name: string): Promise<HuntEvent> {
     await this.init();
     await this.requireAdmin();
-    const { DEFAULT_THEME, DEFAULT_FLAGS, DEFAULT_ARGON } = await import('../../models');
+    const { DEFAULT_FLAGS, DEFAULT_ARGON } = await import('../../models');
+    const { defaultThemeConfig } = await import('../../themes/theme-utils');
     const { newArgonSalt } = await import('../../crypto/pack-crypto');
     const now = Date.now();
     const event: HuntEvent = {
@@ -179,7 +188,7 @@ export class MockBackendService {
       endsAt: new Date(now + 3 * 24 * 3600_000).toISOString(),
       state: 'setup',
       active: false,
-      theme: { ...DEFAULT_THEME, eventName: name, logoText: name },
+      theme: defaultThemeConfig(name, name),
       leaderboardFlags: { ...DEFAULT_FLAGS },
       huntSettings: { ...DEFAULT_SETTINGS },
       maps: [],
@@ -328,7 +337,7 @@ export class MockAuthApi extends AuthApi {
   register = (c: Credentials) => this.backend.register(c);
   login = (c: Credentials) => this.backend.login(c);
   logout = () => this.backend.logout();
-  updateProfile = (p: Partial<Pick<Profile, 'avatar' | 'language'>>) =>
+  updateProfile = (p: Partial<Pick<Profile, 'avatar' | 'language' | 'preferredThemeId'>>) =>
     this.backend.updateProfile(p);
 }
 
