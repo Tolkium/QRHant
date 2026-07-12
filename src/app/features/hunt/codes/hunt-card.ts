@@ -9,11 +9,22 @@ import { HuntCardLockIcon } from './hunt-card-lock-icon';
   imports: [RouterLink, NgTemplateOutlet, HuntCardLockIcon],
   template: `
     @if (link()) {
-      <a [routerLink]="link()!" class="hunt-card" [class.hunt-card-locked]="!found()">
+      <a
+        [routerLink]="link()!"
+        class="hunt-card"
+        [class.hunt-card-locked]="!found()"
+        [class.hunt-card-has-photo]="found() && !!image()"
+        [class.hunt-card-has-locked-preview]="!found() && !!lockedPreview()"
+      >
         <ng-container *ngTemplateOutlet="layers" />
       </a>
     } @else {
-      <div class="hunt-card" [class.hunt-card-locked]="!found()">
+      <div
+        class="hunt-card"
+        [class.hunt-card-locked]="!found()"
+        [class.hunt-card-has-photo]="found() && !!image()"
+        [class.hunt-card-has-locked-preview]="!found() && !!lockedPreview()"
+      >
         <ng-container *ngTemplateOutlet="layers" />
       </div>
     }
@@ -301,6 +312,11 @@ import { HuntCardLockIcon } from './hunt-card-lock-icon';
         <div class="hunt-card-art" [class.hunt-card-art-locked]="!found()">
           @if (image()) {
             <img [src]="image()!" [alt]="title()" />
+          } @else if (!found() && lockedPreview()) {
+            <img [src]="lockedPreview()!" alt="" class="hunt-card-locked-preview-img" />
+            <span class="hunt-card-lock-overlay">
+              <app-hunt-card-lock-icon />
+            </span>
           } @else if (!found()) {
             <app-hunt-card-lock-icon />
           } @else {
@@ -320,6 +336,7 @@ export class HuntCard {
   readonly title = input.required<string>();
   readonly meta = input.required<string>();
   readonly image = input<string | null>(null);
+  readonly lockedPreview = input<string | null>(null);
   readonly index = input.required<number>();
   readonly link = input<string | null>(null);
 

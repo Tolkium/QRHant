@@ -470,6 +470,55 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
   overflow: hidden;
 }
 
+/* Found cards with uploaded artwork: photo layer wins over theme illustration. */
+.hunt-card.hunt-card-has-photo > .hunt-card-zen,
+.hunt-card.hunt-card-has-photo > .hunt-card-kiyo,
+.hunt-card.hunt-card-has-photo > .hunt-card-wamon,
+.hunt-card.hunt-card-has-photo > .hunt-card-sumi,
+.hunt-card.hunt-card-has-photo > .hunt-card-kawaii,
+.hunt-card.hunt-card-has-photo > .hunt-card-izakaya {
+  display: none !important;
+}
+
+.hunt-card.hunt-card-has-photo > .hunt-card-inner {
+  display: block !important;
+  z-index: 2;
+}
+
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-zen,
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-kiyo,
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-wamon,
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-sumi,
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-kawaii,
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-izakaya {
+  display: none !important;
+}
+
+.hunt-card.hunt-card-has-locked-preview > .hunt-card-inner {
+  display: block !important;
+  z-index: 2;
+}
+
+.hunt-card-locked-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.4) brightness(0.95);
+}
+
+.hunt-card-lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.hunt-card-art-locked .hunt-card-lock-overlay .hunt-card-lock-icon {
+  opacity: 0.95;
+}
+
 .hunt-card-zen .zen-art,
 .hunt-card-kiyo .kiyo-art,
 .hunt-card-wamon .wamon-art,

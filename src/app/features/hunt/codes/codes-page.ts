@@ -3,6 +3,9 @@ import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { FindsStore } from '../../../core/stores/finds.store';
 import { PackStore } from '../../../core/stores/pack.store';
+import { ThemeStore } from '../../../core/stores/theme.store';
+import { themeLockedPreviewImage, themeUnlockedArtImage } from '../../../core/themes/theme-card-art';
+import { isRichCardTheme } from '../../../core/themes/theme-utils';
 import { HuntCard } from './hunt-card';
 import { HuntCardLockIcon } from './hunt-card-lock-icon';
 
@@ -61,6 +64,7 @@ const VIEW_KEY = 'qrhunt.codesView';
             [title]="item.title"
             [meta]="item.found ? item.foundAt : ('codes.locked' | transloco)"
             [image]="item.image"
+            [lockedPreview]="item.lockedPreview"
             [index]="i"
             [link]="item.found ? '/hunt/codes/' + item.id : null"
           />
@@ -86,8 +90,11 @@ const VIEW_KEY = 'qrhunt.codesView';
             </a>
           } @else {
             <div class="card flex items-center gap-3 p-2.5 border-dashed bg-transparent opacity-70">
-              <div class="w-14 h-14 rounded-lg bg-line/50 flex items-center justify-center shrink-0 grayscale text-muted hunt-card-lock-list">
-                <app-hunt-card-lock-icon />
+              <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative hunt-card-lock-list">
+                <img [src]="item.lockedPreview" class="w-full h-full object-cover grayscale opacity-70" alt="" />
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <app-hunt-card-lock-icon />
+                </div>
               </div>
               <div class="min-w-0 flex-1">
                 <p class="font-bold truncate text-muted">{{ item.title }}</p>
@@ -103,6 +110,7 @@ const VIEW_KEY = 'qrhunt.codesView';
 export class CodesPage {
   private readonly pack = inject(PackStore);
   private readonly finds = inject(FindsStore);
+  private readonly theme = inject(ThemeStore);
 
   readonly filters: Filter[] = ['all', 'found', 'missing'];
   readonly filter = signal<Filter>('all');
@@ -112,14 +120,21 @@ export class CodesPage {
   readonly foundCount = computed(() => this.finds.foundCount());
 
   readonly visible = computed(() => {
-    const items = this.pack.releasedEntries().map((entry) => {
+    const cosmeticsId = this.theme.applied()?.cosmeticsId ?? 'zen';
+    const rich = isRichCardTheme(cosmeticsId);
+    const items = this.pack.releasedEntries().map((entry, index) => {
       const find = this.finds.findOf(entry.id);
       const found = !!find;
       return {
         id: entry.id,
         found,
         title: found ? find!.content.title : (entry.title || '???'),
-        image: find?.content.image ?? null,
+        image:
+          found && !rich
+            ? (find!.content.image ?? themeUnlockedArtImage(cosmeticsId, index))
+            : null,
+        lockedPreview:
+          !found && !rich ? themeLockedPreviewImage(cosmeticsId, index) : null,
         foundAt: find ? new Date(find.clientFoundAt).toLocaleString() : '',
       };
     });

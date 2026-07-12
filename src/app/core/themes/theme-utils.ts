@@ -239,3 +239,19 @@ export function exportCustomThemeJson(theme: CustomTheme): string {
 export function allBuiltinPresets() {
   return BUILTIN_THEME_PRESETS;
 }
+
+/** Themes with inline SVG card layers in hunt-card (not generic photo inner). */
+export const RICH_CARD_THEME_IDS: readonly BuiltinThemeId[] = [
+  'zen',
+  'kiyo',
+  'wamon',
+  'sumi',
+  'kawaii',
+  'izakaya',
+];
+
+const RICH_CARD_SET = new Set<string>(RICH_CARD_THEME_IDS);
+
+export function isRichCardTheme(cosmeticsId: string): boolean {
+  return RICH_CARD_SET.has(cosmeticsId);
+}
