@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { CardContent, LocalFind, PackEntry } from '../models';
+import { matchAgainstPack } from '../crypto/pack-crypto';
+import { CardContent, LocalFind, OfflinePack, PackEntry } from '../models';
 import { idbGetAll, idbPut } from '../db/idb';
 import { SessionStore } from './session.store';
 
@@ -69,4 +70,36 @@ export class FindsStore {
     }
     this._finds.set(updated);
   }
+
+  /** Refresh decrypted content when admin updates the pack after a find was recorded. */
+  async rehydrateFromPack(pack: OfflinePack): Promise<void> {
+    const userId = this.session.user()?.id;
+    if (!userId) return;
+
+    const updated = new Map(this._finds());
+    let changed = false;
+
+    for (const [codeId, find] of updated) {
+      if (find.userId !== userId || find.eventId !== pack.eventId) continue;
+      const match = await matchAgainstPack(find.code, pack);
+      if (!match || match.entry.id !== codeId) continue;
+      if (!contentChanged(find.content, match.content)) continue;
+      const next: LocalFind = { ...find, content: match.content };
+      updated.set(codeId, next);
+      await idbPut('localFinds', codeId, next);
+      changed = true;
+    }
+
+    if (changed) this._finds.set(updated);
+  }
+}
+
+function contentChanged(before: CardContent, after: CardContent): boolean {
+  return (
+    before.title !== after.title ||
+    before.image !== after.image ||
+    before.art.en !== after.art.en ||
+    before.art.sk !== after.art.sk ||
+    before.art.cs !== after.art.cs
+  );
 }

@@ -130,7 +130,6 @@ export class HuntShell {
   readonly sync = inject(SyncEngine);
   readonly install = inject(InstallPromptService);
 
-  private readonly now = signal(Date.now());
   private readonly installDismissed = signal(
     localStorage.getItem('qrhunt.installDismissed') === '1',
   );
@@ -146,16 +145,12 @@ export class HuntShell {
   readonly countdown = computed(() => {
     const event = this.pack.event();
     if (!event) return '';
-    const ms = Math.max(0, Date.parse(event.startsAt) - this.now());
+    const ms = Math.max(0, Date.parse(event.startsAt) - this.pack.clock());
     const h = Math.floor(ms / 3600_000);
     const m = Math.floor((ms % 3600_000) / 60_000);
     const s = Math.floor((ms % 60_000) / 1000);
     return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   });
-
-  constructor() {
-    setInterval(() => this.now.set(Date.now()), 1000);
-  }
 
   dismissInstall(): void {
     localStorage.setItem('qrhunt.installDismissed', '1');
