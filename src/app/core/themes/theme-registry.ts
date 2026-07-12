@@ -222,7 +222,7 @@ export const BUILTIN_THEME_PRESETS: readonly BuiltinThemePreset[] = [
       primary: '#ffffff',
       primaryInk: '#1a1a2e',
       accent: '#a78bfa',
-      bg: 'transparent',
+      bg: '#0a0a12',
       surface: 'rgba(255,255,255,0.12)',
       ink: '#ffffff',
       muted: 'rgba(255,255,255,0.55)',

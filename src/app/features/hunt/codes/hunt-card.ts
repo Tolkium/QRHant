@@ -2,10 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { cardVariant, zenVariant } from './hunt-card-art';
+import { HuntCardLockIcon } from './hunt-card-lock-icon';
 
 @Component({
   selector: 'app-hunt-card',
-  imports: [RouterLink, NgTemplateOutlet],
+  imports: [RouterLink, NgTemplateOutlet, HuntCardLockIcon],
   template: `
     @if (link()) {
       <a [routerLink]="link()!" class="hunt-card" [class.hunt-card-locked]="!found()">
@@ -301,7 +302,7 @@ import { cardVariant, zenVariant } from './hunt-card-art';
           @if (image()) {
             <img [src]="image()!" [alt]="title()" />
           } @else if (!found()) {
-            <span aria-hidden="true">❓</span>
+            <app-hunt-card-lock-icon />
           } @else {
             <span class="text-4xl" aria-hidden="true">🎨</span>
           }

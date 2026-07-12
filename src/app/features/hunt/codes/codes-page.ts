@@ -4,6 +4,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { FindsStore } from '../../../core/stores/finds.store';
 import { PackStore } from '../../../core/stores/pack.store';
 import { HuntCard } from './hunt-card';
+import { HuntCardLockIcon } from './hunt-card-lock-icon';
 
 type Filter = 'all' | 'found' | 'missing';
 type View = 'grid' | 'list';
@@ -12,7 +13,7 @@ const VIEW_KEY = 'qrhunt.codesView';
 
 @Component({
   selector: 'app-codes-page',
-  imports: [RouterLink, TranslocoModule, HuntCard],
+  imports: [RouterLink, TranslocoModule, HuntCard, HuntCardLockIcon],
   template: `
     <div class="hunt-progress">
       <div class="hunt-progress-row">
@@ -85,8 +86,8 @@ const VIEW_KEY = 'qrhunt.codesView';
             </a>
           } @else {
             <div class="card flex items-center gap-3 p-2.5 border-dashed bg-transparent opacity-70">
-              <div class="w-14 h-14 rounded-lg bg-line/50 flex items-center justify-center text-2xl shrink-0 grayscale">
-                ❓
+              <div class="w-14 h-14 rounded-lg bg-line/50 flex items-center justify-center shrink-0 grayscale text-muted hunt-card-lock-list">
+                <app-hunt-card-lock-icon />
               </div>
               <div class="min-w-0 flex-1">
                 <p class="font-bold truncate text-muted">{{ item.title }}</p>

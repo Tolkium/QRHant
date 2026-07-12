@@ -37,6 +37,7 @@ const classMap = [
   ['.card-body', '.hunt-card-body'],
   ['.card-title', '.hunt-card-title'],
   ['.card-meta', '.hunt-card-meta'],
+  ['.card-img.locked', '.hunt-card-art-locked'],
   ['.card-img', '.hunt-card-art'],
   ['.card-zen', '.hunt-card-zen'],
   ['.card-kiyo', '.hunt-card-kiyo'],
@@ -375,7 +376,7 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
   right: 0;
   bottom: 0;
   z-index: 2;
-  padding: 1.75rem 0.55rem 0.5rem;
+  padding: 1.75rem var(--card-body-pad-right, 0.55rem) 0.5rem var(--card-body-pad-left, 0.55rem);
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.78) 0%,
@@ -418,7 +419,34 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
     var(--c-line)
   );
   color: var(--c-muted);
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hunt-card-lock-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+  opacity: 0.8;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.hunt-card-lock-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.hunt-card-lock-slot .hunt-card-lock-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.hunt-card-lock-list .hunt-card-lock-slot .hunt-card-lock-icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* Theme card layers — one visible per active theme (see [data-active-theme] rules) */
@@ -545,6 +573,76 @@ ${hide} { display: none !important; }`;
 }
 `;
 
+const liquidGlassCss = `
+@keyframes liquidMesh {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(4%, -3%) scale(1.05); }
+  66% { transform: translate(-3%, 2%) scale(0.97); }
+}
+
+@keyframes liquidShimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+
+[data-active-theme="liquid"] body,
+[data-active-theme="liquid"] .hunt-app {
+  background: #0a0a12;
+}
+
+[data-active-theme="liquid"] .phone-ambient {
+  display: block;
+  background: #0a0a12;
+}
+
+[data-active-theme="liquid"] .phone-ambient::before,
+[data-active-theme="liquid"] .phone-ambient::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: liquidMesh 8s ease-in-out infinite;
+}
+
+[data-active-theme="liquid"] .phone-ambient::before {
+  width: 70%;
+  height: 50%;
+  top: 10%;
+  left: 10%;
+  background: radial-gradient(circle, #667eea, transparent 70%);
+}
+
+[data-active-theme="liquid"] .phone-ambient::after {
+  width: 60%;
+  height: 55%;
+  bottom: 5%;
+  right: 5%;
+  background: radial-gradient(circle, #f093fb, transparent 70%);
+  animation-delay: -4s;
+}
+
+[data-active-theme="liquid"] .glass-blob {
+  display: block;
+}
+
+[data-active-theme="liquid"] .hunt-header,
+[data-active-theme="liquid"] .hunt-progress,
+[data-active-theme="liquid"] .hunt-app .hunt-card,
+[data-active-theme="liquid"] .hunt-nav {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+[data-active-theme="liquid"] .hunt-card-art-locked {
+  background: rgba(255, 255, 255, 0.05);
+}
+`;
+
 const swatch = `
 .theme-swatch {
   display: flex;
@@ -587,6 +685,8 @@ fs.writeFileSync(
     themeBlocks.join('\n\n') +
     '\n\n' +
     layerSwaps +
+    '\n\n' +
+    liquidGlassCss +
     swatch,
 );
 console.log('theme rules:', themeBlocks.length, 'deco rules:', decoBlocks.length);
