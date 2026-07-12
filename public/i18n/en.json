@@ -109,7 +109,9 @@
     },
     "avatarCrop": {
       "title": "Crop avatar",
-      "hint": "Drag to position. Pinch on mobile or scroll to zoom.",
+      "hint": "Drag to position. Pinch or scroll to zoom. Use the slider to rotate.",
+      "rotation": "Rotation",
+      "preview": "Preview",
       "save": "Use photo"
     },
     "nickname": "Nickname",
@@ -127,6 +129,16 @@
     },
     "logout": "Log out",
     "version": "Version"
+  },
+  "admin": {
+    "cardCrop": {
+      "title": "Crop card artwork",
+      "hint": "Drag to position. Pinch or scroll to zoom. Use the slider to rotate. Preview matches the print sheet.",
+      "preview": "Print preview",
+      "rotation": "Rotation",
+      "save": "Use photo",
+      "tooLarge": "Image is too large (max 12 MB)."
+    }
   },
   "lifecycle": {
     "countdown": "The hunt starts in",

@@ -2,6 +2,8 @@ import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { FindsStore } from '../../../core/stores/finds.store';
+import { ThemeStore } from '../../../core/stores/theme.store';
+import { themeUnlockedArtImage } from '../../../core/themes/theme-card-art';
 import { Lang } from '../../../core/models';
 
 @Component({
@@ -68,7 +70,7 @@ import { Lang } from '../../../core/models';
             @if (f.content.image) {
               <img [src]="f.content.image" [alt]="f.content.title" />
             } @else {
-              <div class="w-full h-full bg-primary/10 flex items-center justify-center text-6xl">🎨</div>
+              <img [src]="fallbackArt()" [alt]="f.content.title" />
             }
           </div>
           <div class="hunt-card-detail-body">
@@ -91,11 +93,20 @@ import { Lang } from '../../../core/models';
 })
 export class CardDetailPage {
   private readonly finds = inject(FindsStore);
+  private readonly theme = inject(ThemeStore);
   private readonly transloco = inject(TranslocoService);
 
   readonly codeId = input.required<string>();
 
   readonly find = computed(() => this.finds.findOf(this.codeId()));
+  readonly fallbackArt = computed(() => {
+    const cosmeticsId = this.theme.applied()?.cosmeticsId ?? 'zen';
+    const f = this.find();
+    if (!f) return '';
+    let variant = 0;
+    for (const ch of f.codeId) variant = (variant + ch.charCodeAt(0)) % 5;
+    return themeUnlockedArtImage(cosmeticsId, variant);
+  });
   readonly foundAt = computed(() => {
     const f = this.find();
     return f ? new Date(f.clientFoundAt).toLocaleString() : '';

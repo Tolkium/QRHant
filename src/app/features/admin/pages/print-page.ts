@@ -4,7 +4,7 @@ import { AdminState } from '../admin-state';
 import { QrImage } from '../../../shared/qr-image';
 
 /**
- * Print-ready sheet: portrait 3:4 card, artwork top 2/3, QR strip bottom 1/3.
+ * Print-ready sheet: 360×480 artwork, QR strip attached below.
  */
 @Component({
   selector: 'app-print-page',
@@ -38,17 +38,17 @@ import { QrImage } from '../../../shared/qr-image';
   `,
   styles: `
     .print-card {
-      aspect-ratio: 3 / 4;
       display: flex;
       flex-direction: column;
       border: 2px dashed #9ca3af;
       border-radius: 0.75rem;
       overflow: hidden;
       background: #fff;
+      width: 100%;
     }
     .print-card-art {
-      flex: 2 1 0;
-      min-height: 0;
+      aspect-ratio: 3 / 4;
+      width: 100%;
       position: relative;
       background: #f3f4f6;
       overflow: hidden;
@@ -59,6 +59,7 @@ import { QrImage } from '../../../shared/qr-image';
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
     }
     .print-card-placeholder {
       position: absolute;
@@ -69,12 +70,13 @@ import { QrImage } from '../../../shared/qr-image';
       font-size: 3rem;
     }
     .print-card-qr {
-      flex: 1 1 0;
-      min-height: 0;
+      width: 100%;
+      aspect-ratio: 1;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.15rem;
+      padding: 0.35rem;
       background: #fff;
       border-top: 1px dashed #d1d5db;
     }

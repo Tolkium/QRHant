@@ -110,6 +110,8 @@
     "avatarCrop": {
       "title": "Orezať avatar",
       "hint": "Posúvaj na zarovnanie. Na mobile priblíž prstami, na PC kolieskom.",
+      "rotation": "Otočenie",
+      "preview": "Náhľad",
       "save": "Použiť fotku"
     },
     "nickname": "Prezývka",
@@ -127,6 +129,16 @@
     },
     "logout": "Odhlásiť sa",
     "version": "Verzia"
+  },
+  "admin": {
+    "cardCrop": {
+      "title": "Orezať obrázok karty",
+      "hint": "Posúvaj na zarovnanie. Priblíž prstami alebo kolieskom. Posuvníkom otočíš. Náhľad zodpovedá tlačovému hárku.",
+      "preview": "Náhľad tlače",
+      "rotation": "Otočenie",
+      "save": "Použiť fotku",
+      "tooLarge": "Obrázok je príliš veľký (max. 12 MB)."
+    }
   },
   "lifecycle": {
     "countdown": "Hra začína o",

@@ -1,15 +1,16 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AdminApi } from '../../../core/backend/api';
 import { AdminState } from '../admin-state';
 import { CodeRecord } from '../../../core/models';
 import { QrImage } from '../../../shared/qr-image';
-import { compressImageFile } from '../../../shared/image-utils';
+import { ImageCropDialog } from '../../../shared/image-crop-dialog';
 
 @Component({
   selector: 'app-admin-codes-page',
-  imports: [FormsModule, RouterLink, QrImage],
+  imports: [FormsModule, RouterLink, QrImage, ImageCropDialog, TranslocoModule],
   template: `
     <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
       <h1 class="text-2xl font-extrabold">Codes ({{ codes().length }})</h1>
@@ -41,7 +42,11 @@ import { compressImageFile } from '../../../shared/image-utils';
               <app-qr-image [code]="c.code" [size]="90" />
               <span class="font-mono font-bold tracking-widest">{{ c.code }}</span>
               @if (c.image) {
-                <img [src]="c.image" class="w-24 h-16 object-cover rounded-lg border border-line" alt="Artwork" />
+                <img
+                  [src]="c.image"
+                  class="w-24 aspect-[3/4] object-cover object-center rounded-lg border border-line shrink-0"
+                  alt="Artwork"
+                />
               }
               <label class="btn-ghost !min-h-9 text-sm cursor-pointer">
                 {{ c.image ? 'Change photo' : 'Add photo' }}
@@ -78,15 +83,30 @@ import { compressImageFile } from '../../../shared/image-utils';
         </div>
       }
     </div>
+
+    @if (cropFile(); as file) {
+      <app-image-crop-dialog
+        variant="card"
+        [imageSrc]="cropPreview()!"
+        [file]="file"
+        [code]="cropCode()!.code"
+        (confirmed)="onImageCropped($event)"
+        (cancelled)="clearCrop()"
+      />
+    }
   `,
 })
 export class AdminCodesPage {
   private readonly api = inject(AdminApi);
   private readonly state = inject(AdminState);
+  private readonly transloco = inject(TranslocoService);
 
   readonly codes = signal<CodeRecord[]>([]);
   readonly generating = signal(false);
   readonly savedId = signal<string | null>(null);
+  readonly cropFile = signal<File | null>(null);
+  readonly cropPreview = signal<string | null>(null);
+  readonly cropCode = signal<CodeRecord | null>(null);
 
   genCount = 10;
   genPrefix = 'Artwork';
@@ -118,12 +138,36 @@ export class AdminCodesPage {
     }
   }
 
-  /** Compress the picked photo to max 900px JPEG so 100 packs stay small. */
-  async pickImage(code: CodeRecord, event: Event): Promise<void> {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    code.image = await compressImageFile(file, 900, 0.8);
-    (event.target as HTMLInputElement).value = '';
+  /** Open crop dialog (same pan/zoom/rotate frame as avatar, 3:4 + print preview). */
+  pickImage(code: CodeRecord, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file || !file.type.startsWith('image/')) return;
+    if (file.size > 12 * 1024 * 1024) {
+      alert(this.transloco.translate('admin.cardCrop.tooLarge'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.cropPreview.set(reader.result as string);
+      this.cropFile.set(file);
+      this.cropCode.set(code);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onImageCropped(dataUrl: string): void {
+    const code = this.cropCode();
+    this.clearCrop();
+    if (!code) return;
+    code.image = dataUrl;
+  }
+
+  clearCrop(): void {
+    this.cropFile.set(null);
+    this.cropPreview.set(null);
+    this.cropCode.set(null);
   }
 
   async save(code: CodeRecord): Promise<void> {
