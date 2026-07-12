@@ -6,6 +6,10 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { argon2id } from 'npm:hash-wasm@4';
+import {
+  cosmeticsIdFromEventTheme,
+  themeUnlockedArtImage,
+} from '../_shared/theme-card-art.ts';
 
 const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 const CODE_LENGTH = 6;
@@ -70,10 +74,12 @@ Deno.serve(async (req) => {
 
   const { data: event } = await admin
     .from('events')
-    .select('id, argon_salt, argon_params, pack_version')
+    .select('id, argon_salt, argon_params, pack_version, theme')
     .eq('id', eventId)
     .single();
   if (!event) return json({ error: 'event not found' }, 404, cors);
+
+  const cosmeticsId = cosmeticsIdFromEventTheme(event.theme);
 
   const params = event.argon_params as {
     memory: number;
@@ -113,7 +119,8 @@ Deno.serve(async (req) => {
       ['encrypt'],
     );
     const title = `${titlePrefix} ${startIndex + i + 1}`;
-    const content = { title, art: { en: '', sk: '', cs: '' } };
+    const image = themeUnlockedArtImage(cosmeticsId, startIndex + i);
+    const content = { title, art: { en: '', sk: '', cs: '' }, image };
     const iv = new Uint8Array(12);
     crypto.getRandomValues(iv);
     const ct = await crypto.subtle.encrypt(
@@ -127,6 +134,7 @@ Deno.serve(async (req) => {
       code: plaintext,
       title,
       art: content.art,
+      image,
       tag,
       iv: bytesToB64(iv),
       ciphertext: bytesToB64(new Uint8Array(ct)),

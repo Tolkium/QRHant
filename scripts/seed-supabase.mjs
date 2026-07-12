@@ -140,14 +140,14 @@ function newArgonSalt() {
 function demoArtImage(index) {
   const hues = [265, 20, 145, 200, 330, 45, 175, 285, 90, 230];
   const h = hues[index % hues.length];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480" viewBox="0 0 360 480">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="hsl(${h},70%,55%)"/>
     <stop offset="1" stop-color="hsl(${(h + 60) % 360},70%,40%)"/>
   </linearGradient></defs>
-  <rect width="640" height="420" fill="url(#g)"/>
-  <circle cx="${80 + (index * 47) % 480}" cy="${90 + (index * 83) % 240}" r="70" fill="rgba(255,255,255,0.25)"/>
-  <circle cx="${520 - (index * 31) % 400}" cy="${300 - (index * 59) % 180}" r="110" fill="rgba(0,0,0,0.15)"/>
+  <rect width="360" height="480" fill="url(#g)"/>
+  <circle cx="${80 + (index * 47) % 220}" cy="${90 + (index * 83) % 300}" r="70" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="${280 - (index * 31) % 200}" cy="${360 - (index * 59) % 220}" r="110" fill="rgba(0,0,0,0.15)"/>
 </svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }

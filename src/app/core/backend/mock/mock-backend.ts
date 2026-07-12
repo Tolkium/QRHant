@@ -25,6 +25,10 @@ import { MockServer } from './mock-server';
 import { seedIfNeeded } from './seed';
 import { generateCode } from '../../crypto/codec';
 import { deriveCode, encryptContent } from '../../crypto/pack-crypto';
+import {
+  cosmeticsIdFromEventTheme,
+  themeUnlockedArtImage,
+} from '../../themes/theme-card-art';
 
 const SESSION_KEY = 'qrhunt.session';
 
@@ -226,13 +230,15 @@ export class MockBackendService {
     if (!event) throw new Error('event not found');
     const existing = await this.server.listCodes(eventId);
     const existingPlaintexts = new Set(existing.map((c) => c.code));
+    const cosmeticsId = cosmeticsIdFromEventTheme(event.theme);
     const created: CodeRecord[] = [];
     for (let i = 0; i < req.count; i++) {
       let plaintext = generateCode();
       while (existingPlaintexts.has(plaintext)) plaintext = generateCode();
       existingPlaintexts.add(plaintext);
       const title = `${req.titlePrefix} ${existing.length + i + 1}`;
-      const content = { title, art: { en: '', sk: '', cs: '' } };
+      const image = themeUnlockedArtImage(cosmeticsId, existing.length + i);
+      const content = { title, art: { en: '', sk: '', cs: '' }, image };
       const { tag, key } = await deriveCode(plaintext, event.argonSalt, event.argonParams);
       const { iv, ciphertext } = await encryptContent(content, key);
       const record: CodeRecord = {
@@ -241,7 +247,7 @@ export class MockBackendService {
         code: plaintext,
         title,
         art: { en: '', sk: '', cs: '' },
-        image: null,
+        image,
         mapId: null,
         mapX: null,
         mapY: null,
