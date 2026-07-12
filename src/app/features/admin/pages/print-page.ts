@@ -4,7 +4,7 @@ import { AdminState } from '../admin-state';
 import { QrImage } from '../../../shared/qr-image';
 
 /**
- * Print-ready sheet: 2/3 artwork, 1/3 QR (no plaintext code — scan only).
+ * Print-ready sheet: portrait 3:4 card, artwork top 2/3, QR strip bottom 1/3.
  */
 @Component({
   selector: 'app-print-page',
@@ -18,22 +18,17 @@ import { QrImage } from '../../../shared/qr-image';
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 print-cards">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 print-cards">
         @for (c of codes(); track c.id) {
-          <div
-            class="print-card border-2 border-dashed border-gray-400 rounded-xl overflow-hidden
-              flex flex-row items-stretch break-inside-avoid min-h-[150px]"
-          >
-            <!-- artwork: 2/3 width -->
-            <div class="w-2/3 min-w-0 relative bg-gray-100">
+          <div class="print-card break-inside-avoid">
+            <div class="print-card-art">
               @if (c.image) {
-                <img [src]="c.image" class="absolute inset-0 w-full h-full object-cover" [alt]="c.title" />
+                <img [src]="c.image" [alt]="c.title" />
               } @else {
-                <div class="absolute inset-0 flex items-center justify-center text-5xl">🎨</div>
+                <span class="print-card-placeholder" aria-hidden="true">🎨</span>
               }
             </div>
-            <!-- QR: 1/3 width, edge-to-edge -->
-            <div class="w-1/3 min-w-0 flex items-center justify-center p-0.5 bg-white">
+            <div class="print-card-qr">
               <app-qr-image [code]="c.code" [size]="qrSize" class="print-qr" />
             </div>
           </div>
@@ -42,16 +37,59 @@ import { QrImage } from '../../../shared/qr-image';
     </div>
   `,
   styles: `
-    /* QR scales to the full 1/3 column (≈3× the old fixed thumb size) */
+    .print-card {
+      aspect-ratio: 3 / 4;
+      display: flex;
+      flex-direction: column;
+      border: 2px dashed #9ca3af;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #fff;
+    }
+    .print-card-art {
+      flex: 2 1 0;
+      min-height: 0;
+      position: relative;
+      background: #f3f4f6;
+      overflow: hidden;
+    }
+    .print-card-art img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .print-card-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .print-card-qr {
+      flex: 1 1 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.15rem;
+      background: #fff;
+      border-top: 1px dashed #d1d5db;
+    }
     :host ::ng-deep .print-qr img {
       width: 100% !important;
-      height: auto !important;
+      height: 100% !important;
       max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       border-radius: 0;
     }
     @media print {
       .print-card {
-        min-height: 42mm;
+        break-inside: avoid;
+        page-break-inside: avoid;
       }
     }
   `,
@@ -60,7 +98,6 @@ export class PrintPage {
   private readonly api = inject(AdminApi);
   private readonly state = inject(AdminState);
 
-  /** Render resolution; display size comes from CSS column width. */
   readonly qrSize = 512;
 
   private readonly codesRes = resource({
