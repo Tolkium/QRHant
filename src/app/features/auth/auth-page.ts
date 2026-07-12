@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, isDevMode, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -6,6 +6,7 @@ import { SessionStore } from '../../core/stores/session.store';
 import { PackStore } from '../../core/stores/pack.store';
 import { Lang, LANGS } from '../../core/models';
 import { environment } from '../../../environments/environment';
+import { authErrorKey, isExpectedAuthError } from '../../core/auth-errors';
 
 const ONBOARDED_KEY = 'qrhunt.onboarded';
 
@@ -186,16 +187,10 @@ export class AuthPage {
       }
       await this.router.navigate([this.session.isAdmin() ? '/admin' : '/hunt']);
     } catch (e) {
-      const code = e instanceof Error ? e.message : 'invalid';
-      this.error.set(
-        {
-          required: 'auth.errors.required',
-          'short-password': 'auth.errors.shortPassword',
-          'nickname-taken': 'auth.errors.nicknameTaken',
-          invalid: 'auth.errors.invalid',
-          banned: 'auth.errors.banned',
-        }[code] ?? 'auth.errors.invalid',
-      );
+      if (isDevMode() && !isExpectedAuthError(e)) {
+        console.error('[auth]', e);
+      }
+      this.error.set(authErrorKey(e, this.mode()));
     } finally {
       this.busy.set(false);
     }
