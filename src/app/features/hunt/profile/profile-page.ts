@@ -21,10 +21,16 @@ import { celebrateFind } from '../../../shared/celebrate';
   imports: [FormsModule, RouterLink, TranslocoModule, Avatar, AvatarCropDialog, ThemeSwatch],
   template: `
     <div class="p-4 max-w-md mx-auto flex flex-col gap-4">
-      <a routerLink="/hunt/codes" class="text-primary font-semibold">
-        ← {{ 'common.back' | transloco }}
-      </a>
-      <h1 class="text-2xl font-extrabold">{{ 'profile.title' | transloco }}</h1>
+      <div class="flex items-center justify-between gap-3">
+        <h1 class="text-2xl font-extrabold min-w-0">{{ 'profile.title' | transloco }}</h1>
+        <a
+          routerLink="/hunt/codes"
+          class="text-primary font-semibold shrink-0"
+          [attr.aria-label]="'common.back' | transloco"
+        >
+          ← {{ 'common.back' | transloco }}
+        </a>
+      </div>
 
       <!-- identity -->
       <section class="card p-4 flex items-center gap-4">
@@ -34,6 +40,16 @@ import { celebrateFind } from '../../../shared/celebrate';
           <p class="text-sm text-muted">{{ 'profile.nickname' | transloco }}</p>
         </div>
       </section>
+
+      @if (session.isAdmin()) {
+        <section class="card p-4 flex flex-col gap-2 border-2 !border-primary">
+          <p class="label">{{ 'profile.adminPanel.title' | transloco }}</p>
+          <p class="text-sm text-muted">{{ 'profile.adminPanel.hint' | transloco }}</p>
+          <button class="btn-primary" (click)="enterAdminView()">
+            {{ 'profile.adminPanel.action' | transloco }}
+          </button>
+        </section>
+      }
 
       <!-- avatar picker -->
       <section class="card p-4">
@@ -335,5 +351,10 @@ export class ProfilePage {
   async logout(): Promise<void> {
     await this.session.logout();
     await this.router.navigate(['/auth']);
+  }
+
+  async enterAdminView(): Promise<void> {
+    this.session.setPlayerViewMode(false);
+    await this.router.navigate(['/admin']);
   }
 }
