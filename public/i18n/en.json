@@ -128,9 +128,17 @@
       "never": "Not synced yet"
     },
     "logout": "Log out",
-    "version": "Version"
+    "version": "Version",
+    "adminPanel": {
+      "title": "Admin access",
+      "hint": "Leave player view and return to event management.",
+      "action": "Open admin panel"
+    }
   },
   "admin": {
+    "viewMode": {
+      "playHunt": "Play as player"
+    },
     "cardCrop": {
       "title": "Crop card artwork",
       "hint": "Drag to position. Pinch or scroll to zoom. Use the slider to rotate. Preview matches the print sheet.",

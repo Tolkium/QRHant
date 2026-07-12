@@ -128,9 +128,17 @@
       "never": "Zatiaľ nesynchronizované"
     },
     "logout": "Odhlásiť sa",
-    "version": "Verzia"
+    "version": "Verzia",
+    "adminPanel": {
+      "title": "Prístup pre admina",
+      "hint": "Opusti hráčsky pohľad a vráť sa do správy podujatia.",
+      "action": "Otvoriť admin panel"
+    }
   },
   "admin": {
+    "viewMode": {
+      "playHunt": "Hrať ako hráč"
+    },
     "cardCrop": {
       "title": "Orezať obrázok karty",
       "hint": "Posúvaj na zarovnanie. Priblíž prstami alebo kolieskom. Posuvníkom otočíš. Náhľad zodpovedá tlačovému hárku.",

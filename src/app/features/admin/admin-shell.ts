@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
 import { AdminState } from './admin-state';
 import { SessionStore } from '../../core/stores/session.store';
 import { environment } from '../../../environments/environment';
@@ -18,7 +19,7 @@ const NAV = [
 
 @Component({
   selector: 'app-admin-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, TranslocoModule],
   template: `
     <div class="min-h-dvh md:flex">
       <!-- mobile top bar -->
@@ -38,6 +39,9 @@ const NAV = [
             </span>
           }
         </span>
+        <button class="text-sm text-primary font-semibold" (click)="enterPlayerView()">
+          {{ 'admin.viewMode.playHunt' | transloco }}
+        </button>
         <button class="text-sm text-primary font-semibold" (click)="logout()">Log out</button>
       </header>
 
@@ -84,6 +88,12 @@ const NAV = [
         }
 
         <div class="flex-1"></div>
+        <button
+          class="btn-primary mb-2 flex"
+          (click)="enterPlayerView()"
+        >
+          {{ 'admin.viewMode.playHunt' | transloco }}
+        </button>
         <button class="btn-ghost hidden md:flex" (click)="logout()">Log out</button>
       </aside>
 
@@ -109,5 +119,11 @@ export class AdminShell implements OnInit {
   async logout(): Promise<void> {
     await this.session.logout();
     await this.router.navigate(['/auth']);
+  }
+
+  async enterPlayerView(): Promise<void> {
+    this.session.setPlayerViewMode(true);
+    this.menuOpen.set(false);
+    await this.router.navigate(['/hunt']);
   }
 }

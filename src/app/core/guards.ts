@@ -18,5 +18,5 @@ export const guestGuard: CanActivateFn = () => {
   const session = inject(SessionStore);
   const router = inject(Router);
   if (!session.isLoggedIn()) return true;
-  return router.createUrlTree([session.isAdmin() ? '/admin' : '/hunt']);
+  return router.createUrlTree([session.homeRoute()]);
 };

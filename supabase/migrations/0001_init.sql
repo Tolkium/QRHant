@@ -210,7 +210,7 @@ begin
       max(f.clamped_found_at) as last_find
     from public.finds f
     join public.profiles p on p.id = f.user_id
-    where f.event_id = p_event_id and p.role = 'player' and not p.banned
+    where f.event_id = p_event_id and not p.banned
     group by f.user_id, p.nickname, p.avatar
   ),
   ranked as (

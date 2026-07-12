@@ -315,7 +315,7 @@ export class MockServer {
       byUser.set(f.userId, cur);
     }
     const rows = users
-      .filter((u) => u.role === 'player' && !u.banned && byUser.has(u.id))
+      .filter((u) => !u.banned && byUser.has(u.id))
       .map((u) => {
         const agg = byUser.get(u.id)!;
         return {

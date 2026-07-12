@@ -185,7 +185,7 @@ export class AuthPage {
       } else {
         await this.session.register(creds);
       }
-      await this.router.navigate([this.session.isAdmin() ? '/admin' : '/hunt']);
+      await this.router.navigate([this.session.homeRoute()]);
     } catch (e) {
       if (isDevMode() && !isExpectedAuthError(e)) {
         console.error('[auth]', e);

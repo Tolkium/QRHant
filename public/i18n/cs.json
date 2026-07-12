@@ -128,9 +128,17 @@
       "never": "Zatím nesynchronizováno"
     },
     "logout": "Odhlásit se",
-    "version": "Verze"
+    "version": "Verze",
+    "adminPanel": {
+      "title": "Přístup pro admina",
+      "hint": "Opusť hráčský pohled a vrať se do správy akce.",
+      "action": "Otevřít admin panel"
+    }
   },
   "admin": {
+    "viewMode": {
+      "playHunt": "Hrát jako hráč"
+    },
     "cardCrop": {
       "title": "Oříznout obrázek karty",
       "hint": "Posouvej pro zarovnání. Přibliž prsty nebo kolečkem. Posuvníkem otočíš. Náhled odpovídá tiskovému listu.",
