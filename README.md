@@ -50,6 +50,7 @@ keyed from the code itself — devices never hold plaintext codes.
 | `src/app/features/admin/` | Admin panel: dashboard, events, codes, map editor, leaderboard flags, players, settings, print sheet |
 | `supabase/` | Postgres schema + RLS, Edge Functions, deployment notes |
 | `design/` | UI theme lab (`index.html`) — share `/design/` with designers |
+| `TODO.md` | Optimization backlog and architecture notes |
 | `android/` | Capacitor Android project (MLKit native scanning) |
 
 ## Commands
