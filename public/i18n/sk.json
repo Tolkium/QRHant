@@ -21,7 +21,11 @@
       "nicknameTaken": "Táto prezývka je už obsadená.",
       "invalid": "Nesprávna prezývka alebo heslo.",
       "shortPassword": "Heslo musí mať aspoň 6 znakov.",
-      "banned": "Tento účet bol zablokovaný."
+      "banned": "Tento účet bol zablokovaný.",
+      "profileMissing": "Účet bol vytvorený, ale profil chýba. Skús to o chvíľu znova.",
+      "mfaRequired": "Na dokončenie prihlásenia zadaj kód z autentifikátora.",
+      "registerFailed": "Účet sa nepodarilo vytvoriť. Skontroluj údaje a skús znova.",
+      "loginFailed": "Prihlásenie zlyhalo. Skontroluj prezývku a heslo."
     }
   },
   "onboarding": {
@@ -43,8 +47,8 @@
     }
   },
   "tabs": {
-    "codes": "Kódy",
-    "ranking": "Rebríček",
+    "codes": "Karty",
+    "ranking": "Poradie",
     "scan": "Skenovať"
   },
   "codes": {
@@ -96,6 +100,7 @@
   "profile": {
     "title": "Profil",
     "language": "Jazyk",
+    "theme": "Farebná téma",
     "avatar": "Avatar",
     "avatarUpload": {
       "label": "Nahrať vlastnú fotku",

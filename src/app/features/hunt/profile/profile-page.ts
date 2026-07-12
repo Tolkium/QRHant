@@ -4,18 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { SessionStore } from '../../../core/stores/session.store';
 import { PackStore } from '../../../core/stores/pack.store';
+import { ThemeStore } from '../../../core/stores/theme.store';
 import { SyncEngine } from '../../../core/sync/sync-engine';
 import { InstallPromptService } from '../../../core/pwa/install-prompt';
 import { CodeEntryService } from '../scan/code-entry.service';
 import { Avatar } from '../../../shared/avatar';
 import { AvatarCropDialog } from '../../../shared/avatar-crop-dialog';
+import { ThemeSwatch } from '../../../shared/theme-swatch';
 import { Lang, LANGS, PRESET_AVATARS, isCustomAvatar } from '../../../core/models';
+import { listThemeRefs } from '../../../core/themes/theme-utils';
 import { environment } from '../../../../environments/environment';
 import { celebrateFind } from '../../../shared/celebrate';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [FormsModule, RouterLink, TranslocoModule, Avatar, AvatarCropDialog],
+  imports: [FormsModule, RouterLink, TranslocoModule, Avatar, AvatarCropDialog, ThemeSwatch],
   template: `
     <div class="p-4 max-w-md mx-auto flex flex-col gap-4">
       <a routerLink="/hunt/codes" class="text-primary font-semibold">
@@ -114,6 +117,22 @@ import { celebrateFind } from '../../../shared/celebrate';
         </div>
       </section>
 
+      @if (pack.event()?.theme?.themePickerEnabled) {
+        <section class="card p-4">
+          <p class="label">{{ 'profile.theme' | transloco }}</p>
+          <div class="flex flex-wrap gap-2">
+            @for (theme of availableThemes(); track theme.id) {
+              <app-theme-swatch
+                [name]="theme.name"
+                [tokens]="theme.tokens"
+                [active]="activeThemeId() === theme.id"
+                (selected)="setTheme(theme.id)"
+              />
+            }
+          </div>
+        </section>
+      }
+
       <!-- sync -->
       <section class="card p-4 flex flex-col gap-2">
         <p class="label">{{ 'profile.sync.title' | transloco }}</p>
@@ -202,6 +221,7 @@ import { celebrateFind } from '../../../shared/celebrate';
 export class ProfilePage {
   readonly session = inject(SessionStore);
   readonly pack = inject(PackStore);
+  readonly themes = inject(ThemeStore);
   readonly sync = inject(SyncEngine);
   readonly install = inject(InstallPromptService);
   private readonly entry = inject(CodeEntryService);
@@ -220,6 +240,13 @@ export class ProfilePage {
     return !!av && isCustomAvatar(av);
   });
 
+  readonly availableThemes = computed(() => {
+    const config = this.pack.event()?.theme;
+    return config ? listThemeRefs(config) : [];
+  });
+
+  readonly activeThemeId = computed(() => this.themes.activeId());
+
   readonly isStandalone = () =>
     window.matchMedia('(display-mode: standalone)').matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true;
@@ -235,6 +262,10 @@ export class ProfilePage {
 
   setLang(lang: Lang): void {
     void this.session.setLanguage(lang);
+  }
+
+  setTheme(themeId: string): void {
+    void this.session.setPreferredTheme(themeId);
   }
 
   setAvatar(avatar: string): void {
@@ -291,6 +322,9 @@ export class ProfilePage {
         break;
       case 'already-found':
         this.manualResult.set('scan.alreadyFound');
+        break;
+      case 'not-live':
+        this.manualResult.set('lifecycle.ended');
         break;
       default:
         this.manualResult.set('scan.unknownCode');

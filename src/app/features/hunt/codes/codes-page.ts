@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { FindsStore } from '../../../core/stores/finds.store';
 import { PackStore } from '../../../core/stores/pack.store';
+import { HuntCard } from './hunt-card';
 
 type Filter = 'all' | 'found' | 'missing';
 type View = 'grid' | 'list';
@@ -11,51 +12,34 @@ const VIEW_KEY = 'qrhunt.codesView';
 
 @Component({
   selector: 'app-codes-page',
-  imports: [RouterLink, TranslocoModule],
+  imports: [RouterLink, TranslocoModule, HuntCard],
   template: `
-    <!-- sticky progress header -->
-    <div class="sticky top-[53px] z-[5] bg-page/95 backdrop-blur px-4 pt-3 pb-3 border-b border-line">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-extrabold text-lg">
+    <div class="hunt-progress">
+      <div class="hunt-progress-row">
+        <span class="hunt-progress-title">
           {{ 'codes.progress' | transloco: { found: foundCount(), total: total() } }}
         </span>
-        <!-- grid / list toggle -->
-        <div class="flex rounded-lg border border-line overflow-hidden">
-          <button
-            class="px-3 py-1.5 text-sm font-bold"
-            [class.bg-primary]="view() === 'grid'"
-            [class.text-primary-ink]="view() === 'grid'"
-            (click)="setView('grid')"
-            aria-label="Grid view"
-          >
-            ▦
-          </button>
-          <button
-            class="px-3 py-1.5 text-sm font-bold"
-            [class.bg-primary]="view() === 'list'"
-            [class.text-primary-ink]="view() === 'list'"
-            (click)="setView('list')"
-            aria-label="List view"
-          >
-            ☰
-          </button>
-        </div>
+        <button
+          type="button"
+          class="hunt-layout-toggle"
+          (click)="toggleView()"
+          [attr.aria-label]="view() === 'grid' ? 'Grid view' : 'List view'"
+        >
+          {{ view() === 'grid' ? '▦' : '☰' }}
+        </button>
       </div>
-      <div class="h-2.5 rounded-full bg-line overflow-hidden">
+      <div class="hunt-progress-bar">
         <div
-          class="h-full rounded-full bg-primary transition-all duration-500"
+          class="hunt-progress-fill"
           [style.width.%]="total() ? (foundCount() / total()) * 100 : 0"
         ></div>
       </div>
-      <div class="flex gap-1.5 mt-3">
+      <div class="hunt-filters">
         @for (f of filters; track f) {
           <button
-            class="rounded-full px-4 py-1.5 text-sm font-semibold border"
-            [class.bg-primary]="filter() === f"
-            [class.text-primary-ink]="filter() === f"
-            [class.border-primary]="filter() === f"
-            [class.bg-surface]="filter() !== f"
-            [class.border-line]="filter() !== f"
+            type="button"
+            class="hunt-chip"
+            [class.on]="filter() === f"
             (click)="filter.set(f)"
           >
             {{ 'codes.filter.' + f | transloco }}
@@ -69,45 +53,23 @@ const VIEW_KEY = 'qrhunt.codesView';
     }
 
     @if (view() === 'grid') {
-      <div class="grid grid-cols-2 gap-3 p-4">
-        @for (item of visible(); track item.id) {
-          @if (item.found) {
-            <a
-              [routerLink]="['/hunt/codes', item.id]"
-              class="card overflow-hidden flex flex-col shadow-md"
-            >
-              @if (item.image) {
-                <img [src]="item.image" class="w-full aspect-[3/2] object-cover" [alt]="item.title" />
-              } @else {
-                <div class="w-full aspect-[3/2] bg-primary/10 flex items-center justify-center text-4xl">
-                  🎨
-                </div>
-              }
-              <div class="p-3">
-                <p class="font-bold leading-tight truncate">{{ item.title }}</p>
-                <p class="text-xs text-muted mt-0.5">{{ item.foundAt }}</p>
-              </div>
-            </a>
-          } @else {
-            <div
-              class="card flex flex-col items-center justify-center gap-1 text-center
-                border-dashed bg-transparent aspect-[4/3] opacity-70 p-3"
-            >
-              <span class="text-3xl select-none grayscale">❓</span>
-              <span class="font-bold leading-tight text-muted px-1">{{ item.title }}</span>
-              <span class="text-xs text-muted">{{ 'codes.locked' | transloco }}</span>
-            </div>
-          }
+      <div class="hunt-card-grid">
+        @for (item of visible(); track item.id; let i = $index) {
+          <app-hunt-card
+            [found]="item.found"
+            [title]="item.title"
+            [meta]="item.found ? item.foundAt : ('codes.locked' | transloco)"
+            [image]="item.image"
+            [index]="i"
+            [link]="item.found ? '/hunt/codes/' + item.id : null"
+          />
         }
       </div>
     } @else {
       <div class="flex flex-col gap-2 p-4">
         @for (item of visible(); track item.id) {
           @if (item.found) {
-            <a
-              [routerLink]="['/hunt/codes', item.id]"
-              class="card flex items-center gap-3 p-2.5 shadow-sm"
-            >
+            <a [routerLink]="['/hunt/codes', item.id]" class="card flex items-center gap-3 p-2.5 shadow-sm">
               @if (item.image) {
                 <img [src]="item.image" class="w-14 h-14 rounded-lg object-cover shrink-0" [alt]="item.title" />
               } @else {
@@ -166,6 +128,11 @@ export class CodesPage {
     if (f === 'missing') return items.filter((i) => !i.found);
     return items;
   });
+
+  toggleView(): void {
+    const next: View = this.view() === 'grid' ? 'list' : 'grid';
+    this.setView(next);
+  }
 
   setView(view: View): void {
     this.view.set(view);

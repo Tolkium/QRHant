@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { PackStore } from '../../../core/stores/pack.store';
 import { ScannerService } from './scanner.service';
 import { CodeEntryService } from './code-entry.service';
 import { celebrateFind, celebrateMilestone } from '../../../shared/celebrate';
@@ -73,6 +74,7 @@ import { celebrateFind, celebrateMilestone } from '../../../shared/celebrate';
 export class ScanPage implements AfterViewInit, OnDestroy {
   private readonly scanner = inject(ScannerService);
   private readonly entry = inject(CodeEntryService);
+  private readonly pack = inject(PackStore);
   private readonly router = inject(Router);
 
   private readonly videoRef = viewChild.required<ElementRef<HTMLVideoElement>>('video');
@@ -91,6 +93,10 @@ export class ScanPage implements AfterViewInit, OnDestroy {
   private nativeActive = false;
 
   async ngAfterViewInit(): Promise<void> {
+    if (this.pack.eventPhase() !== 'live') {
+      await this.router.navigate(['/hunt/codes']);
+      return;
+    }
     await this.startCamera();
   }
 
@@ -146,6 +152,10 @@ export class ScanPage implements AfterViewInit, OnDestroy {
         case 'already-found':
           this.flashNow('good');
           this.showToast('scan.alreadyFound', 'info');
+          break;
+        case 'not-live':
+          this.showToast('lifecycle.ended', 'info');
+          await this.router.navigate(['/hunt/codes']);
           break;
         case 'found': {
           this.flashNow('good');

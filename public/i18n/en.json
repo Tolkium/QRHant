@@ -21,7 +21,11 @@
       "nicknameTaken": "This nickname is already taken.",
       "invalid": "Wrong nickname or password.",
       "shortPassword": "Password must be at least 6 characters.",
-      "banned": "This account has been suspended."
+      "banned": "This account has been suspended.",
+      "profileMissing": "Account was created but your profile is missing. Try again in a moment or contact support.",
+      "mfaRequired": "Enter your authenticator code to finish signing in.",
+      "registerFailed": "Could not create your account. Check your details and try again.",
+      "loginFailed": "Could not sign you in. Check your nickname and password."
     }
   },
   "onboarding": {
@@ -43,8 +47,8 @@
     }
   },
   "tabs": {
-    "codes": "Codes",
-    "ranking": "Ranking",
+    "codes": "Cards",
+    "ranking": "Rank",
     "scan": "Scan"
   },
   "codes": {
@@ -96,6 +100,7 @@
   "profile": {
     "title": "Profile",
     "language": "Language",
+    "theme": "Color theme",
     "avatar": "Avatar",
     "avatarUpload": {
       "label": "Upload your photo",

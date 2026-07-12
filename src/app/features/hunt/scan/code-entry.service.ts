@@ -10,7 +10,8 @@ export type EntryResult =
   | { kind: 'found'; find: LocalFind; milestone: boolean; all: boolean }
   | { kind: 'already-found' }
   | { kind: 'unknown' }
-  | { kind: 'not-a-code' };
+  | { kind: 'not-a-code' }
+  | { kind: 'not-live' };
 
 const MILESTONES = [10, 25, 50, 75];
 
@@ -30,6 +31,7 @@ export class CodeEntryService {
     const pack = this.pack.pack();
     const event = this.pack.event();
     if (!pack || !event) return { kind: 'unknown' };
+    if (this.pack.eventPhase() !== 'live') return { kind: 'not-live' };
 
     const match = await matchAgainstPack(code, pack);
     if (!match) return { kind: 'unknown' };

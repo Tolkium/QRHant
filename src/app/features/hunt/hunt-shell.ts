@@ -7,17 +7,37 @@ import { SyncEngine } from '../../core/sync/sync-engine';
 import { InstallPromptService } from '../../core/pwa/install-prompt';
 import { Avatar } from '../../shared/avatar';
 import { environment } from '../../../environments/environment';
+import { HuntThemeDeco } from './hunt-theme-deco';
+import { HuntNavIcon } from './hunt-nav-icon';
 
 @Component({
   selector: 'app-hunt-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoModule, Avatar],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoModule, Avatar, HuntThemeDeco, HuntNavIcon],
+  styles: `
+    :host {
+      display: block;
+    }
+    .hunt-lifecycle-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--c-line);
+      background: color-mix(in srgb, var(--c-surface) 88%, var(--c-bg));
+    }
+    .hunt-lifecycle-setup {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.35rem;
+      padding: 1rem;
+    }
+  `,
   template: `
-    <div class="min-h-dvh flex flex-col">
-      <!-- top bar -->
-      <header
-        class="sticky top-0 z-10 flex items-center justify-between px-4 py-2 bg-surface border-b border-line"
-      >
-        <span class="font-extrabold text-lg truncate flex items-center gap-1.5 min-w-0">
+    <div class="hunt-app">
+      <app-hunt-theme-deco />
+
+      <header class="hunt-header sticky top-0 z-10 flex items-center justify-between px-4 py-2">
+        <span class="hunt-logo truncate flex items-center gap-1.5 min-w-0">
           <span class="truncate">{{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}</span>
           @if (deployLabel) {
             <span
@@ -58,71 +78,48 @@ import { environment } from '../../../environments/environment';
         </div>
       }
 
-      <main class="flex-1 pb-24">
-        @switch (pack.eventPhase()) {
-          @case ('setup') {
-            <div class="flex flex-col items-center justify-center gap-4 p-8 text-center mt-16">
-              <div class="text-6xl">⏳</div>
-              <h2 class="text-2xl font-bold">{{ 'lifecycle.countdown' | transloco }}</h2>
-              <p class="text-4xl font-extrabold text-primary tabular-nums">{{ countdown() }}</p>
+      <main class="hunt-main">
+        @if (pack.eventPhase() === 'ended') {
+          <div class="hunt-lifecycle-banner hunt-lifecycle-ended" role="status">
+            <span class="text-2xl shrink-0" aria-hidden="true">🏁</span>
+            <div class="min-w-0">
+              <p class="font-bold leading-tight">{{ 'lifecycle.ended' | transloco }}</p>
+              <p class="text-sm text-muted leading-snug">{{ 'lifecycle.thanks' | transloco }}</p>
             </div>
-          }
-          @case ('ended') {
-            <div class="flex flex-col items-center gap-4 p-8 text-center mt-8">
-              <div class="text-6xl">🏁</div>
-              <h2 class="text-2xl font-bold">{{ 'lifecycle.ended' | transloco }}</h2>
-              <p class="text-muted">{{ 'lifecycle.thanks' | transloco }}</p>
-              <a routerLink="/hunt/ranking" class="btn-primary">{{ 'rank.title' | transloco }}</a>
-            </div>
-          }
-          @default {
-            <router-outlet />
-          }
+          </div>
+        } @else if (pack.eventPhase() === 'setup') {
+          <div class="hunt-lifecycle-banner hunt-lifecycle-setup" role="status">
+            <span class="text-4xl" aria-hidden="true">⏳</span>
+            <p class="font-bold">{{ 'lifecycle.countdown' | transloco }}</p>
+            <p class="text-2xl font-extrabold text-primary tabular-nums">{{ countdown() }}</p>
+          </div>
         }
+        <router-outlet />
       </main>
 
-      <!-- bottom bar: Codes | SCAN | Ranking -->
-      <nav
-        class="fixed bottom-0 inset-x-0 z-10 bg-surface border-t border-line
-          grid grid-cols-3 items-end pb-[env(safe-area-inset-bottom)]"
-      >
-        <a
-          routerLink="/hunt/codes"
-          routerLinkActive="!text-primary"
-          class="flex flex-col items-center gap-0.5 py-2 text-muted font-semibold text-xs"
-        >
-          <span class="text-2xl leading-none">🃏</span>
-          {{ 'tabs.codes' | transloco }}
-        </a>
-        <div class="flex justify-center">
-          <a
-            routerLink="/hunt/scan"
-            class="!rounded-full w-16 h-16 -mt-6 bg-primary text-primary-ink shadow-lg
-              ring-4 ring-page flex items-center justify-center active:scale-95 transition-transform"
-            [class.pointer-events-none]="pack.eventPhase() !== 'live'"
-            [class.opacity-40]="pack.eventPhase() !== 'live'"
-            aria-label="Scan"
-          >
-            <!-- QR scan icon: viewfinder corners + center line -->
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-              <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-              <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-              <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-              <line x1="7" y1="12" x2="17" y2="12" />
-            </svg>
+      <div class="hunt-nav-dock">
+        <nav class="hunt-nav" aria-label="Bottom navigation">
+          <a routerLink="/hunt/codes" routerLinkActive="active" class="hunt-nav-tab">
+            <app-hunt-nav-icon slot="codes" />
+            <span class="lbl">{{ 'tabs.codes' | transloco }}</span>
           </a>
-        </div>
-        <a
-          routerLink="/hunt/ranking"
-          routerLinkActive="!text-primary"
-          class="flex flex-col items-center gap-0.5 py-2 text-muted font-semibold text-xs"
-        >
-          <span class="text-2xl leading-none">🏆</span>
-          {{ 'tabs.ranking' | transloco }}
-        </a>
-      </nav>
+          <div class="hunt-scan-slot">
+            <a
+              routerLink="/hunt/scan"
+              class="hunt-scan-fab"
+              [class.pointer-events-none]="pack.eventPhase() !== 'live'"
+              [class.opacity-40]="pack.eventPhase() !== 'live'"
+              aria-label="Scan"
+            >
+              <app-hunt-nav-icon slot="scan" />
+            </a>
+          </div>
+          <a routerLink="/hunt/ranking" routerLinkActive="active" class="hunt-nav-tab">
+            <app-hunt-nav-icon slot="rank" />
+            <span class="lbl">{{ 'tabs.ranking' | transloco }}</span>
+          </a>
+        </nav>
+      </div>
     </div>
   `,
 })
@@ -138,12 +135,10 @@ export class HuntShell {
     localStorage.getItem('qrhunt.installDismissed') === '1',
   );
 
-  /** Shown in browser tab only — standalone / home-screen has no URL bar. */
   readonly showInstallHint = computed(
     () => !this.installDismissed() && !this.isStandalone(),
   );
 
-  /** Native install button vs manual iOS steps. */
   readonly installHint = computed(() =>
     this.install.canPrompt() ? 'install.hint' : 'install.hintManual',
   );
