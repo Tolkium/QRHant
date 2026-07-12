@@ -8,7 +8,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 Deno.serve(async (req) => {
   const cors = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, content-type',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-api-version',
   };
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
