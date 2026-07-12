@@ -97,6 +97,8 @@ import { HuntNavIcon } from './hunt-nav-icon';
         <router-outlet />
       </main>
 
+      <div class="hunt-scroll-fade" aria-hidden="true"></div>
+
       <div class="hunt-nav-dock">
         <nav class="hunt-nav" aria-label="Bottom navigation">
           <a routerLink="/hunt/codes" routerLinkActive="active" class="hunt-nav-tab">

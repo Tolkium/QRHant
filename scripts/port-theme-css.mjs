@@ -150,9 +150,26 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
 
 .hunt-main {
   flex: 1;
-  padding-bottom: 5.5rem;
+  padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
   position: relative;
   z-index: 1;
+}
+
+.hunt-scroll-fade {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+  height: calc(8.5rem + env(safe-area-inset-bottom));
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--c-bg) 25%, transparent) 30%,
+    color-mix(in srgb, var(--c-bg) 82%, transparent) 58%,
+    var(--c-bg) 72%
+  );
 }
 
 .hunt-header {
