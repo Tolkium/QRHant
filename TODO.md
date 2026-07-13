@@ -12,6 +12,15 @@ Tracked improvements beyond day-to-day fixes. Prioritize by impact and risk.
 | OPT-04 | **Canvas integration tests** for `cropFramedImage` (rotation + export size) in Vitest with mocked `createImageBitmap` | Pure math covered in `image-dimensions.spec.ts`; full JPEG pipeline untested | Open |
 | OPT-05 | **PWA / pack size budget** — monitor uploaded card JPEG weight after crop (target &lt; 80 KB per code at 360×480) | Large hunts store images in IndexedDB | Open |
 
+## Admin UI
+
+| ID | Item | Why | Status |
+|----|------|-----|--------|
+| ADM-01 | **Events page — list all events** — show every hunt in a clear list/grid, not only the currently selected draft | Hard to see what exists; sidebar dropdown alone is not enough | Open |
+| ADM-02 | **Events page — create flow** — redesign “new event” so it feels normal and easy (not a bare inline form) | Current create UX is easy to miss and looks unfinished | Open |
+| ADM-03 | **Events page — lock ended hunts** — ended events are read-only until admin explicitly unlocks for editing | Prevents accidental edits to finished hunts | Open |
+| ADM-04 | **Events page — overall polish** — layout, status badges (live / setup / ended), active hunt emphasis, clearer actions | Events page needs a proper admin screen, not a single-card editor | Open |
+
 ## Done (this pass)
 
 - Shared `ImageCropPreview` component (DRY crop display)
