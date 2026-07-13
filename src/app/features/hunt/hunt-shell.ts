@@ -1,6 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { filter, map, startWith } from 'rxjs';
 import { PackStore } from '../../core/stores/pack.store';
 import { SessionStore } from '../../core/stores/session.store';
 import { SyncEngine } from '../../core/sync/sync-engine';
@@ -33,61 +35,77 @@ import { HuntNavIcon } from './hunt-nav-icon';
     }
   `,
   template: `
-    <div class="hunt-app">
+    <div class="hunt-app" [class.hunt-app--profile]="isProfileRoute()">
       <app-hunt-theme-deco />
 
-      <header class="hunt-header sticky top-0 z-10 flex items-center justify-between px-4 py-2">
-        <span class="hunt-logo truncate flex items-center gap-1.5 min-w-0">
-          <span class="truncate">{{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}</span>
-          @if (deployLabel) {
-            <span
-              class="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted border border-line rounded px-1 py-px"
-            >
-              {{ deployLabel }}
-            </span>
-          }
-        </span>
-        <span class="flex items-center gap-3">
-          @if (!sync.online()) {
-            <span class="text-xs font-bold text-bad uppercase">
-              {{ 'common.offline' | transloco }}
-            </span>
-          } @else if (sync.pendingCount() > 0) {
-            <span class="text-xs font-bold text-accent">⇅ {{ sync.pendingCount() }}</span>
-          }
-          <a routerLink="/hunt/profile" aria-label="Profile">
-            <app-avatar [avatar]="session.user()?.avatar ?? 'fox'" [size]="36" />
+      @if (isProfileRoute()) {
+        <header class="hunt-header flex items-center justify-between">
+          <span class="hunt-logo min-w-0">
+            <span class="hunt-logo-name truncate">{{ 'profile.title' | transloco }}</span>
+          </span>
+          <a
+            routerLink="/hunt/codes"
+            class="hunt-header-back shrink-0"
+            [attr.aria-label]="'common.back' | transloco"
+          >
+            ← {{ 'common.back' | transloco }}
           </a>
-        </span>
-      </header>
-
-      @if (showInstallHint()) {
-        <div class="bg-primary text-primary-ink text-sm px-4 py-2 flex items-center gap-2">
-          <span class="flex-1">{{ installHint() | transloco }}</span>
-          @if (install.canPrompt()) {
-            <button
-              class="font-bold bg-primary-ink/20 rounded-lg px-3 py-1 shrink-0"
-              (click)="installApp()"
-            >
-              {{ 'install.action' | transloco }}
-            </button>
-          }
-          <button class="font-bold underline shrink-0 opacity-80" (click)="dismissInstall()">
-            {{ 'install.dismiss' | transloco }}
-          </button>
-        </div>
+        </header>
+      } @else {
+        <header class="hunt-header flex items-center justify-between">
+            <span class="hunt-logo flex items-center gap-1 min-w-0">
+              <span class="hunt-logo-name truncate">{{ pack.event()?.theme?.logoText ?? 'QR Hunt' }}</span>
+              @if (pack.eventPhase() === 'ended') {
+                <span class="hunt-ended-label truncate">
+                  · {{ 'lifecycle.ended' | transloco }}
+                </span>
+              }
+              @if (deployLabel) {
+                <span
+                  class="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted border border-line rounded px-1 py-px"
+                >
+                  {{ deployLabel }}
+                </span>
+              }
+            </span>
+            <span class="flex items-center gap-3">
+              @if (!sync.online()) {
+                <span class="text-xs font-bold text-bad uppercase">
+                  {{ 'common.offline' | transloco }}
+                </span>
+              } @else if (sync.pendingCount() > 0) {
+                <span class="text-xs font-bold text-accent">⇅ {{ sync.pendingCount() }}</span>
+              }
+              <a routerLink="/hunt/profile" aria-label="Profile">
+                <app-avatar [avatar]="session.user()?.avatar ?? 'fox'" [size]="36" />
+              </a>
+            </span>
+          </header>
       }
 
+      <div class="hunt-scroll-fade-top" aria-hidden="true"></div>
+
       <main class="hunt-main">
-        @if (pack.eventPhase() === 'ended') {
-          <div class="hunt-lifecycle-banner hunt-lifecycle-ended" role="status">
-            <span class="text-2xl shrink-0" aria-hidden="true">🏁</span>
-            <div class="min-w-0">
-              <p class="font-bold leading-tight">{{ 'lifecycle.ended' | transloco }}</p>
-              <p class="text-sm text-muted leading-snug">{{ 'lifecycle.thanks' | transloco }}</p>
-            </div>
+        @if (showInstallHint()) {
+          <div
+            class="hunt-install-hint bg-primary text-primary-ink text-sm px-4 py-2 flex items-center gap-2"
+          >
+            <span class="flex-1">{{ installHint() | transloco }}</span>
+            @if (install.canPrompt()) {
+              <button
+                class="font-bold bg-primary-ink/20 rounded-lg px-3 py-1 shrink-0"
+                (click)="installApp()"
+              >
+                {{ 'install.action' | transloco }}
+              </button>
+            }
+            <button class="font-bold underline shrink-0 opacity-80" (click)="dismissInstall()">
+              {{ 'install.dismiss' | transloco }}
+            </button>
           </div>
-        } @else if (pack.eventPhase() === 'setup') {
+        }
+
+        @if (pack.eventPhase() === 'setup') {
           <div class="hunt-lifecycle-banner hunt-lifecycle-setup" role="status">
             <span class="text-4xl" aria-hidden="true">⏳</span>
             <p class="font-bold">{{ 'lifecycle.countdown' | transloco }}</p>
@@ -131,6 +149,16 @@ export class HuntShell {
   readonly session = inject(SessionStore);
   readonly sync = inject(SyncEngine);
   readonly install = inject(InstallPromptService);
+  private readonly router = inject(Router);
+
+  readonly isProfileRoute = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map(() => this.router.url.includes('/hunt/profile')),
+      startWith(this.router.url.includes('/hunt/profile')),
+    ),
+    { initialValue: this.router.url.includes('/hunt/profile') },
+  );
 
   private readonly installDismissed = signal(
     localStorage.getItem('qrhunt.installDismissed') === '1',

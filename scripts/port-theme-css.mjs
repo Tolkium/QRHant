@@ -146,10 +146,42 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
   background: var(--c-bg);
   color: var(--c-ink);
   font-family: var(--c-font, system-ui, sans-serif);
+  --hunt-header-pad-y: 0.65rem;
+  --hunt-header-pad-x: 1rem;
+  --hunt-header-inner-h: 2.25rem;
+  --hunt-header-content-h: calc(var(--hunt-header-pad-y) * 2 + var(--hunt-header-inner-h));
+  --hunt-header-bar-h: calc(var(--hunt-header-content-h) + env(safe-area-inset-top));
+  --hunt-header-fade-h: calc(var(--hunt-header-bar-h) / 2);
+  --hunt-header-h: var(--hunt-header-bar-h);
+  --hunt-content-inset-top: 0;
+  --hunt-content-inset-x: 0;
+}
+
+.hunt-scroll-fade-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 11;
+  height: var(--hunt-header-bar-h);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--c-surface) 0px,
+    var(--c-surface) calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h)),
+    color-mix(in srgb, var(--c-surface) 78%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.72),
+    color-mix(in srgb, var(--c-surface) 42%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.4),
+    color-mix(in srgb, var(--c-surface) 16%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.14),
+    transparent var(--hunt-header-bar-h)
+  );
 }
 
 .hunt-main {
   flex: 1;
+  padding-top: var(--hunt-header-bar-h);
   padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
   position: relative;
   z-index: 1;
@@ -173,15 +205,74 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
 }
 
 .hunt-header {
-  position: relative;
-  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  box-sizing: border-box;
+  padding: calc(var(--hunt-header-pad-y) + env(safe-area-inset-top)) var(--hunt-header-pad-x)
+    var(--hunt-header-pad-y);
   font-family: var(--c-font-display, inherit);
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-line);
+  background: transparent;
+  border-bottom: none;
+  min-height: var(--hunt-header-bar-h);
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.hunt-header-back {
+  font-family: var(--c-font-display, inherit);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--c-primary);
+  text-decoration: none;
+}
+
+@container (max-width: 360px) {
+  .hunt-header-back {
+    font-size: clamp(0.82rem, 6cqi, 1.05rem);
+  }
 }
 
 .hunt-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1 1 auto;
   font-family: var(--c-font-display, inherit);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@container (max-width: 360px) {
+  .hunt-logo {
+    font-size: clamp(0.82rem, 6cqi, 1.05rem);
+  }
+}
+
+.hunt-logo-name {
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hunt-ended-label {
+  color: var(--c-bad);
+  font: inherit;
+  letter-spacing: inherit;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hunt-nav-dock {
@@ -285,7 +376,8 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
 .hunt-progress {
   position: relative;
   z-index: 2;
-  padding: 0.75rem 1rem;
+  margin: var(--hunt-content-inset-top) var(--hunt-content-inset-x) 0;
+  padding: 0 0.75rem 0.75rem;
   background: color-mix(in srgb, var(--c-bg) 92%, transparent);
   border-bottom: 1px solid var(--c-line);
 }
@@ -357,6 +449,14 @@ const base = `/* Theme cosmetics — ported from design/index.html. Tokens via T
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
   padding: 0.75rem;
+}
+
+.hunt-profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: var(--hunt-content-inset-top);
+  padding: 0 0.75rem 0.75rem;
 }
 
 .hunt-card {

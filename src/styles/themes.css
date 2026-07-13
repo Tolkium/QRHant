@@ -9,10 +9,42 @@
   background: var(--c-bg);
   color: var(--c-ink);
   font-family: var(--c-font, system-ui, sans-serif);
+  --hunt-header-pad-y: 0.65rem;
+  --hunt-header-pad-x: 1rem;
+  --hunt-header-inner-h: 2.25rem;
+  --hunt-header-content-h: calc(var(--hunt-header-pad-y) * 2 + var(--hunt-header-inner-h));
+  --hunt-header-bar-h: calc(var(--hunt-header-content-h) + env(safe-area-inset-top));
+  --hunt-header-fade-h: calc(var(--hunt-header-bar-h) / 2);
+  --hunt-header-h: var(--hunt-header-bar-h);
+  --hunt-content-inset-top: 0;
+  --hunt-content-inset-x: 0;
+}
+
+.hunt-scroll-fade-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 11;
+  height: var(--hunt-header-bar-h);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--c-surface) 0px,
+    var(--c-surface) calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h)),
+    color-mix(in srgb, var(--c-surface) 78%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.72),
+    color-mix(in srgb, var(--c-surface) 42%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.4),
+    color-mix(in srgb, var(--c-surface) 16%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.14),
+    transparent var(--hunt-header-bar-h)
+  );
 }
 
 .hunt-main {
   flex: 1;
+  padding-top: var(--hunt-header-bar-h);
   padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
   position: relative;
   z-index: 1;
@@ -36,15 +68,74 @@
 }
 
 .hunt-header {
-  position: relative;
-  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  box-sizing: border-box;
+  padding: calc(var(--hunt-header-pad-y) + env(safe-area-inset-top)) var(--hunt-header-pad-x)
+    var(--hunt-header-pad-y);
   font-family: var(--c-font-display, inherit);
-  background: var(--c-surface);
-  border-bottom: 1px solid var(--c-line);
+  background: transparent;
+  border-bottom: none;
+  min-height: var(--hunt-header-bar-h);
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.hunt-header-back {
+  font-family: var(--c-font-display, inherit);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--c-primary);
+  text-decoration: none;
+}
+
+@container (max-width: 360px) {
+  .hunt-header-back {
+    font-size: clamp(0.82rem, 6cqi, 1.05rem);
+  }
 }
 
 .hunt-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1 1 auto;
   font-family: var(--c-font-display, inherit);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@container (max-width: 360px) {
+  .hunt-logo {
+    font-size: clamp(0.82rem, 6cqi, 1.05rem);
+  }
+}
+
+.hunt-logo-name {
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hunt-ended-label {
+  color: var(--c-bad);
+  font: inherit;
+  letter-spacing: inherit;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hunt-nav-dock {
@@ -148,7 +239,8 @@
 .hunt-progress {
   position: relative;
   z-index: 2;
-  padding: 0.75rem 1rem;
+  margin: var(--hunt-content-inset-top) var(--hunt-content-inset-x) 0;
+  padding: 0 0.75rem 0.75rem;
   background: color-mix(in srgb, var(--c-bg) 92%, transparent);
   border-bottom: 1px solid var(--c-line);
 }
@@ -220,6 +312,14 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
   padding: 0.75rem;
+}
+
+.hunt-profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: var(--hunt-content-inset-top);
+  padding: 0 0.75rem 0.75rem;
 }
 
 .hunt-card {
@@ -552,9 +652,13 @@
   content: "⛩ ";;
 }
 
+[data-active-theme="shrine"] .hunt-app {
+  --hunt-content-inset-top: 0.6rem;
+  --hunt-content-inset-x: 0.65rem;
+}
+
 [data-active-theme="shrine"] .hunt-progress {
-  margin: 0.6rem 0.65rem 0;
-      padding: 0.75rem;
+  padding: 0.75rem;
       border: 2px solid var(--c-accent);
       border-radius: 0.25rem;
       background: var(--c-surface);
@@ -643,9 +747,13 @@
   content: "🧭 ";;
 }
 
+[data-active-theme="atlas"] .hunt-app {
+  --hunt-content-inset-top: 0.55rem;
+  --hunt-content-inset-x: 0.6rem;
+}
+
 [data-active-theme="atlas"] .hunt-progress {
-  margin: 0.55rem 0.6rem 0;
-      padding: 0.7rem 0.85rem;
+  padding: 0.7rem 0.85rem;
       background: var(--c-surface);
       border: 2px solid var(--c-primary);
       border-radius: 0.2rem;
@@ -739,9 +847,13 @@
   font-size: 1.25rem;;
 }
 
+[data-active-theme="scrapbook"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.55rem;
+}
+
 [data-active-theme="scrapbook"] .hunt-progress {
-  margin: 0.5rem 0.55rem 0;
-      padding: 0.65rem 0.75rem;
+  padding: 0.65rem 0.75rem;
       background: #ffffff;
       border: 3px solid var(--c-ink);
       box-shadow: 4px 4px 0 var(--c-primary);
@@ -890,9 +1002,13 @@
       font-size: 0.85rem;;
 }
 
+[data-active-theme="kiyo"] .hunt-app {
+  --hunt-content-inset-top: 0.65rem;
+  --hunt-content-inset-x: 0.75rem;
+}
+
 [data-active-theme="kiyo"] .hunt-progress {
-  margin: 0.65rem 0.75rem 0;
-      padding: 1rem;
+  padding: 1rem;
       background: var(--c-surface);
       border-radius: 1.125rem;
       border: 0.5px solid rgba(0,0,0,0.06);
@@ -1040,9 +1156,13 @@
       letter-spacing: 0.04em;;
 }
 
+[data-active-theme="wamon"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.6rem;
+}
+
 [data-active-theme="wamon"] .hunt-progress {
-  margin: 0.5rem 0.6rem 0;
-      padding: 0.75rem 0.85rem;
+  padding: 0.75rem 0.85rem;
       background: var(--c-surface);
       border: 1px solid var(--c-line);
       border-radius: var(--c-radius-lg);
@@ -1169,9 +1289,13 @@
       letter-spacing: 0.12em;;
 }
 
+[data-active-theme="sumi"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.6rem;
+}
+
 [data-active-theme="sumi"] .hunt-progress {
-  margin: 0.5rem 0.6rem 0;
-      padding: 0.7rem 0.85rem;
+  padding: 0.7rem 0.85rem;
       background: var(--c-surface);
       border: 1px solid var(--c-line);
       border-radius: var(--c-radius-lg);;
@@ -1292,9 +1416,13 @@
       color: var(--c-ink);;
 }
 
+[data-active-theme="kawaii"] .hunt-app {
+  --hunt-content-inset-top: 0.55rem;
+  --hunt-content-inset-x: 0.65rem;
+}
+
 [data-active-theme="kawaii"] .hunt-progress {
-  margin: 0.55rem 0.65rem 0;
-      padding: 0.85rem 1rem;
+  padding: 0.85rem 1rem;
       background: var(--c-surface);
       border: none;
       border-radius: var(--c-radius-lg);
@@ -1422,9 +1550,13 @@
       border-color: rgba(255,255,255,0.25);;
 }
 
+[data-active-theme="izakaya"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.65rem;
+}
+
 [data-active-theme="izakaya"] .hunt-progress {
-  margin: 0.5rem 0.65rem 0;
-      padding: 0.8rem 0.9rem;
+  padding: 0.8rem 0.9rem;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--c-radius-lg);;
@@ -1542,6 +1674,21 @@
       border-bottom: none;;
 }
 
+[data-active-theme="zen"] .hunt-scroll-fade-top {
+  background: linear-gradient(
+    to bottom,
+    var(--c-bg) 0px,
+    var(--c-bg) calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h)),
+    color-mix(in srgb, var(--c-bg) 78%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.72),
+    color-mix(in srgb, var(--c-bg) 42%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.4),
+    color-mix(in srgb, var(--c-bg) 16%, transparent)
+      calc(var(--hunt-header-bar-h) - var(--hunt-header-fade-h) * 0.14),
+    transparent var(--hunt-header-bar-h)
+  );
+}
+
 [data-active-theme="zen"] .hunt-logo {
   font-family: var(--c-font-display);
       font-weight: 700;
@@ -1551,9 +1698,13 @@
       color: var(--c-ink);;
 }
 
+[data-active-theme="zen"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.65rem;
+}
+
 [data-active-theme="zen"] .hunt-progress {
-  margin: 0.5rem 0.65rem 0;
-      padding: 0.75rem 0.85rem;
+  padding: 0.75rem 0.85rem;
       background: var(--c-surface);
       border: 1px solid var(--c-line);
       border-radius: var(--c-radius-lg);
@@ -1729,12 +1880,10 @@
 }
 
 [data-active-theme="liquid"] .hunt-header {
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-      margin: 0.35rem 0.5rem 0;
-      border-radius: 1rem;;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-[data-active-theme="liquid"] .hunt-logo {
+[data-active-theme="liquid"] .hunt-logo-name {
   font-weight: 600;
       letter-spacing: -0.03em;
       background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
@@ -1743,9 +1892,13 @@
       background-clip: text;;
 }
 
+[data-active-theme="liquid"] .hunt-app {
+  --hunt-content-inset-top: 0.5rem;
+  --hunt-content-inset-x: 0.6rem;
+}
+
 [data-active-theme="liquid"] .hunt-progress {
-  margin: 0.5rem 0.6rem 0;
-      border-radius: 1.25rem;;
+  border-radius: 1.25rem;;
 }
 
 [data-active-theme="liquid"] .hunt-progress-bar {
@@ -1844,38 +1997,32 @@
   display: block;;
 }
 
-[data-active-theme="wamon"] .hunt-header,
-    [data-active-theme="wamon"] .hunt-main,
+[data-active-theme="wamon"] .hunt-main,
     [data-active-theme="wamon"] .hunt-nav {
   position: relative; z-index: 1;
 }
 
-[data-active-theme="sumi"] .hunt-header,
-    [data-active-theme="sumi"] .hunt-main,
+[data-active-theme="sumi"] .hunt-main,
     [data-active-theme="sumi"] .hunt-nav {
   position: relative; z-index: 1;
 }
 
-[data-active-theme="kawaii"] .hunt-header,
-    [data-active-theme="kawaii"] .hunt-main,
+[data-active-theme="kawaii"] .hunt-main,
     [data-active-theme="kawaii"] .hunt-nav {
   position: relative; z-index: 1;
 }
 
-[data-active-theme="izakaya"] .hunt-header,
-    [data-active-theme="izakaya"] .hunt-main,
+[data-active-theme="izakaya"] .hunt-main,
     [data-active-theme="izakaya"] .hunt-nav {
   position: relative; z-index: 1;
 }
 
-[data-active-theme="zen"] .hunt-header,
-    [data-active-theme="zen"] .hunt-main,
+[data-active-theme="zen"] .hunt-main,
     [data-active-theme="zen"] .hunt-nav {
   position: relative; z-index: 1;
 }
 
-[data-active-theme="liquid"] .hunt-header,
-    [data-active-theme="liquid"] .hunt-main,
+[data-active-theme="liquid"] .hunt-main,
     [data-active-theme="liquid"] .hunt-nav {
   position: relative; z-index: 1;
 }
@@ -2244,4 +2391,11 @@
   height: 10px;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Solid header chrome lives on the fade overlay so scrolling content can dissolve under it. */
+.hunt-app .hunt-header {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }

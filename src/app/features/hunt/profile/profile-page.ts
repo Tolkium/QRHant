@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { SessionStore } from '../../../core/stores/session.store';
 import { PackStore } from '../../../core/stores/pack.store';
@@ -18,19 +18,9 @@ import { celebrateFind } from '../../../shared/celebrate';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [FormsModule, RouterLink, TranslocoModule, Avatar, AvatarCropDialog, ThemeSwatch],
+  imports: [FormsModule, TranslocoModule, Avatar, AvatarCropDialog, ThemeSwatch],
   template: `
-    <div class="p-4 max-w-md mx-auto flex flex-col gap-4">
-      <div class="flex items-center justify-between gap-3">
-        <h1 class="text-2xl font-extrabold min-w-0">{{ 'profile.title' | transloco }}</h1>
-        <a
-          routerLink="/hunt/codes"
-          class="text-primary font-semibold shrink-0"
-          [attr.aria-label]="'common.back' | transloco"
-        >
-          ← {{ 'common.back' | transloco }}
-        </a>
-      </div>
+    <div class="hunt-profile-page">
 
       <!-- identity -->
       <section class="card p-4 flex items-center gap-4">
