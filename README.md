@@ -1,91 +1,129 @@
 # QR Hunt
 
-Offline-capable QR treasure-hunt app for festivals. Players scan hidden QR
-codes, unlock art cards, and climb a server-controlled leaderboard. Built as
-an Angular PWA with a Capacitor Android shell; the alpha runs entirely
-on-device with zero backend.
+Offline-capable QR treasure hunt for festivals and events. Players scan hidden codes,
+unlock collectible art cards, and compete on a server-backed leaderboard. Organizers run
+everything from a built-in admin panel.
 
-## Quick start
+Built as an **Angular PWA** — that is what runs in production today (Cloudflare Pages + Supabase).
+An **Android Capacitor** shell is in the repo for a future native APK (MLKit scanning), but it is
+not built or released yet; players use the installed PWA in the browser.
+
+<p align="center">
+  <img src="docs/screenshots/player-cards.png" alt="Player card grid" width="280" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/admin-panel.png" alt="Admin panel" width="280" />
+</p>
+
+<sub>Real app screenshots from the dev deployment.</sub>
+
+## What it does
+
+**Players**
+
+- Scan QR codes (camera or manual entry) to unlock themed art cards
+- Browse a card grid and collection; works offline after the hunt pack is cached
+- Climb the leaderboard; sync finds when back online
+- Pick visual themes when the event allows it (EN / SK / CS)
+
+**Organizers (admin)**
+
+- Create events, generate codes in bulk, upload card art with crop
+- Set one **live** hunt for all players; schedule code releases and hunt dates
+- Map editor, leaderboard flags, player list, print sheet, theme settings
+- Switch to **player view** to test the hunt as a competitor
+
+## Quick start (local mock)
+
+No Supabase needed — full demo on IndexedDB:
 
 ```bash
-fnm use          # picks the Node version from .node-version
+fnm use          # Node version from .node-version
 npm install
 npm start        # http://localhost:4200
 ```
 
-Demo data is seeded automatically on first launch:
+On first launch:
 
-- **Admin account**: nickname `admin`, password `admin123` → `/admin`
-- **Demo event** with 20 art codes (5 scheduled for later release) and a fake
-  leaderboard.
-- To scan on desktop: open Admin → Codes, show a QR on screen, scan it with
-  the webcam — or enable manual entry in Admin → Settings and type a code on
-  the profile page.
+- **Admin:** nickname `admin`, password `admin123` → `/admin`
+- **Demo event** with 20 codes (5 time-gated) and a seeded leaderboard
+- **Desktop scan:** Admin → Codes, show a QR on screen, scan with webcam — or enable manual entry in Settings and type a code on Profile
 
-To test on a phone, either run `npm run start:lan` (UI only — camera needs
-HTTPS) or deploy `dist/qrhunt/browser` to any static host (Cloudflare Pages,
-GitHub Pages).
+## Quick start (Supabase — like production)
 
-## Architecture in one paragraph
+1. Copy credentials into `src/environments/environment.local.ts` (gitignored) — see `supabase/README.md`
+2. `npm run start:supabase` → `http://localhost:4200`
+3. For phone testing over Wi‑Fi: `npm run start:supabase:lan` (camera still needs HTTPS; use Cloudflare preview for real device scans)
 
-All UI depends on five abstract APIs (`AuthApi`, `CodesApi`, `FindsApi`,
-`LeaderboardApi`, `AdminApi` in `src/app/core/backend/api.ts`). The alpha
-binds `MockBackend` — a full server simulation living in IndexedDB, including
-timestamp clamping, rate limits and anomaly flags. Production binds
-`SupabaseBackend` (same interfaces) by setting `environment.backend =
-'supabase'`; schema, RLS and Edge Functions live in `supabase/` (see
-`supabase/README.md`). The offline pack format is identical in both: per code
-an Argon2id-derived match tag plus AES-256-GCM ciphertext of the card content,
-keyed from the code itself — devices never hold plaintext codes.
+Daily backend work targets the **QRHant-Dev** project. Production uses **QRHant-Backend**.
+
+## Deployed environments
+
+| Branch | Hosting | Database | Typical use |
+| --- | --- | --- | --- |
+| `dev` | Cloudflare Pages preview | QRHant-Dev | Daily testing, designers |
+| `main` | Cloudflare Pages production | QRHant-Backend | Live events |
+
+Preview and production builds use `npm run build:pages` with `SUPABASE_*` env vars in Cloudflare (never committed). See [Cloudflare Pages](#cloudflare-pages) below.
+
+## Architecture
+
+All UI talks to five abstract APIs (`AuthApi`, `CodesApi`, `FindsApi`, `LeaderboardApi`, `AdminApi` in `src/app/core/backend/api.ts`):
+
+- **`mock`** — full server simulation in IndexedDB (local dev, CI)
+- **`supabase`** — Postgres + RLS + Edge Functions (`supabase/`)
+
+The offline **pack** format is the same in both backends: per code, an Argon2id match tag and AES-256-GCM ciphertext of card content — devices never store plaintext codes. `PackStore` caches the active event and pack for offline play; `SyncEngine` pushes finds when online.
 
 ## Key directories
 
 | Path | What lives there |
 | --- | --- |
-| `src/app/core/crypto/` | Code generation, Argon2id derivation, pack encryption (unit-tested) |
-| `src/app/core/backend/` | API boundary + mock and Supabase implementations |
+| `src/app/features/hunt/` | Player UI: cards, scanner, ranking, profile |
+| `src/app/features/admin/` | Admin: dashboard, events, codes, map, leaderboard, players, settings, themes |
 | `src/app/core/stores/` | Signal stores: session, pack, finds, theme |
-| `src/app/core/sync/` | Sync engine state machine (idle → syncing → backoff) |
-| `src/app/features/hunt/` | Player UI: codes grid, card detail, scanner, ranking, profile |
-| `src/app/features/admin/` | Admin panel: dashboard, events, codes, map editor, leaderboard flags, players, settings, print sheet |
-| `supabase/` | Postgres schema + RLS, Edge Functions, deployment notes |
-| `design/` | UI theme lab (`index.html`) — share `/design/` with designers |
-| `TODO.md` | Optimization backlog and architecture notes |
-| `android/` | Capacitor Android project (MLKit native scanning) |
+| `src/app/core/crypto/` | Code generation, pack encryption (unit-tested) |
+| `src/app/core/backend/` | API boundary — mock and Supabase |
+| `supabase/` | Schema, RLS, Edge Functions, setup notes |
+| `design/` | Standalone theme lab (`/design/` in every build) |
+| `docs/screenshots/` | README screenshots (you add real captures) |
+| `TODO.md` | Backlog and architecture notes |
+| `android/` | Capacitor Android project |
 
 ## Commands
 
 ```bash
-npm start             # dev server
-npm test              # vitest (crypto module has hard coverage)
-npm run build         # production PWA -> dist/qrhunt/browser (needs env.deploy — use build:pages)
-npm run build:pages   # Cloudflare Pages: writes env from SUPABASE_* vars, then builds
-npm run android:sync  # build web + sync into android/
-npm run android:open  # open in Android Studio (requires Android Studio + JDK)
+npm start                  # mock backend, localhost
+npm run start:supabase     # Supabase via environment.local.ts
+npm test                   # Vitest (crypto has strict coverage)
+npm run build:pages        # Cloudflare build (reads SUPABASE_* from env)
+npm run android:sync       # build web + sync into android/
+npm run android:open       # open in Android Studio
 ```
+
+More Supabase CLI: `npm run supabase:push:dev`, `npm run supabase:functions:dev`, `npm run seed:supabase` — see `supabase/README.md`.
 
 ## Git workflow
 
-- **`main`** — stable; production deploys from here (Phase 5).
-- **`dev`** — daily work; open PRs into `main` when ready.
-- CI runs on every push/PR to `main` or `dev`: `npm ci` → `ng test` → `ng build`.
-- Keep `environment.ts` on `backend: 'mock'` with empty Supabase keys in git.
-  For Supabase testing (Phase 3), edit `src/environments/environment.local.ts`
-  (gitignored) and run `npm run start:supabase`. See `supabase/README.md`.
+- **`dev`** — daily work; deploys to Cloudflare preview (QRHant-Dev)
+- **`main`** — production deploys (QRHant-Backend)
+- CI on push/PR to `main` or `dev`: `npm ci` → `ng test` → `ng build`
+- Committed `environment.ts` stays on `backend: 'mock'` for CI; real keys only in `environment.local.ts` or Cloudflare
 
-## Android APK
+## Android APK (planned, not shipped)
 
-`android/` is a complete Gradle project. Building the APK requires Android
-Studio (or the SDK + JDK 21): run `npm run android:sync`, open the project,
-and build. The scanner automatically switches from the web camera pipeline to
-native MLKit inside the APK. Play Store submission needs a one-time $25
-developer account; the PWA is fully usable without it.
+The `android/` folder is a Capacitor scaffold (`capacitor.config.ts`, MLKit hook in
+`scanner.service.ts`). You can build locally with Android Studio, but there is no CI APK
+build and nothing on the Play Store yet. For events today, use the **PWA** (add to home screen
+on Android — scanning uses the browser camera / BarcodeDetector).
+
+```bash
+npm run android:sync   # build web + sync into android/ (local only)
+npm run android:open   # open in Android Studio
+```
 
 ## Cloudflare Pages
 
-Host the PWA with Supabase. **Production** (`main`) uses **QRHant-Backend**;
-**preview** deploys (e.g. `dev`) use **QRHant-Dev**. Keys live in Cloudflare,
-not in git.
+Host the PWA with Supabase. Keys live in Cloudflare, not in git.
 
 ### 1. Create the Pages project
 
@@ -101,50 +139,48 @@ not in git.
 | Build output directory | `dist/qrhunt/browser` |
 | Root directory | `/` |
 
-5. **Environment variables** → add for **Production** (QRHant-Backend):
+5. **Environment variables** — **Production** (QRHant-Backend):
 
 | Name | Value |
 | --- | --- |
 | `NODE_VERSION` | `24.15.0` |
 | `SUPABASE_URL` | `https://wsafofmssdycacqjzclv.supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | publishable key from prod dashboard (Settings → API) |
+| `SUPABASE_PUBLISHABLE_KEY` | publishable key from prod dashboard |
 | `BACKEND` | `supabase` |
 
-6. Same variables for **Preview**, but **dev** URL + publishable key:
+6. Same for **Preview**, with dev URL + key:
 
 | Name | Preview value |
 | --- | --- |
 | `SUPABASE_URL` | `https://rvtltgrlsmapwonmwsbf.supabase.co` |
 | `SUPABASE_PUBLISHABLE_KEY` | dev publishable key |
 
-7. Save and deploy. SPA routing is handled automatically by Cloudflare Pages (no `_redirects` needed). The design lab at `/design/` is excluded from the Angular service worker so it stays a standalone static page.
+7. Deploy. SPA routing is automatic. `/design/` is excluded from the service worker.
 
 ### 2. After first deploy
 
-- Prod: register admin, create/seed event (or run `npm run seed:supabase` with `supabase/.env.prod` locally — careful).
-- Dev preview URL: same flow against dev DB (already seeded).
-- Camera/scan on phone needs **HTTPS** — Pages provides that automatically.
+- Create an admin account, create or seed an event (`npm run seed:supabase` against dev — see `supabase/README.md`)
+- Mark the hunt **live** in Admin (sidebar → **Make live for players**)
+- Phone camera/scan needs **HTTPS** — Pages provides that
 
-### Design lab (theme picker for designers)
+### 3. Design lab
 
-The standalone UI lab in `design/index.html` is copied into every build at **`/design/`** (no app button — just share the URL).
+Share `/design/` with designers (theme and layout exploration):
 
-| Where | Link |
+| Where | URL |
 | --- | --- |
-| Local dev | `http://localhost:4200/design/` |
-| Cloudflare Pages preview (`dev` branch) | `https://<your-preview>.pages.dev/design/` |
-| Production | `https://<your-prod-domain>/design/` |
+| Local | `http://localhost:4200/design/` |
+| Preview (`dev`) | `https://<preview>.pages.dev/design/` |
+| Production | `https://<prod-domain>/design/` |
 
-After pushing to `dev`, open the Pages preview deployment and append `/design/`. Designers can pick themes and layouts in the browser; choices are for reference only until integrated into the app.
-
-### 3. Local smoke test of the Pages build
+### 4. Local smoke test of the Pages build
 
 ```bash
-# PowerShell — use your dev or prod publishable key
+# PowerShell — dev or prod publishable key
 $env:SUPABASE_URL="https://rvtltgrlsmapwonmwsbf.supabase.co"
 $env:SUPABASE_PUBLISHABLE_KEY="sb_publishable_..."
 npm run build:pages
 npx serve dist/qrhunt/browser
 ```
 
-Refs (no secrets): `supabase/projects.env.example`.
+Project refs (no secrets): `supabase/projects.env.example`.
