@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { CodesApi } from '../backend/api';
 import { HuntEvent, OfflinePack } from '../models';
-import { idbGet, idbPut } from '../db/idb';
+import { idbDelete, idbGet, idbPut } from '../db/idb';
 import { FindsStore } from './finds.store';
 import { SessionStore } from './session.store';
 import { ThemeStore } from './theme.store';
@@ -74,12 +74,20 @@ export class PackStore {
     try {
       const event = await this.codes.getActiveEvent();
       if (!event) return;
+
+      const current = this._pack();
+      const huntSwitched = current != null && current.eventId !== event.id;
+
+      if (huntSwitched) {
+        this._pack.set(null);
+        await idbDelete('kv', DEVICE_PACK);
+      }
+
       this._event.set(event);
       this.applyThemeForEvent(event);
       await idbPut('kv', DEVICE_EVENT, event);
 
-      const current = this._pack();
-      if (!current || current.eventId !== event.id || current.version < event.packVersion) {
+      if (!current || huntSwitched || current.version < event.packVersion) {
         const pack = await this.codes.getPack(event.id);
         this._pack.set(pack);
         await idbPut('kv', DEVICE_PACK, pack);

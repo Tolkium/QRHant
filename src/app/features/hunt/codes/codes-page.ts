@@ -5,7 +5,6 @@ import { FindsStore } from '../../../core/stores/finds.store';
 import { PackStore } from '../../../core/stores/pack.store';
 import { ThemeStore } from '../../../core/stores/theme.store';
 import { themeLockedPreviewImage, themeUnlockedArtImage } from '../../../core/themes/theme-card-art';
-import { isRichCardTheme } from '../../../core/themes/theme-utils';
 import { HuntCard } from './hunt-card';
 import { HuntCardLockIcon } from './hunt-card-lock-icon';
 
@@ -121,7 +120,6 @@ export class CodesPage {
 
   readonly visible = computed(() => {
     const cosmeticsId = this.theme.applied()?.cosmeticsId ?? 'zen';
-    const rich = isRichCardTheme(cosmeticsId);
     const items = this.pack.releasedEntries().map((entry, index) => {
       const find = this.finds.findOf(entry.id);
       const found = !!find;
@@ -129,12 +127,10 @@ export class CodesPage {
         id: entry.id,
         found,
         title: found ? find!.content.title : (entry.title || '???'),
-        image:
-          found && !rich
-            ? (find!.content.image ?? themeUnlockedArtImage(cosmeticsId, index))
-            : null,
-        lockedPreview:
-          !found && !rich ? themeLockedPreviewImage(cosmeticsId, index) : null,
+        image: found
+          ? (find!.content.image ?? themeUnlockedArtImage(cosmeticsId, index))
+          : null,
+        lockedPreview: !found ? themeLockedPreviewImage(cosmeticsId, index) : null,
         foundAt: find ? new Date(find.clientFoundAt).toLocaleString() : '',
       };
     });

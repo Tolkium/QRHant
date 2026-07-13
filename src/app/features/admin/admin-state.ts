@@ -1,11 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AdminApi } from '../../core/backend/api';
 import { HuntEvent } from '../../core/models';
+import { PackStore } from '../../core/stores/pack.store';
 
 /** Shared admin context: the event list and which event is being managed. */
 @Injectable({ providedIn: 'root' })
 export class AdminState {
   private readonly api = inject(AdminApi);
+  private readonly pack = inject(PackStore);
 
   private readonly _events = signal<HuntEvent[]>([]);
   private readonly _selectedId = signal<string | null>(null);
@@ -41,5 +43,6 @@ export class AdminState {
   async setActive(eventId: string): Promise<void> {
     await this.api.setActiveEvent(eventId);
     await this.load();
+    await this.pack.refresh();
   }
 }

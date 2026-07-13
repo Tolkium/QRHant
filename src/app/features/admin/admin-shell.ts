@@ -3,7 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AdminState } from './admin-state';
+import { PackStore } from '../../core/stores/pack.store';
 import { SessionStore } from '../../core/stores/session.store';
+import { HuntEvent } from '../../core/models';
 import { environment } from '../../../environments/environment';
 
 const NAV = [
@@ -67,14 +69,26 @@ const NAV = [
         <label class="label" for="event-switcher">Event</label>
         <select
           id="event-switcher"
-          class="input mb-3"
+          class="input mb-2"
           [ngModel]="state.selected()?.id"
           (ngModelChange)="state.select($event)"
         >
           @for (e of state.events(); track e.id) {
-            <option [value]="e.id">{{ e.name }}{{ e.active ? ' ●' : '' }}</option>
+            <option [value]="e.id">
+              {{ eventLabel(e) }}{{ e.active ? ' ● LIVE' : '' }}
+            </option>
           }
         </select>
+
+        @if (state.selected(); as e) {
+          @if (e.active) {
+            <p class="text-good font-semibold text-xs mb-3">● Live for all players</p>
+          } @else {
+            <button class="btn-primary w-full mb-3 !min-h-10" (click)="makeActive()">
+              Make live for players
+            </button>
+          }
+        }
 
         @for (item of nav; track item[0]) {
           <a
@@ -106,6 +120,7 @@ const NAV = [
 export class AdminShell implements OnInit {
   readonly deployLabel = environment.deployLabel;
   readonly state = inject(AdminState);
+  private readonly pack = inject(PackStore);
   private readonly session = inject(SessionStore);
   private readonly router = inject(Router);
 
@@ -121,9 +136,21 @@ export class AdminShell implements OnInit {
     await this.router.navigate(['/auth']);
   }
 
+  async makeActive(): Promise<void> {
+    const e = this.state.selected();
+    if (e) await this.state.setActive(e.id);
+  }
+
   async enterPlayerView(): Promise<void> {
+    await this.pack.refresh();
     this.session.setPlayerViewMode(true);
     this.menuOpen.set(false);
     await this.router.navigate(['/hunt']);
+  }
+
+  eventLabel(event: HuntEvent): string {
+    const brand = event.theme?.logoText?.trim();
+    if (brand && brand !== event.name) return `${brand} (${event.name})`;
+    return brand || event.name;
   }
 }
