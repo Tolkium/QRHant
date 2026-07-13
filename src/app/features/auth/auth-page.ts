@@ -1,4 +1,4 @@
-import { Component, inject, isDevMode, signal } from '@angular/core';
+import { Component, inject, isDevMode, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -9,6 +9,13 @@ import { environment } from '../../../environments/environment';
 import { authErrorKey, isExpectedAuthError } from '../../core/auth-errors';
 
 const ONBOARDED_KEY = 'qrhunt.onboarded';
+const RETURNING_KEY = 'qrhunt.returning';
+
+function isReturningVisitor(): boolean {
+  return (
+    localStorage.getItem(ONBOARDED_KEY) === '1' || localStorage.getItem(RETURNING_KEY) === '1'
+  );
+}
 
 @Component({
   selector: 'app-auth-page',
@@ -122,7 +129,7 @@ const ONBOARDED_KEY = 'qrhunt.onboarded';
     </div>
   `,
 })
-export class AuthPage {
+export class AuthPage implements OnDestroy {
   readonly deployLabel = environment.deployLabel;
   private readonly session = inject(SessionStore);
   private readonly transloco = inject(TranslocoService);
@@ -131,8 +138,8 @@ export class AuthPage {
 
   readonly langs = LANGS;
   readonly slide = signal(0);
-  readonly onboarded = signal(localStorage.getItem(ONBOARDED_KEY) === '1');
-  readonly mode = signal<'login' | 'register'>('register');
+  readonly onboarded = signal(isReturningVisitor());
+  readonly mode = signal<'login' | 'register'>(isReturningVisitor() ? 'login' : 'register');
   readonly error = signal<string | null>(null);
   readonly busy = signal(false);
 
@@ -142,6 +149,10 @@ export class AuthPage {
 
   activeLang(): string {
     return this.transloco.getActiveLang();
+  }
+
+  ngOnDestroy(): void {
+    localStorage.setItem(RETURNING_KEY, '1');
   }
 
   slideKey(): string {
@@ -158,6 +169,7 @@ export class AuthPage {
     } else {
       localStorage.setItem(ONBOARDED_KEY, '1');
       this.onboarded.set(true);
+      this.mode.set('register');
     }
   }
 
@@ -185,6 +197,8 @@ export class AuthPage {
       } else {
         await this.session.register(creds);
       }
+      localStorage.setItem(ONBOARDED_KEY, '1');
+      localStorage.setItem(RETURNING_KEY, '1');
       await this.router.navigate([this.session.homeRoute()]);
     } catch (e) {
       if (isDevMode() && !isExpectedAuthError(e)) {
