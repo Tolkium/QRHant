@@ -30,6 +30,11 @@
                 "output": "/design"
               },
               {
+                "glob": "**/*",
+                "input": "lunch",
+                "output": "/lunch"
+              },
+              {
                 "glob": "zxing_reader.wasm",
                 "input": "node_modules/zxing-wasm/dist/reader",
                 "output": "/wasm"

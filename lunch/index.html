@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Obed — výber menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f6f1e8;
+      --surface: #fffdf8;
+      --ink: #1e1a14;
+      --muted: #6b6358;
+      --line: #e4d9c8;
+      --accent: #c45c26;
+      --accent-ink: #fff8f2;
+      --good: #2d6a4f;
+      --bad: #9b2226;
+      --shadow: 0 8px 28px rgba(30, 26, 20, 0.08);
+      --radius: 18px;
+    }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100dvh;
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1rem 1rem 6rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 1.25rem 0 1rem;
+    }
+
+    header h1 {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 1.65rem;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.35rem;
+    }
+
+    .day-tabs {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+
+    .day-tabs::-webkit-scrollbar { display: none; }
+
+    .day-tab {
+      flex: 1 0 auto;
+      min-width: 4.5rem;
+      border: 2px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.55rem 0.85rem;
+      font: 700 0.78rem/1 "DM Sans", sans-serif;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .day-tab small {
+      display: block;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .day-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .day-tab.active small { color: rgba(255, 248, 242, 0.82); }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel h2 {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .input {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      font: inherit;
+      background: #fff;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 1rem 0 0.55rem;
+    }
+
+    .cards {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 0.75rem;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.15s ease;
+    }
+
+    .card:hover { border-color: #d4b896; }
+
+    .card.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(196, 92, 38, 0.15);
+    }
+
+    .card img {
+      width: 108px;
+      height: 100%;
+      min-height: 96px;
+      object-fit: cover;
+      background: #efe6d8;
+    }
+
+    .card-body {
+      padding: 0.7rem 0.75rem 0.7rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .card-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .allergens {
+      font-size: 0.72rem;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .pick-summary {
+      margin-top: 0.85rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 12px;
+      background: #f0ebe1;
+      font-size: 0.88rem;
+    }
+
+    .pick-summary strong { color: var(--accent); }
+
+    .actions {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      font: 700 0.95rem/1 "DM Sans", sans-serif;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 2px solid var(--line);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--bad);
+      border: 2px solid #e8c4c5;
+      font-size: 0.82rem;
+    }
+
+    .queue {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      background: #efe6d8;
+      border-radius: 999px;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ticket */
+    .ticket-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 26, 20, 0.45);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
+    }
+
+    .ticket {
+      width: min(100%, 420px);
+      max-height: 88dvh;
+      overflow: auto;
+      background: #fffef9;
+      border: 2px dashed #b8a88e;
+      border-radius: 12px 12px 4px 4px;
+      padding: 1rem 1rem 1.25rem;
+      font-family: "Courier New", monospace;
+      box-shadow: var(--shadow);
+    }
+
+    .ticket h3 {
+      text-align: center;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .ticket .sub {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .ticket-line {
+      border-top: 1px dashed #cfc2ad;
+      margin: 0.65rem 0;
+    }
+
+    .ticket-row {
+      margin-bottom: 0.75rem;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .ticket-row .no {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .ticket-section {
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0.65rem 0 0.25rem;
+    }
+
+    .ticket-total {
+      text-align: center;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 1.25rem 0.5rem;
+    }
+
+    .credits {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    .credits a { color: var(--accent); }
+
+    @media (min-width: 560px) {
+      .cards.two-col { grid-template-columns: 1fr 1fr; }
+      .card { grid-template-columns: 1fr; }
+      .card img { width: 100%; min-height: 120px; }
+      .card-body { padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>🍽️ Výber obeda</h1>
+      <p>Verejná anketa — bez prihlásenia. Stačí hlavné jedlo; meno môže byť Pokémon.</p>
+    </header>
+
+    <div class="day-tabs" id="dayTabs"></div>
+
+    <div id="voteView">
+      <div class="panel">
+        <label class="label" for="personName">Meno (voliteľné)</label>
+        <input id="personName" class="input" type="text" placeholder="Alebo nechaj prázdne → náhodný Pokémon" autocomplete="off" />
+
+        <p class="section-label">Polievka (voliteľné)</p>
+        <div class="cards" id="soupCards"></div>
+
+        <p class="section-label">Hlavné jedlo</p>
+        <div class="cards two-col" id="mainCards"></div>
+
+        <div class="pick-summary" id="pickSummary">Vyber hlavné jedlo.</div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" id="nextBtn" disabled>Ďalší človek</button>
+          <button class="btn btn-primary" id="orderBtn" disabled>Objednať</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Objednaní dnes</h2>
+        <div class="queue" id="queue"></div>
+        <p class="empty hidden" id="queueEmpty">Zatiaľ nikto neobjednal.</p>
+        <div class="actions">
+          <button class="btn btn-danger" id="resetBtn">Vymazať dnešné objednávky</button>
+        </div>
+      </div>
+    </div>
+    <p class="credits">Fotky jedál: <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> (CC licencie).</p>
+  </div>
+
+  <div class="ticket-wrap hidden" id="ticketWrap">
+    <div class="ticket" id="ticket"></div>
+  </div>
+
+  <script>
+    const POKEMON_NAMES = [
+      'Pikachu', 'Bulbasaur', 'Charmander', 'Squirtle', 'Eevee',
+      'Snorlax', 'Gengar', 'Lapras', 'Mewtwo', 'Jigglypuff',
+    ];
+
+    const IMG = {
+      vegSoup: 'images/zeleninovy-krem.jpg',
+      chickenBroth: 'images/slepaci-vyvar.jpg',
+      beanSoup: 'images/hrstkova.jpg',
+      kulajda: 'images/kulajda.jpg',
+      tomatoSoup: 'images/paradajkova.jpg',
+      cordonBleu: 'images/cernohorsky-rezen.jpg',
+      porkSteak: 'images/bravcovy-steak.jpg',
+      risotto: 'images/cviklove-risotto.jpg',
+      schnitzel: 'images/kuraci-rezen.jpg',
+      venison: 'images/jelenie-ragu.jpg',
+      vrabec: 'images/moravsky-vrabec.jpg',
+      fishChips: 'images/hejk.jpg',
+      porkCheeks: 'images/bravcove-licka.jpg',
+      placeholder: 'images/kuraci-rezen.jpg',
+    };
+
+    const MENUS = {
+      '2026-07-14': {
+        label: 'Utorok',
+        short: '14.7.',
+        soups: [
+          { id: 's1', short: 'Zel. krém', name: 'Zeleninový krém, krutóny', detail: '0,3 l', allergens: '1,7', image: IMG.vegSoup },
+          { id: 's2', short: 'Slepačí vývar', name: 'Slepačí vývar so zeleninou a niťovkami', detail: '0,25 l', allergens: '1,3,9', image: IMG.chickenBroth },
+        ],
+        mains: [
+          { id: 'm1', short: 'Černohorský rezeň', name: 'Kurací černohorský rezeň posypaný syrom', detail: '140 g · varené zemiaky · tatárska omáčka', allergens: '1,3,7,10', image: IMG.cordonBleu },
+          { id: 'm2', short: 'Bravč. steak', name: 'Marinovaný bravčový steak', detail: '150 g · francúzska cibuľová omáčka · dusená ryža · zelenina', allergens: '1,7,10', image: IMG.porkSteak },
+          { id: 'm3', short: 'Cviklové risotto', name: 'Krémové cviklové risotto', detail: '450 g · kozí syr · karamelové orechy · rukola', allergens: '1,4,7', image: IMG.risotto },
+          { id: 'm4', short: 'Kurací rezeň', name: 'Vyprážaný kurací rezeň', detail: '150 g · zemiakový šalát viedenský', allergens: '1,3,7,10', image: IMG.schnitzel },
+          { id: 'm5', short: 'Jelenie ragú', name: 'Jelenie ragú so zeleninou', detail: '150 g · parená knedľa · brusnice', allergens: '1,3,7,9', image: IMG.venison },
+        ],
+      },
+      '2026-07-15': {
+        label: 'Streda',
+        short: '15.7.',
+        soups: [
+          { id: 's1', short: 'Hrstková', name: 'Hrstková s párkom a zeleninou, chlieb', detail: '0,3 l', allergens: '1,9', image: IMG.beanSoup },
+          { id: 's2', short: 'Slepačí vývar', name: 'Slepačí vývar so zeleninou a niťovkami', detail: '0,25 l', allergens: '1,3,9', image: IMG.chickenBroth },
+        ],
+        mains: [
+          { id: 'm1', short: 'Moravský vrabec', name: 'Moravský vrabec', detail: '150 g · dusená kyslá kapusta · parená knedľa', allergens: '1,3,7', image: IMG.vrabec },
+          { id: 'm2', short: 'Hejk', name: 'Vyprážaný hejk na mlynárský spôsob', detail: '220 g · hranolky · aioli dresing', allergens: '1,3,4,7,10', image: IMG.fishChips },
+          { id: 'm3', short: 'Kurací rezeň', name: 'Vyprážaný kurací / bravčový rezeň', detail: '150 g · zemiakový šalát viedenský', allergens: '1,3,7,10', image: IMG.schnitzel },
+          { id: 'm4', short: 'Bravč. líčka', name: 'Bravčové líčka na portskom víne', detail: '160 g · zemiakové pyré · baby mrkva', allergens: '1,7,10', image: IMG.porkCheeks },
+          { id: 'm5', short: 'Jelenie ragú', name: 'Jelenie ragú so zeleninou', detail: '150 g · parená knedľa · brusnice', allergens: '1,3,7,9', image: IMG.venison },
+        ],
+      },
+      '2026-07-16': {
+        label: 'Štvrtok',
+        short: '16.7.',
+        soups: [
+          { id: 's1', short: 'Kulajda', name: 'Kulajda so zašľahaným vajcom a kôprom', detail: '0,3 l', allergens: '1,3,7', image: IMG.kulajda },
+          { id: 's2', short: 'Slepačí vývar', name: 'Slepačí vývar so zeleninou a niťovkami', detail: '0,25 l', allergens: '1,3,9', image: IMG.chickenBroth },
+        ],
+        mains: [
+          { id: 'm5', short: 'Jelenie ragú', name: 'Jelenie ragú so zeleninou', detail: '150 g · parená knedľa · brusnice', allergens: '1,3,7,9', image: IMG.venison },
+        ],
+      },
+      '2026-07-17': {
+        label: 'Piatok',
+        short: '17.7.',
+        soups: [
+          { id: 's1', short: 'Paradajková', name: 'Paradajková s parmezánom', detail: '0,25 l', allergens: '7', image: IMG.tomatoSoup },
+          { id: 's2', short: 'Slepačí vývar', name: 'Slepačí vývar so zeleninou a niťovkami', detail: '0,25 l', allergens: '1,3,9', image: IMG.chickenBroth },
+        ],
+        mains: [
+          { id: 'm5', short: 'Jelenie ragú', name: 'Jelenie ragú so zeleninou', detail: '150 g · parená knedľa · brusnice', allergens: '1,3,7,9', image: IMG.venison },
+        ],
+      },
+    };
+
+    const DAY_KEYS = Object.keys(MENUS);
+    const STORAGE_PREFIX = 'qrhunt.lunch.orders.';
+
+    let activeDay = pickDefaultDay();
+    let selectedSoup = null;
+    let selectedMain = null;
+
+    const els = {
+      dayTabs: document.getElementById('dayTabs'),
+      soupCards: document.getElementById('soupCards'),
+      mainCards: document.getElementById('mainCards'),
+      pickSummary: document.getElementById('pickSummary'),
+      personName: document.getElementById('personName'),
+      nextBtn: document.getElementById('nextBtn'),
+      orderBtn: document.getElementById('orderBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      queue: document.getElementById('queue'),
+      queueEmpty: document.getElementById('queueEmpty'),
+      ticketWrap: document.getElementById('ticketWrap'),
+      ticket: document.getElementById('ticket'),
+    };
+
+    function pickDefaultDay() {
+      const today = new Date();
+      const key = formatDateKey(today);
+      if (MENUS[key]) return key;
+      return DAY_KEYS[0];
+    }
+
+    function formatDateKey(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function storageKey(day) {
+      return STORAGE_PREFIX + day;
+    }
+
+    function loadOrders(day) {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey(day)) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveOrders(day, orders) {
+      localStorage.setItem(storageKey(day), JSON.stringify(orders));
+    }
+
+    function dishById(day, type, id) {
+      const menu = MENUS[day];
+      const list = type === 'soup' ? menu.soups : menu.mains;
+      return list.find((d) => d.id === id) || null;
+    }
+
+    function randomPokemon() {
+      return POKEMON_NAMES[Math.floor(Math.random() * POKEMON_NAMES.length)];
+    }
+
+    function resolveName() {
+      const typed = els.personName.value.trim();
+      return typed || randomPokemon();
+    }
+
+    function displayName() {
+      const typed = els.personName.value.trim();
+      if (typed) return `<strong>${escapeHtml(typed)}</strong>`;
+      return '<em>náhodný Pokémon</em>';
+    }
+
+    function aggregateByShort(orders, field) {
+      const counts = new Map();
+      for (const o of orders) {
+        const label = o[field];
+        if (!label) continue;
+        counts.set(label, (counts.get(label) || 0) + 1);
+      }
+      return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    }
+
+    function ticketSection(title, rows) {
+      if (!rows.length) return '';
+      const lines = rows.map(([label, count], i) =>
+        `<div class="ticket-row"><span class="no">${i + 1}.</span> ${escapeHtml(label)} <strong>× ${count}</strong></div>`,
+      ).join('');
+      return `<div class="ticket-section">${title}</div>${lines}`;
+    }
+
+    function renderDayTabs() {
+      els.dayTabs.innerHTML = DAY_KEYS.map((key) => {
+        const m = MENUS[key];
+        const active = key === activeDay ? 'active' : '';
+        const count = loadOrders(key).length;
+        const badge = count ? ` · ${count}` : '';
+        return `<button type="button" class="day-tab ${active}" data-day="${key}">${m.label}<small>${m.short}${badge}</small></button>`;
+      }).join('');
+
+      els.dayTabs.querySelectorAll('.day-tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeDay = btn.dataset.day;
+          selectedSoup = null;
+          selectedMain = null;
+          els.personName.value = '';
+          render();
+        });
+      });
+    }
+
+    function renderCards(container, items, type, selectedId) {
+      if (!items.length) {
+        container.innerHTML = '<p class="empty">Dnes nie sú k dispozícii žiadne položky.</p>';
+        return;
+      }
+
+      container.innerHTML = items.map((item) => {
+        const selected = item.id === selectedId ? 'selected' : '';
+        const allergens = item.allergens ? `<span class="allergens">A: ${item.allergens}</span>` : '';
+        return `
+          <button type="button" class="card ${selected}" data-type="${type}" data-id="${item.id}">
+            <img src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.src='${IMG.placeholder}'" />
+            <div class="card-body">
+              <div class="card-title">${item.name}</div>
+              <div class="card-meta">${item.detail}</div>
+              ${allergens}
+            </div>
+          </button>`;
+      }).join('');
+
+      container.querySelectorAll('.card').forEach((card) => {
+        card.addEventListener('click', () => {
+          const { type, id } = card.dataset;
+          if (type === 'soup') {
+            selectedSoup = selectedSoup === id ? null : id;
+          } else {
+            selectedMain = id;
+          }
+          renderMenuCards();
+          updateSummary();
+        });
+      });
+    }
+
+    function renderMenuCards() {
+      const menu = MENUS[activeDay];
+      renderCards(els.soupCards, menu.soups, 'soup', selectedSoup);
+      renderCards(els.mainCards, menu.mains, 'main', selectedMain);
+    }
+
+    function updateSummary() {
+      const soup = selectedSoup ? dishById(activeDay, 'soup', selectedSoup) : null;
+      const main = selectedMain ? dishById(activeDay, 'main', selectedMain) : null;
+      const ready = !!main;
+
+      if (!main) {
+        els.pickSummary.textContent = 'Vyber hlavné jedlo.';
+      } else {
+        els.pickSummary.innerHTML = [
+          displayName(),
+          soup ? `polievka: ${escapeHtml(soup.short)}` : 'polievka: —',
+          `hlavné: ${escapeHtml(main.short)}`,
+        ].join(' · ');
+      }
+
+      els.nextBtn.disabled = !ready;
+      els.orderBtn.disabled = !ready;
+    }
+
+    function renderQueue() {
+      const orders = loadOrders(activeDay);
+      if (!orders.length) {
+        els.queue.innerHTML = '';
+        els.queueEmpty.classList.remove('hidden');
+        return;
+      }
+      els.queueEmpty.classList.add('hidden');
+      els.queue.innerHTML = orders.map((o) =>
+        `<span class="chip">#${o.no} ${escapeHtml(o.name)} · ${escapeHtml(o.mainShort)}</span>`,
+      ).join('');
+    }
+
+    function addOrder() {
+      const main = dishById(activeDay, 'main', selectedMain);
+      if (!main) return null;
+
+      const soup = selectedSoup ? dishById(activeDay, 'soup', selectedSoup) : null;
+      const name = resolveName();
+      const orders = loadOrders(activeDay);
+      const entry = {
+        no: orders.length + 1,
+        name,
+        soupShort: soup?.short ?? null,
+        mainShort: main.short,
+        at: new Date().toISOString(),
+      };
+      orders.push(entry);
+      saveOrders(activeDay, orders);
+      return entry;
+    }
+
+    function clearForm() {
+      els.personName.value = '';
+      selectedSoup = null;
+      selectedMain = null;
+      updateSummary();
+      renderMenuCards();
+      els.personName.focus();
+    }
+
+    function showTicket() {
+      const orders = loadOrders(activeDay);
+      const menu = MENUS[activeDay];
+      const dateLabel = `${menu.label} ${menu.short}`;
+      const soups = aggregateByShort(orders, 'soupShort');
+      const mains = aggregateByShort(orders, 'mainShort');
+
+      els.ticket.innerHTML = `
+        <h3>🧾 Lístok objednávky</h3>
+        <div class="sub">${dateLabel} · ${orders.length} ${orders.length === 1 ? 'objednávka' : 'objednávok'}</div>
+        <div class="ticket-line"></div>
+        ${ticketSection('Polievky', soups)}
+        ${ticketSection('Hlavné', mains)}
+        <div class="ticket-line"></div>
+        <div class="ticket-total">SPOLU: ${orders.length}×</div>
+        <div class="actions" style="margin-top:0.85rem">
+          <button type="button" class="btn btn-secondary" id="closeTicket">Zavrieť</button>
+          <button type="button" class="btn btn-primary" id="printTicket">Tlačiť</button>
+        </div>
+      `;
+
+      els.ticketWrap.classList.remove('hidden');
+      document.getElementById('closeTicket').addEventListener('click', () => {
+        els.ticketWrap.classList.add('hidden');
+      });
+      document.getElementById('printTicket').addEventListener('click', () => window.print());
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function render() {
+      renderDayTabs();
+      renderMenuCards();
+      renderQueue();
+      updateSummary();
+    }
+
+    els.personName.addEventListener('input', updateSummary);
+
+    els.nextBtn.addEventListener('click', () => {
+      addOrder();
+      clearForm();
+      render();
+    });
+
+    els.orderBtn.addEventListener('click', () => {
+      addOrder();
+      render();
+      showTicket();
+      clearForm();
+    });
+
+    els.resetBtn.addEventListener('click', () => {
+      const menu = MENUS[activeDay];
+      if (!confirm(`Vymazať všetky objednávky pre ${menu.label} ${menu.short}?`)) return;
+      saveOrders(activeDay, []);
+      render();
+    });
+
+    els.ticketWrap.addEventListener('click', (e) => {
+      if (e.target === els.ticketWrap) els.ticketWrap.classList.add('hidden');
+    });
+
+    render();
+    els.personName.focus();
+  </script>
+</body>
+</html>

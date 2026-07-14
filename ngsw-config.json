@@ -7,7 +7,9 @@
     "!/**/*__*",
     "!/**/*__*/**",
     "!/design",
-    "!/design/**"
+    "!/design/**",
+    "!/lunch",
+    "!/lunch/**"
   ],
   "assetGroups": [
     {
