@@ -7,8 +7,10 @@
     "!/**/*__*",
     "!/**/*__*/**",
     "!/design",
+    "!/design/",
     "!/design/**",
     "!/lunch",
+    "!/lunch/",
     "!/lunch/**"
   ],
   "assetGroups": [

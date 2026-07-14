@@ -21,6 +21,22 @@
     />
   </head>
   <body>
+    <script>
+      (function () {
+        var p = location.pathname;
+        var roots = ['/lunch', '/design'];
+        for (var i = 0; i < roots.length; i++) {
+          var root = roots[i];
+          if (p === root || p.startsWith(root + '/')) {
+            var isFile = /\.[a-zA-Z0-9]{2,8}$/.test(p);
+            if (!isFile && p !== root + '/index.html') {
+              location.replace(root + '/index.html' + location.search + location.hash);
+            }
+            return;
+          }
+        }
+      })();
+    </script>
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
   </body>
