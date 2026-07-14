@@ -349,6 +349,95 @@
 
     .credits a { color: var(--accent); }
 
+    .hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .avail-list {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .avail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.75rem;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .avail-item:hover { border-color: #d4b896; }
+
+    .avail-item.off {
+      opacity: 0.5;
+      background: #f8f4ee;
+    }
+
+    .avail-item input {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .avail-item-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avail-item-text strong {
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .avail-item-text span {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .avail-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      background: #e8f5ee;
+      color: var(--good);
+      flex-shrink: 0;
+    }
+
+    .avail-item.off .avail-badge {
+      background: #f5e8e8;
+      color: var(--bad);
+    }
+
+    .setup-actions {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .top-link {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.75rem;
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--accent);
+      font: 600 0.82rem/1 "DM Sans", sans-serif;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
     @media (min-width: 560px) {
       .cards.two-col { grid-template-columns: 1fr 1fr; }
       .card { grid-template-columns: 1fr; }
@@ -366,8 +455,27 @@
 
     <div class="day-tabs" id="dayTabs"></div>
 
-    <div id="voteView">
+    <div id="setupView">
       <div class="panel">
+        <h2>Dostupné jedlá</h2>
+        <p class="hint">Pred objednávaním označ, čo je ešte na sklade. Vypnuté položky sa v ankete nezobrazia.</p>
+
+        <p class="section-label">Polievky</p>
+        <div class="avail-list" id="availSoups"></div>
+
+        <p class="section-label">Hlavné jedlá</p>
+        <div class="avail-list" id="availMains"></div>
+
+        <div class="setup-actions">
+          <button class="btn btn-primary" id="startOrderBtn" type="button">Otvoriť objednávanie</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="voteView" class="hidden">
+      <div class="panel">
+        <button class="top-link" id="editAvailBtn" type="button">← Upraviť dostupnosť</button>
+
         <label class="label" for="personName">Meno (voliteľné)</label>
         <input id="personName" class="input" type="text" placeholder="Alebo nechaj prázdne → náhodný Pokémon" autocomplete="off" />
 
@@ -481,13 +589,21 @@
 
     const DAY_KEYS = Object.keys(MENUS);
     const STORAGE_PREFIX = 'qrhunt.lunch.orders.';
+    const AVAIL_PREFIX = 'qrhunt.lunch.availability.';
 
     let activeDay = pickDefaultDay();
+    let viewMode = 'setup';
     let selectedSoup = null;
     let selectedMain = null;
 
     const els = {
       dayTabs: document.getElementById('dayTabs'),
+      setupView: document.getElementById('setupView'),
+      voteView: document.getElementById('voteView'),
+      availSoups: document.getElementById('availSoups'),
+      availMains: document.getElementById('availMains'),
+      startOrderBtn: document.getElementById('startOrderBtn'),
+      editAvailBtn: document.getElementById('editAvailBtn'),
       soupCards: document.getElementById('soupCards'),
       mainCards: document.getElementById('mainCards'),
       pickSummary: document.getElementById('pickSummary'),
@@ -535,6 +651,46 @@
       const menu = MENUS[day];
       const list = type === 'soup' ? menu.soups : menu.mains;
       return list.find((d) => d.id === id) || null;
+    }
+
+    function defaultAvailability(day) {
+      const menu = MENUS[day];
+      return new Set([...menu.soups, ...menu.mains].map((d) => d.id));
+    }
+
+    function loadAvailability(day) {
+      try {
+        const raw = localStorage.getItem(AVAIL_PREFIX + day);
+        if (raw) return new Set(JSON.parse(raw));
+      } catch { /* ignore */ }
+      return defaultAvailability(day);
+    }
+
+    function saveAvailability(day, ids) {
+      localStorage.setItem(AVAIL_PREFIX + day, JSON.stringify([...ids]));
+    }
+
+    function setDishAvailable(day, id, available) {
+      const ids = loadAvailability(day);
+      if (available) ids.add(id);
+      else ids.delete(id);
+      saveAvailability(day, ids);
+    }
+
+    function availableSoups(day) {
+      const ids = loadAvailability(day);
+      return MENUS[day].soups.filter((d) => ids.has(d.id));
+    }
+
+    function availableMains(day) {
+      const ids = loadAvailability(day);
+      return MENUS[day].mains.filter((d) => ids.has(d.id));
+    }
+
+    function clearUnavailableSelections() {
+      const ids = loadAvailability(activeDay);
+      if (selectedSoup && !ids.has(selectedSoup)) selectedSoup = null;
+      if (selectedMain && !ids.has(selectedMain)) selectedMain = null;
     }
 
     function randomPokemon() {
@@ -585,9 +741,51 @@
           selectedSoup = null;
           selectedMain = null;
           els.personName.value = '';
+          viewMode = 'setup';
           render();
         });
       });
+    }
+
+    function renderAvailList(container, items, day) {
+      const ids = loadAvailability(day);
+      if (!items.length) {
+        container.innerHTML = '<p class="empty">Žiadne položky v menu.</p>';
+        return;
+      }
+
+      container.innerHTML = items.map((item) => {
+        const on = ids.has(item.id);
+        return `
+          <label class="avail-item ${on ? '' : 'off'}">
+            <input type="checkbox" data-id="${item.id}" ${on ? 'checked' : ''} />
+            <div class="avail-item-text">
+              <strong>${item.short}</strong>
+              <span>${item.name}</span>
+            </div>
+            <span class="avail-badge">${on ? 'áno' : 'nie'}</span>
+          </label>`;
+      }).join('');
+
+      container.querySelectorAll('.avail-item').forEach((row) => {
+        const input = row.querySelector('input');
+        input.addEventListener('change', () => {
+          setDishAvailable(day, input.dataset.id, input.checked);
+          renderAvailability();
+        });
+      });
+    }
+
+    function renderAvailability() {
+      const menu = MENUS[activeDay];
+      renderAvailList(els.availSoups, menu.soups, activeDay);
+      renderAvailList(els.availMains, menu.mains, activeDay);
+    }
+
+    function showView(mode) {
+      viewMode = mode;
+      els.setupView.classList.toggle('hidden', mode !== 'setup');
+      els.voteView.classList.toggle('hidden', mode !== 'order');
     }
 
     function renderCards(container, items, type, selectedId) {
@@ -625,9 +823,9 @@
     }
 
     function renderMenuCards() {
-      const menu = MENUS[activeDay];
-      renderCards(els.soupCards, menu.soups, 'soup', selectedSoup);
-      renderCards(els.mainCards, menu.mains, 'main', selectedMain);
+      clearUnavailableSelections();
+      renderCards(els.soupCards, availableSoups(activeDay), 'soup', selectedSoup);
+      renderCards(els.mainCards, availableMains(activeDay), 'main', selectedMain);
     }
 
     function updateSummary() {
@@ -728,10 +926,32 @@
 
     function render() {
       renderDayTabs();
+      showView(viewMode);
+      renderAvailability();
+      if (viewMode === 'order') {
+        renderMenuCards();
+        renderQueue();
+        updateSummary();
+      }
+    }
+
+    els.startOrderBtn.addEventListener('click', () => {
+      if (!availableMains(activeDay).length) {
+        alert('Označ aspoň jedno hlavné jedlo ako dostupné.');
+        return;
+      }
+      showView('order');
+      viewMode = 'order';
       renderMenuCards();
       renderQueue();
       updateSummary();
-    }
+      els.personName.focus();
+    });
+
+    els.editAvailBtn.addEventListener('click', () => {
+      viewMode = 'setup';
+      render();
+    });
 
     els.personName.addEventListener('input', updateSummary);
 
@@ -760,7 +980,6 @@
     });
 
     render();
-    els.personName.focus();
   </script>
 </body>
 </html>
