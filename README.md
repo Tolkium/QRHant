@@ -16,6 +16,12 @@ not built or released yet; players use the installed PWA in the browser.
 
 <sub>Real app screenshots from the dev deployment.</sub>
 
+<p align="center">
+  <img src="docs/screenshots/themes_fan.png" alt="Theme variants carousel" width="640" />
+</p>
+
+<sub>One screen, six built-in themes. (A live hover-fan runs in the <a href="#3-design-lab">design lab</a>; GitHub strips JS/CSS from READMEs, so here it's a static carousel.)</sub>
+
 ## What it does
 
 **Players**
