@@ -9,9 +9,9 @@ An **Android Capacitor** shell is in the repo for a future native APK (MLKit sca
 not built or released yet; players use the installed PWA in the browser.
 
 <p align="center">
-  <img src="docs/screenshots/player-cards.png" alt="Player card grid" width="280" />
+  <img src="docs/screenshots/player-cards.png" alt="Player card grid" height="380" />
   &nbsp;&nbsp;
-  <img src="docs/screenshots/admin-panel.png" alt="Admin panel" width="280" />
+  <img src="docs/screenshots/admin-panel.png" alt="Admin dashboard" height="380" />
 </p>
 
 <sub>Real app screenshots from the dev deployment.</sub>
